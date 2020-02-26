@@ -12,6 +12,8 @@
 #include <stdlib.h>
 
 int main(void) {
-	FindRoot();
+	//FindRoot();
+	FindNewtonianRoot();
+	printf("Operation Completed!");
 	return EXIT_SUCCESS;
 }
