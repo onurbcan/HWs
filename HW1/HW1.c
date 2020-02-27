@@ -10,11 +10,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Part1.h"
 #include "Part2.h"
 
 int main(void) {
-	//FindRoot();
 	FindNewtonianRoot();
 	printf("Operation Completed!");
 	return EXIT_SUCCESS;
