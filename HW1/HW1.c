@@ -13,8 +13,6 @@
 #include <math.h>
 
 int main(void) {
-	//FindRoot();
-	//FindNewtonianRoot();
 	int a, b;
 
 	printf("Enter the first integer:");
