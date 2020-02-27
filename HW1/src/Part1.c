@@ -8,13 +8,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-//#include "Part1.h"
+#include "Part1.h"
 
 void FindRoot(){
+	int a, b, c;
+	float x1, x2, delta;
 
-	int a, b, c = 0;
-	float x1, x2 = 0;
-	float delta = 0;
+	a = 0;
+	b = 0;
+	c = 0;
+
+	x1 = 0;
+	x2 = 0;
+	delta = 0;
 
 	printf("enter a of the equation:");
 	scanf("%d",&a);
