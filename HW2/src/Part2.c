@@ -14,14 +14,14 @@
 void number_test(){
 	int number, digit;
 
-	printf("Enter a number (maximum 6 digits):\n");
+	printf("Enter a number (maximum 6 digits): ");
 	scanf("%d",&number);
 
 	printf("Your number has %d digits\n", number_length(number));
-	printf("\n");
 
 	printf("When your number is written 100 times next to each other, which digit of this number would you like to see?:\n");
 	scanf("%d",&digit);
+
 	printf("%dth digit of the big number sequence: %d", digit, find_digit(number, digit));
 }
 
