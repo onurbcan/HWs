@@ -11,20 +11,9 @@
 #include "Part2.h"
 
 void FindNewtonianRoot(){
-	int a, b, c, i, j;
-	float g, f, df, diff;
+	int a = 0, b = 0, c = 0, i = 0, j = 0;
+	float g = 0, f = 0, df = 0, diff = 0;
 	float output[COLUMN_SIZE_OF_ARR][ROW_SIZE_OF_ARR];
-
-	a = 0;
-	b = 0;
-	c = 0;
-	i = 0;
-	j = 0;
-
-	g = 0;
-	f = 0;
-	df = 0;
-	diff = 0;
 
 	printf("enter a of the equation:");
 	scanf("%d",&a);
@@ -35,7 +24,7 @@ void FindNewtonianRoot(){
 	printf("enter the initial guess:");
 	scanf("%f",&g);
 
-	for(i = 0 ; i < COLUMN_SIZE_OF_ARR ; i++){
+	for(i = 0 ; i < COLUMN_SIZE_OF_ARR ; ++i){
 		f = (a * g * g) + (b * g) + c;
 		df = (2 * a * g) + b;
 		output[i][0]  = g;
@@ -45,7 +34,7 @@ void FindNewtonianRoot(){
 
 	printf("Step\t x\t f(x)\t\t Difference\n");
 
-	for(j = 1 ; j < COLUMN_SIZE_OF_ARR ; j++){
+	for(j = 1 ; j < COLUMN_SIZE_OF_ARR ; ++j){
 		diff = output[j][0] - g;
 		printf("x%d:\t %.4f\t %.5f\t %.4f\n", j, output[j][0], output[j][1], diff);
 	}
