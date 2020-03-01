@@ -11,16 +11,8 @@
 #include "Part1.h"
 
 void FindRoot(){
-	int a, b, c;
-	float x1, x2, delta;
-
-	a = 0;
-	b = 0;
-	c = 0;
-
-	x1 = 0;
-	x2 = 0;
-	delta = 0;
+	int a = 0, b = 0, c = 0;
+	float x1 = 0, x2 = 0, delta = 0;
 
 	printf("enter a of the equation:");
 	scanf("%d",&a);
