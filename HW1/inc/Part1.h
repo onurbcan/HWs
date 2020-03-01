@@ -8,6 +8,6 @@
 #ifndef PART1_H_
 #define PART1_H_
 
-
+void FindRoot();
 
 #endif /* PART1_H_ */
