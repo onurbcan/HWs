@@ -25,7 +25,7 @@ void FindRoot(){
 	x1 = (-b + sqrt(delta)) / (2 * a);
 	x2 = (-b - sqrt(delta)) / (2 * a);
 
-	if(delta < 0) printf("Roots are complex numbers");
+	if(delta < 0) printf("Roots are complex numbers\n");
 	else {
 		printf("x1: %.2f\n",x1);
 		printf("x2: %.2f\n",x2);

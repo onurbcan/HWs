@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 #include "Part2.h"
+#include "Part3.h"
 #include <math.h>
 
 int main(void) {
