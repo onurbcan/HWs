@@ -10,10 +10,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include "Part1.h"
+#include "Part2.h"
 #include "Part3.h"
-int main(void) {
+#include <math.h>
 
+int main(void) {
+	FindRoot();
+	FindNewtonianRoot();
 	FindMultipleClosestFunction();
 
 	printf("Operation Completed!");
