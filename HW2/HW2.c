@@ -10,8 +10,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include "Part1.h"
 
 int main(void) {
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+	triangle_test();
+
 	return EXIT_SUCCESS;
 }
