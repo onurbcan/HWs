@@ -1,13 +1,17 @@
 /*
  * Part1.h
  *
- *  Created on: Mar 3, 2020
+ *  Created on: Feb 28, 2020
  *      Author: onur
  */
 
-#ifndef INC_PART1_H_
-#define INC_PART1_H_
+#ifndef PART1_H_
+#define PART1_H_
 
+void triangle_test();
+int draw_triangle();
+void type_triangle();
+int perimeter_triangle();
+double area_triangle();
 
-
-#endif /* INC_PART1_H_ */
+#endif /* PART1_H_ */
