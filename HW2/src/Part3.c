@@ -35,7 +35,7 @@ void currency_converter(){
 	scanf("%d", &tcurrency);
 
 	switch(tcurrency){
-		case 1:
+		case Try:
 			if(fcurrency == Try)
 				printf("Same currency! No exchange needed.");
 			if(fcurrency == Eur)
@@ -44,7 +44,7 @@ void currency_converter(){
 				printf("You have %.2f Turkish Liras", amount * USD_TRY);
 			break;
 
-		case 2:
+		case Eur:
 			if(fcurrency == Try)
 				printf("You have %.2f Euros", amount / EUR_TRY);
 			if(fcurrency == Eur)
@@ -53,7 +53,7 @@ void currency_converter(){
 				printf("You have %.2f Euros", amount / EUR_USD);
 			break;
 
-		case 3:
+		case Usd:
 			if(fcurrency == Try)
 				printf("You have %.2f US Dollars", amount / USD_TRY);
 			if(fcurrency == Eur)
