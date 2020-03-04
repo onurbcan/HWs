@@ -13,9 +13,9 @@
 #define EUR_USD 1.089577655 //EUR to USD exchange rate
 
 enum currencies{
-	try = 1,
-	eur = 2,
-	usd = 3,
+	Try = 1,
+	Eur = 2,
+	Usd = 3,
 };
 
 void currency_converter();
