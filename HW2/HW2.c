@@ -13,10 +13,12 @@
 #include <math.h>
 #include "Part1.h"
 #include "Part2.h"
+#include "Part3.h"
 
 int main(void) {
 	triangle_test();
 	number_test();
+	currency_converter();
 
 	return EXIT_SUCCESS;
 }
