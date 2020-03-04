@@ -26,22 +26,21 @@ void number_test(){
 }
 
 int number_length(int number){
-	int log10eq; //log10 equivalent of the number
-	log10eq = log10(number) + 1;
+	int log10_equivalent; //log10 equivalent of the number
+	log10_equivalent = log10(number) + 1;
 
-	return log10eq;
+	return log10_equivalent;
 }
 
 int find_digit(int number, int index){
-	int numberofdigits, wisheddigit, result;
+	int number_of_digits, wished_digit, result;
 	//(actual) wished digit, converted into left-to-rigth order
 
-	numberofdigits = number_length(number);
-	wisheddigit = numberofdigits - (index % numberofdigits);
-	if(wisheddigit == numberofdigits)
-		wisheddigit = 0;
-	result = (number / pow(10, wisheddigit));
+	number_of_digits = number_length(number);
+	wished_digit = number_of_digits - (index % number_of_digits);
+	if(wished_digit == number_of_digits)
+		wished_digit = 0;
+	result = (number / pow(10, wished_digit));
 
 	return result %= 10;
 }
-
