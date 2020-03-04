@@ -28,19 +28,20 @@ void number_test(){
 int number_length(int number){
 	int log10eq; //log10 equivalent of the number
 	log10eq = log10(number) + 1;
+
 	return log10eq;
 }
 
 int find_digit(int number, int index){
-	int ndgt, wdgt;
+	int numberofdigits, wisheddigit, result;
+	//(actual) wished digit, converted into left-to-rigth order
 
-	ndgt = number_length(number); //number of digits
-	wdgt = ndgt - (index % ndgt) + 1; //(actual) wished digit, converted into left-to-rigth order
+	numberofdigits = number_length(number);
+	wisheddigit = numberofdigits - (index % numberofdigits);
+	if(wisheddigit == numberofdigits)
+		wisheddigit = 0;
+	result = (number / pow(10, wisheddigit));
 
-	while(wdgt > 1){
-		number = (number - (number % 10)) / 10;
-		--wdgt;
-	}
-	return number % 10;
+	return result %= 10;
 }
 
