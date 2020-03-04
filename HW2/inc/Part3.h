@@ -12,6 +12,12 @@
 #define USD_TRY 6.14 //USD to TRY exchange rate
 #define EUR_USD 1.089577655 //EUR to USD exchange rate
 
+enum currencies{
+	try = 1,
+	eur = 2,
+	usd = 3,
+};
+
 void currency_converter();
 
 #endif /* INC_PART3_H_ */
