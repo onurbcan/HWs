@@ -25,19 +25,26 @@
 #include "Part3.h"
 
 void and_operation(){
-	int num1, num2, temp1, temp2, no_error;
-	no_error = 1;
+	unsigned int num1, num2, temp1, temp2, error;
+	//error = 1;
 
 	do{
+		/*
 		printf("First integer: ");
 		scanf("%d",&num1);
+		fflush(stdin);
 		printf("Second integer: ");
 		scanf("%d",&num2);
+		fflush(stdin);
+		printf("%d und %d\n", num1, num2);
+		*/
+		num1 = 1011;
+		num2 = 1001;
 
 		temp1 = num1;
 		temp2 = num2;
 
-		while(1){
+		do{
 			/*
 			if(temp1 % 10 != 0)
 				printf("Integers should be binary, please enter 2 new integers.\n");
@@ -48,35 +55,44 @@ void and_operation(){
 			else if(temp2 % 10 != 1)
 				printf("Integers should be binary, please enter 2 new integers.\n");
 			*/
+			error = 1;
 
 			temp1 /= 10;
 			temp2 /= 10;
+			printf("%d and %d\n", temp1, temp2); //bu satırı bastı
 
-			if(temp1 == 0 && temp2 == 0){
-				no_error = 0;
+			if((temp1 == 0) && (temp2 == 0)){
+				error = 0; //removes error flag
+				printf("here2 and %d\n", error); //ama buraya gelmedi yine
 				break;
 			}
 			else if(temp1 == 0){
-				no_error = 1;
+				error = 1;
 				printf("Integers should have the same length, please enter 2 new integers.\n");
 				break;
 			}
 			else if(temp2 == 0){
-				no_error = 1;
+				error = 1;
 				printf("Integers should have the same length, please enter 2 new integers.\n");
 				break;
 			}
-		}
+			else printf("here4");
+			printf("here5");
+		} while(error != 0);
+		//if(temp1 == 0 && temp2 == 0)
+			//error = 0;
+		//printf("%d", error);
+	} while(error != 0);
 
-	} while(no_error);
+
 	printf("%d AND %d = %d", num1, num2, andop(num1, num2));
 }
 
 int andop(int a, int b){
-	int result, mult;
-	result = 0;
-	mult = 1;
-
+	//int result, mult;
+	//result = 0;
+	//mult = 1;
+	/*
 	while(a > 0){
 		if(a % 10 == 1 && b % 10 == 1)
 			result += (1 * mult);
@@ -85,5 +101,6 @@ int andop(int a, int b){
 
 		mult *= 10;
 	}
+	*/
 	return 0;
 }
