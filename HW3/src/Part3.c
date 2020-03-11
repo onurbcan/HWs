@@ -25,82 +25,77 @@
 #include "Part3.h"
 
 void and_operation(){
-	unsigned int num1, num2, temp1, temp2, error;
-	//error = 1;
+	int num1, num2, temp1, temp2, error1, error2;
 
 	do{
-		/*
+		error1 = 0; //error flag for binary check
+		error2 = 0; //error flag for length check
+
 		printf("First integer: ");
 		scanf("%d",&num1);
-		fflush(stdin);
 		printf("Second integer: ");
 		scanf("%d",&num2);
-		fflush(stdin);
-		printf("%d und %d\n", num1, num2);
-		*/
-		num1 = 1011;
-		num2 = 1001;
 
-		temp1 = num1;
-		temp2 = num2;
+		temp1 = num1; //temporary variables to check num1 and num2 for errors
+		temp2 = num2; //temporary variables to check num1 and num2 for errors
 
 		do{
-			/*
-			if(temp1 % 10 != 0)
-				printf("Integers should be binary, please enter 2 new integers.\n");
-			else if(temp1 % 10 != 1)
-				printf("Integers should be binary, please enter 2 new integers.\n");
-			else if(temp2 % 10 != 0)
-				printf("Integers should be binary, please enter 2 new integers.\n");
-			else if(temp2 % 10 != 1)
-				printf("Integers should be binary, please enter 2 new integers.\n");
-			*/
-			error = 1;
+			if(temp1 % 10 != 0){
+				if(temp1 % 10 != 1){
+					printf("Integers should be binary, please enter 2 new integers.\n");
+					error1 = 1; //error1 flag active here
+				}
+			}
+			else if(temp2 % 10 != 0){
+				if(temp2 % 10 != 1){
+					printf("Integers should be binary, please enter 2 new integers.\n");
+					error1 = 1; //error1 flag active here
+				}
+			}
 
 			temp1 /= 10;
 			temp2 /= 10;
-			printf("%d and %d\n", temp1, temp2); //bu satırı bastı
 
-			if((temp1 == 0) && (temp2 == 0)){
-				error = 0; //removes error flag
-				printf("here2 and %d\n", error); //ama buraya gelmedi yine
-				break;
-			}
-			else if(temp1 == 0){
-				error = 1;
-				printf("Integers should have the same length, please enter 2 new integers.\n");
+			if(temp1 == 0){
+				if(temp2 == 0){
+					error2 = 0; //deactivates error2 flag
+				}
+				else{
+					error2 = 1; //error2 flag active here
+					printf("Integers should have the same length, please enter 2 new integers.\n");
+				}
 				break;
 			}
 			else if(temp2 == 0){
-				error = 1;
+				error2 = 1; //error2 flag active here
 				printf("Integers should have the same length, please enter 2 new integers.\n");
 				break;
 			}
-			else printf("here4");
-			printf("here5");
-		} while(error != 0);
-		//if(temp1 == 0 && temp2 == 0)
-			//error = 0;
-		//printf("%d", error);
-	} while(error != 0);
+		} while(temp1 != 0 || temp2 != 0);
 
+	} while(error2 == 1 || error1 == 1); //to continue loop if any of the errors occur
 
 	printf("%d AND %d = %d", num1, num2, andop(num1, num2));
 }
 
 int andop(int a, int b){
-	//int result, mult;
-	//result = 0;
-	//mult = 1;
-	/*
-	while(a > 0){
-		if(a % 10 == 1 && b % 10 == 1)
-			result += (1 * mult);
-		else
-			mult *= 10;
+	int result, mult;
+	result = 0; //result to be returned
+	mult = 1; //decimal multiplier
 
-		mult *= 10;
+	while(a > 0){
+		if(a % 10 == 1){
+			if(b % 10 == 1){
+				result += (1 * mult);
+				/*
+				 * if both a and b have 1 for a certain decimal, 1 is added to
+				 * the related decimal of the result variable
+				 */
+			}
+		}
+		a /= 10; //to get next decimal of a
+		b /= 10; //to get next decimal of b
+		mult *= 10; //to move decimal pointer for result variable
 	}
-	*/
-	return 0;
+	return (result);
 }
