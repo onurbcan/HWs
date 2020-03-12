@@ -38,9 +38,10 @@ void check_prime(){
 }
 
 int isprime(int a){
-	int i, flag = 0; //this is set 0 to make 2 (exceptional) as a prime number;
+	int i, flag;
 	double root_a;
 
+	flag = 0; //this is set 0 to make 2 (exceptional) as a prime number
 	root_a = sqrt(a); //control range for the prime check
 
 	for(i = 2 ; i <= root_a ; ++i){
@@ -50,8 +51,7 @@ int isprime(int a){
 				/* this if case is to keep -not a prime number- if it is already
 				 * not a prime number
 				 */
-			else
-				flag = 0; //0 flag for prime numbers
+			else flag = 0; //0 flag for prime numbers
 		}
 		else
 			flag = i; //different than 0 flag, to return divider
