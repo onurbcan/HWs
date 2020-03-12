@@ -43,30 +43,24 @@ void and_operation(){
 		temp2 = num2; //temporary variables to check num1 and num2 for errors
 
 		do{
-			if(temp1 % 10 != 0){
-				if(temp1 % 10 != 1){
-					printf("Integers should be binary, please enter 2 new integers.\n");
-					error1 = 1; //error1 flag active here
-				}
+			if(temp1 % 10 != 0 && temp1 % 10 != 1){
+				printf("Integers should be binary, please enter 2 new integers.\n");
+				error1 = 1; //error1 flag active here
 			}
-			else if(temp2 % 10 != 0){
-				if(temp2 % 10 != 1){
-					printf("Integers should be binary, please enter 2 new integers.\n");
-					error1 = 1; //error1 flag active here
-				}
+			else if(temp2 % 10 != 0 && temp2 % 10 != 1){
+				printf("Integers should be binary, please enter 2 new integers.\n");
+				error1 = 1; //error1 flag active here
 			}
 
 			temp1 /= 10;
 			temp2 /= 10;
 
-			if(temp1 == 0){
-				if(temp2 == 0){
-					error2 = 0; //deactivates error2 flag
-				}
-				else{
-					error2 = 1; //error2 flag active here
-					printf("Integers should have the same length, please enter 2 new integers.\n");
-				}
+			if(temp1 == 0 && temp2 == 0){
+				error2 = 0; //deactivates error2 flag
+			}
+			else if(temp1 == 0){
+				error2 = 1; //error2 flag active here
+				printf("Integers should have the same length, please enter 2 new integers.\n");
 				break;
 			}
 			else if(temp2 == 0){
@@ -74,6 +68,7 @@ void and_operation(){
 				printf("Integers should have the same length, please enter 2 new integers.\n");
 				break;
 			}
+
 		} while(temp1 != 0 || temp2 != 0);
 
 	} while(error1 == 1 || error2 == 1); //to continue loop if any of the errors occur
@@ -85,14 +80,12 @@ int andop(int a, int b){
 	int result = 0, mult = 1; //result to be returned and decimal multiplier
 
 	while(a > 0){
-		if(a % 10 == 1){
-			if(b % 10 == 1){
-				result += (1 * mult);
-				/*
-				 * if both a and b have 1 for a certain decimal, 1 is added to
-				 * the related decimal of the result variable
-				 */
-			}
+		if(a % 10 == 1 && b % 10 == 1){
+			result += (1 * mult);
+			/*
+			 * if both a and b have 1 for a certain decimal, 1 is added to
+			 * the related decimal of the result variable
+			 */
 		}
 		a /= 10; //to get next decimal of a
 		b /= 10; //to get next decimal of b
