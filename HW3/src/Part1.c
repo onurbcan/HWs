@@ -41,13 +41,12 @@ void sum_mult_operation(){
 				break;
 		}
 		break;
-	} while(operation != 0 && operation != 1);
+	} while(operation != SUM_OPERATION && operation != MULT_OPERATION);
 
 }
 
 int sum(int n, int flag){
-	int i, sum;
-	sum = 0;
+	int i, sum = 0;
 
 	switch(flag){
 		case EVEN_NUMBERS:
@@ -55,16 +54,16 @@ int sum(int n, int flag){
 				printf("%d ", i);
 				sum += i;
 				if(i == (n - 1) || i == (n - 2)) break;
-					printf("+ ");
-				}
+				printf("+ ");
+			}
 
-				if(!(n % 2)){
-					printf("+ %d ", n);
-					sum += n;
-				}
+			if(!(n % 2)){
+				printf("+ %d ", n);
+				sum += n;
+			}
 
-				printf("= %d\n", sum);
-				break;
+			printf("= %d\n", sum);
+			break;
 
 		case ODD_NUMBERS:
 			for(i = 1 ; i < n ; i += 2){
@@ -90,8 +89,7 @@ int sum(int n, int flag){
 }
 
 int mult(int n, int flag){
-	int i, mult;
-	mult = 1;
+	int i, mult = 1;
 
 	switch(flag){
 		case EVEN_NUMBERS:
@@ -99,7 +97,7 @@ int mult(int n, int flag){
 				printf("%d ", i);
 				mult *= i;
 				if(i == (n - 1) || i == (n - 2)) break;
-					printf("* ");
+				printf("* ");
 			}
 
 			if(!(n % 2)){
