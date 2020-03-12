@@ -16,6 +16,9 @@
  * calculates the result of the AND operation and returns it to the main(). And
  * the result should be printed in the main() function.
  *
+ * Without using '&' operator!
+ * Only while and do-while loops allowed!
+ *
  *  Created on: Mar 9, 2020
  *      Author: onur
  */
@@ -73,15 +76,13 @@ void and_operation(){
 			}
 		} while(temp1 != 0 || temp2 != 0);
 
-	} while(error2 == 1 || error1 == 1); //to continue loop if any of the errors occur
+	} while(error1 == 1 || error2 == 1); //to continue loop if any of the errors occur
 
 	printf("%d AND %d = %d", num1, num2, andop(num1, num2));
 }
 
 int andop(int a, int b){
-	int result, mult;
-	result = 0; //result to be returned
-	mult = 1; //decimal multiplier
+	int result = 0, mult = 1; //result to be returned and decimal multiplier
 
 	while(a > 0){
 		if(a % 10 == 1){
