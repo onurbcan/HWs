@@ -38,11 +38,8 @@ void check_prime(){
 }
 
 int isprime(int a){
-	int i, flag;
-	double root_a;
-
-	flag = 0; //this is set 0 to make 2 (exceptional) as a prime number
-	root_a = sqrt(a); //control range for the prime check
+	int i, flag = 0; //this is set 0 to make 2 (exceptional) as a prime number
+	double root_a = sqrt(a); //control range for the prime check
 
 	for(i = 2 ; i <= root_a ; ++i){
 		if(a % i){
