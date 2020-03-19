@@ -26,14 +26,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Part1.h"
-/*
-void decrypt_and_print(char *file_path) {
-	FILE *fptr;
-	if((fptr = fopen(*file_path, "r")) == NULL){
+
+void open_file(char file_path){
+	if((fptr = fopen(file_path, "r")) == NULL){
 		printf("Error on opening file");
 	}
 }
 
+void decrypt_and_print(char *file_path) {
+	char c[1000];
+	open_file(*file_path);
+	fscanf(fptr, "%[^\n]", c);
+	printf("%s",c);
+	fclose(fptr);
+}
+/*
 char decrypt_numbers(int number) {
 	switch(number){
 	case ZERO:

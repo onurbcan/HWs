@@ -16,6 +16,8 @@
 #define FIVE 5
 #define SIX 6
 
+FILE *fptr;
+
 void decrypt_and_print(char *file_path);
 char decrypt_numbers(int number);
 
