@@ -14,6 +14,6 @@
 
 int main(int argc, char **argv) {
 	decrypt_and_print(argv[1]);
-	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
+	puts("!!!Hello Wor!!!"); /* prints !!!Hello World!!! */
 	return EXIT_SUCCESS;
 }
