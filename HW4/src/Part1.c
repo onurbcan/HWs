@@ -37,15 +37,19 @@ void open_file(char *file_path){
 void decrypt_and_print(char *file_path) {
 	int c;
 	open_file(file_path);
-	//do{
-		//putchar(c);
-		c = fgetc(fptr);
-		printf("%c",c);
-	//}while(c != EOF);
+	do{
+		do{
+			c = fgetc(fptr);
+			printf("%c", decrypt_numbers(c));
+		}while(c != '\n');
+		printf("\n");
+	}while(c != EOF);
+	printf("\n");
 	fclose(fptr);
+	return;
 }
-//EOF
-/*
+
+
 char decrypt_numbers(int number) {
 	switch(number){
 	case ZERO:
@@ -59,12 +63,12 @@ char decrypt_numbers(int number) {
 	case FOUR:
 		return '/';
 	case FIVE:
-		return '\';
+		return 'b'; // \ (backslash character)
 	case SIX:
 		return '0';
 	default:
 		return ' ';
 	}
-	return ('a');
+	return (' ');
 }
-*/
+

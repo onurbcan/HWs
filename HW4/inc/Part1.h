@@ -8,13 +8,13 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
-#define ZERO 0
-#define ONE 1
-#define TWO 2
-#define THREE 3
-#define FOUR 4
-#define FIVE 5
-#define SIX 6
+#define ZERO 48
+#define ONE 49
+#define TWO 50
+#define THREE 51
+#define FOUR 52
+#define FIVE 53
+#define SIX 54
 
 FILE *fptr;
 
