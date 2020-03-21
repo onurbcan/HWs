@@ -35,10 +35,13 @@ void open_file(char *file_path){
 
 
 void decrypt_and_print(char *file_path) {
-	char c[1000];
+	int c;
 	open_file(file_path);
-	fscanf(fptr, "%c", c);
-	printf("%s",c);
+	//do{
+		//putchar(c);
+		c = fgetc(fptr);
+		printf("%c",c);
+	//}while(c != EOF);
 	fclose(fptr);
 }
 //EOF
