@@ -37,10 +37,11 @@ void open_file(char *file_path){
 void decrypt_and_print(char *file_path) {
 	char c[1000];
 	open_file(file_path);
-	fscanf(fptr, "%[^\n]", c);
+	fscanf(fptr, "%c", c);
 	printf("%s",c);
 	fclose(fptr);
 }
+//EOF
 /*
 char decrypt_numbers(int number) {
 	switch(number){
