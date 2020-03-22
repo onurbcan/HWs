@@ -29,10 +29,19 @@
 
 void open_file(char *file_path){
 	if((fptr = fopen(file_path, "r")) == NULL){
-		printf("Error on opening file");
+		printf("Error! File not found.");
+		exit(1);
 	}
+	return;
 }
 
+void close_file(){
+	if(fclose(fptr) != 0){
+		printf("Error! File not closed.");
+		exit(1);
+	}
+	return;
+}
 
 void decrypt_and_print(char *file_path) {
 	int c;
@@ -45,30 +54,28 @@ void decrypt_and_print(char *file_path) {
 		printf("\n");
 	}while(c != EOF);
 	printf("\n");
-	fclose(fptr);
+	close_file();
 	return;
 }
-
 
 char decrypt_numbers(int number) {
 	switch(number){
 	case ZERO:
-		return ' ';
+		return (' ');
 	case ONE:
-		return '-';
+		return ('-');
 	case TWO:
-		return '_';
+		return ('_');
 	case THREE:
-		return '|';
+		return ('|');
 	case FOUR:
-		return '/';
+		return ('/');
 	case FIVE:
-		return 'b'; // \ (backslash character)
+		return ('b'); // \ (backslash character)
 	case SIX:
-		return '0';
+		return ('0');
 	default:
-		return ' ';
+		return (' ');
 	}
 	return (' ');
 }
-

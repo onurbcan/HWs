@@ -19,6 +19,7 @@
 FILE *fptr;
 
 void open_file(char *file_path);
+void close_file();
 void decrypt_and_print(char *file_path);
 char decrypt_numbers(int number);
 
