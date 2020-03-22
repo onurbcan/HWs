@@ -53,6 +53,7 @@ void decrypt_and_print(char *file_path) {
 		}while(c != '\n');
 		printf("\n");
 	}while(c != EOF);
+	//}while(!feof(fptr));
 	printf("\n");
 	close_file();
 	return;
