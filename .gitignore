@@ -9,3 +9,5 @@
 /HW3/.*
 /HW4/Debug/*
 /HW4/.*
+/HW4/files/*
+/HW4/output.txt

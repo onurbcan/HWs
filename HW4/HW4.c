@@ -10,8 +10,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "Part1.h"
 
-int main(void) {
+int main(int argc, char **argv) {
+	decrypt_and_print(argv[1]);
 	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
 	return EXIT_SUCCESS;
 }
