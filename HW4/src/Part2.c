@@ -54,31 +54,22 @@ void deep_decrypt_and_print(char *file_path) {
 	open_file_read(file_path);
 	open_file_write();
 
-	while(1){
+	while (1) {
 		num1 = getc(fptr);
 		num2 = getc(fptr);
 		num3 = getc(fptr);
-		//printf("%d\n", num1);
-		//printf("%d\n", num2);
-		//printf("%d\n", num3);
 
-
-		//printf("%d\n", result);
-
-		if(feof(fptr)){
+		if (feof(fptr)) {
 			close_file(fptr);
 			close_file(fptw);
 			return;
-		}else if(num1 == '\n'){
-			fprintf(fptw, "\n");
-		}else if(num2 == '\n'){
-			result = ascii_converter(num1) % 7;
-			fprintf(fptw, "%d\n", result);
-		}else if(num3 == '\n'){
+		} else if (num3 == '\n') {
 			result = (ascii_converter(num1) + ascii_converter(num2)) % 7;
 			fprintf(fptw, "%d\n", result);
-		}else{
-			result = (ascii_converter(num1) + ascii_converter(num2) + ascii_converter(num3)) % 7;
+		} else {
+			result = (ascii_converter(num1) + ascii_converter(num2)
+					+ ascii_converter(num3)) % 7;
+			fseek(fptr, -2, SEEK_CUR);
 			fprintf(fptw, "%d", result);
 		}
 	}
