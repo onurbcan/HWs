@@ -1,7 +1,7 @@
 /*
  * Part1.h
  *
- *  Created on: Mar 19, 2020
+ *  Created on: Mar 23, 2020
  *      Author: onur
  */
 
@@ -17,9 +17,12 @@
 #define SIX 54
 
 FILE *fptr;
+FILE *fptw;
 
-void open_file(char *file_path);
-void close_file();
+void open_file_read(char *file_path);
+void open_file_write();
+void close_file(FILE *file_pointer);
 void deep_decrypt_and_print (char* file_path);
+int ascii_converter(int number);
 
 #endif /* INC_PART1_H_ */

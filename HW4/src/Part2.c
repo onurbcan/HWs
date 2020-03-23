@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include "Part2.h"
 
-void open_file(char *file_path) {
+void open_file_read(char *file_path) {
 	if ((fptr = fopen(file_path, "r")) == NULL) {
 		printf("Error! File not found.");
 		exit(1);
@@ -32,8 +32,16 @@ void open_file(char *file_path) {
 	return;
 }
 
-void close_file() {
-	if (fclose(fptr) != 0) {
+void open_file_write() {
+	if ((fptw = fopen("output.txt", "w")) == NULL) {
+		printf("Error! File not created.");
+		exit(1);
+	}
+	return;
+}
+
+void close_file(FILE *file_pointer) {
+	if (fclose(file_pointer) != 0) {
 		printf("Error! File not closed.");
 		exit(1);
 	}
@@ -41,7 +49,60 @@ void close_file() {
 }
 
 void deep_decrypt_and_print(char *file_path) {
-	open_file(file_path);
-	close_file();
+	int num1, num2, num3, result;
+
+	open_file_read(file_path);
+	open_file_write();
+
+	while(1){
+		num1 = getc(fptr);
+		num2 = getc(fptr);
+		num3 = getc(fptr);
+		//printf("%d\n", num1);
+		//printf("%d\n", num2);
+		//printf("%d\n", num3);
+
+
+		//printf("%d\n", result);
+
+		if(feof(fptr)){
+			close_file(fptr);
+			close_file(fptw);
+			return;
+		}else if(num1 == '\n'){
+			fprintf(fptw, "\n");
+		}else if(num2 == '\n'){
+			result = ascii_converter(num1) % 7;
+			fprintf(fptw, "%d\n", result);
+		}else if(num3 == '\n'){
+			result = (ascii_converter(num1) + ascii_converter(num2)) % 7;
+			fprintf(fptw, "%d\n", result);
+		}else{
+			result = (ascii_converter(num1) + ascii_converter(num2) + ascii_converter(num3)) % 7;
+			fprintf(fptw, "%d", result);
+		}
+	}
 	return;
+}
+
+int ascii_converter(int number) {
+	switch (number) {
+	case ZERO:
+		return (0);
+	case ONE:
+		return (1);
+	case TWO:
+		return (2);
+	case THREE:
+		return (3);
+	case FOUR:
+		return (4);
+	case FIVE:
+		return (5);
+	case SIX:
+		return (6);
+	default:
+		return (0);
+	}
+	return (0);
 }
