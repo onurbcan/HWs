@@ -32,8 +32,8 @@ void open_file_read(char *file_path) {
 	return;
 }
 
-void open_file_write() {
-	if ((fptw = fopen("output.txt", "w")) == NULL) {
+void open_file_write(char *file_path) {
+	if ((fptw = fopen(file_path, "w")) == NULL) {
 		printf("Error! File not created.");
 		exit(1);
 	}
@@ -52,18 +52,14 @@ void deep_decrypt_and_print(char *file_path) {
 	int num1, num2, num3, result;
 
 	open_file_read(file_path);
-	open_file_write();
+	open_file_write("output.txt");
 
-	while (1) {
+	while (!feof(fptr)) {
 		num1 = getc(fptr);
 		num2 = getc(fptr);
 		num3 = getc(fptr);
 
-		if (feof(fptr)) {
-			close_file(fptr);
-			close_file(fptw);
-			return;
-		} else if (num3 == '\n') {
+		if (num3 == '\n') {
 			result = (ascii_converter(num1) + ascii_converter(num2)) % 7;
 			fprintf(fptw, "%d\n", result);
 		} else {
@@ -73,6 +69,8 @@ void deep_decrypt_and_print(char *file_path) {
 			fprintf(fptw, "%d", result);
 		}
 	}
+	close_file(fptr);
+	close_file(fptw);
 	return;
 }
 

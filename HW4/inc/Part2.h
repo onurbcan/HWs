@@ -1,12 +1,12 @@
 /*
- * Part1.h
+ * Part2.h
  *
  *  Created on: Mar 23, 2020
  *      Author: onur
  */
 
-#ifndef INC_PART1_H_
-#define INC_PART1_H_
+#ifndef INC_PART2_H_
+#define INC_PART2_H_
 
 #define ZERO 48
 #define ONE 49
@@ -20,9 +20,9 @@ FILE *fptr;
 FILE *fptw;
 
 void open_file_read(char *file_path);
-void open_file_write();
+void open_file_write(char *file_path);
 void close_file(FILE *file_pointer);
 void deep_decrypt_and_print (char* file_path);
 int ascii_converter(int number);
 
-#endif /* INC_PART1_H_ */
+#endif /* INC_PART2_H_ */
