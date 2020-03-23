@@ -20,7 +20,7 @@ FILE *fptr; //fptr file pointer read
 FILE *fptw; //fptw file pointer write
 
 void open_file_read(char *file_path);
-void open_file_write();
+void open_file_write(char *file_path);
 void close_file(FILE *file_pointer);
 void decrypt_and_print(char *file_path);
 char decrypt_numbers(int number);

@@ -35,8 +35,8 @@ void open_file_read(char *file_path) {
 	return;
 }
 
-void open_file_write() {
-	if ((fptw = fopen("output.txt", "w")) == NULL) {
+void open_file_write(char *file_path) {
+	if ((fptw = fopen(file_path, "w")) == NULL) {
 		printf("Error! File not created.");
 		exit(1);
 	}
@@ -54,18 +54,16 @@ void close_file(FILE *file_pointer) {
 void decrypt_and_print(char *file_path) {
 	int num;
 	open_file_read(file_path); //fptr file pointer read
-	open_file_write(); //fptw file pointer write
-	while (1) {
+	open_file_write("output.txt"); //fptw file pointer write
+	while (!feof(fptr)) {
 		num = fgetc(fptr);
 		fprintf(fptw, "%c", decrypt_numbers(num));
-		if (feof(fptr)) {
-			close_file(fptr);
-			close_file(fptw);
-			return;
-		} else if (num == '\n') {
+		if (num == '\n') {
 			fprintf(fptw, "\n");
 		}
 	}
+	close_file(fptr);
+	close_file(fptw);
 	return;
 }
 
@@ -88,5 +86,4 @@ char decrypt_numbers(int number) {
 	default:
 		return (' ');
 	}
-	return (' ');
 }
