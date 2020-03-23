@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 
-void open_file(char *file_path) {
+void open_file_read(char *file_path) {
 	if ((fptr = fopen(file_path, "r")) == NULL) {
 		printf("Error! File not found.");
 		exit(1);
@@ -35,8 +35,16 @@ void open_file(char *file_path) {
 	return;
 }
 
-void close_file() {
-	if (fclose(fptr) != 0) {
+void open_file_write() {
+	if ((fptw = fopen("output.txt", "w")) == NULL) {
+		printf("Error! File not created.");
+		exit(1);
+	}
+	return;
+}
+
+void close_file(FILE *file_pointer) {
+	if (fclose(file_pointer) != 0) {
 		printf("Error! File not closed.");
 		exit(1);
 	}
@@ -45,18 +53,19 @@ void close_file() {
 
 void decrypt_and_print(char *file_path) {
 	int num;
-	open_file(file_path);
+	open_file_read(file_path); //fptr file pointer read
+	open_file_write(); //fptw file pointer write
 	while (1) {
 		num = fgetc(fptr);
-		printf("%c", decrypt_numbers(num));
+		fprintf(fptw, "%c", decrypt_numbers(num));
 		if (feof(fptr)) {
-			close_file();
+			close_file(fptr);
+			close_file(fptw);
 			return;
 		} else if (num == '\n') {
-			printf("\n");
+			fprintf(fptw, "\n");
 		}
 	}
-	printf("\n");
 	return;
 }
 

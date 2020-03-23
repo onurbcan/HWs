@@ -16,10 +16,12 @@
 #define FIVE 53
 #define SIX 54
 
-FILE *fptr;
+FILE *fptr; //fptr file pointer read
+FILE *fptw; //fptw file pointer write
 
-void open_file(char *file_path);
-void close_file();
+void open_file_read(char *file_path);
+void open_file_write();
+void close_file(FILE *file_pointer);
 void decrypt_and_print(char *file_path);
 char decrypt_numbers(int number);
 
