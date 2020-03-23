@@ -27,16 +27,16 @@
 #include <stdlib.h>
 #include "Part1.h"
 
-void open_file(char *file_path){
-	if((fptr = fopen(file_path, "r")) == NULL){
+void open_file(char *file_path) {
+	if ((fptr = fopen(file_path, "r")) == NULL) {
 		printf("Error! File not found.");
 		exit(1);
 	}
 	return;
 }
 
-void close_file(){
-	if(fclose(fptr) != 0){
+void close_file() {
+	if (fclose(fptr) != 0) {
 		printf("Error! File not closed.");
 		exit(1);
 	}
@@ -44,23 +44,24 @@ void close_file(){
 }
 
 void decrypt_and_print(char *file_path) {
-	int c;
+	int num;
 	open_file(file_path);
-	do{
-		do{
-			c = fgetc(fptr);
-			printf("%c", decrypt_numbers(c));
-		}while(c != '\n');
-		printf("\n");
-	}while(c != EOF);
-	//}while(!feof(fptr));
+	while (1) {
+		num = fgetc(fptr);
+		printf("%c", decrypt_numbers(num));
+		if (feof(fptr)) {
+			close_file();
+			return;
+		} else if (num == '\n') {
+			printf("\n");
+		}
+	}
 	printf("\n");
-	close_file();
 	return;
 }
 
 char decrypt_numbers(int number) {
-	switch(number){
+	switch (number) {
 	case ZERO:
 		return (' ');
 	case ONE:
@@ -72,7 +73,7 @@ char decrypt_numbers(int number) {
 	case FOUR:
 		return ('/');
 	case FIVE:
-		return ('b'); // \ (backslash character)
+		return ('\\'); //prints backslash (\) character
 	case SIX:
 		return ('0');
 	default:
