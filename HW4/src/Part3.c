@@ -32,25 +32,19 @@
 #include "Part3.h"
 
 void track_machine() {
-	/*
-	 do{
+	int X = 0, Y = 0;
+	double D, R;
+	char command;
 
-	 }while();
-	 */
-	int X = 0, Y = 0, in;
-
-	double R, //distance between current position and the last position of the enemy camp
-			D; //distance of enemy to our camp
-
+	refresh_position(&X, &Y, &D, &R);
+	printf(
+			"Enemies X position: %d, Y position: %d, Displacement: %f, Distance to our camp: %f\n",
+			X, Y, D, R);
 	do {
-		refresh_position(&X, &Y, &D, &R);
-		printf("Xtra: %d\n", X);
-		printf("Ytra: %d\n", Y);
-		printf("D: %f\n", D);
-		printf("R: %f\n", R);
-		printf("in value: ");
-		scanf("%d", &in);
-	} while (in != 0);
+		printf("Command (R / E) waiting...: ");
+		scanf("%c", &command);
+		printf("\n");
+	} while (command != 'R' && command != 'E'); //to get a valid command
 	return;
 }
 
@@ -58,9 +52,6 @@ void refresh_position(int *X, int *Y, double *D, double *R) {
 	int i, j;
 
 	srand(time(NULL));
-
-	printf("Xref: %d\n", *X);
-	printf("Yref: %d\n", *Y);
 
 	temp_X = *X;
 	temp_Y = *Y;
@@ -81,9 +72,9 @@ void refresh_position(int *X, int *Y, double *D, double *R) {
 		printf("\n");
 	}
 
-	*D = sqrt(pow((*X - temp_X), 2) + pow((*Y - temp_Y), 2));
+	*D = sqrt(pow((*X - temp_X), 2) + pow((*Y - temp_Y), 2)); //distance between current position and the last position of the enemy camp
 	*R = sqrt(
-			pow((*X - OUR_X_COORDINATE), 2) + pow((*Y - OUR_Y_COORDINATE), 2));
+			pow((*X - OUR_X_COORDINATE), 2) + pow((*Y - OUR_Y_COORDINATE), 2)); //distance of enemy to our camp
 
 	return;
 }
