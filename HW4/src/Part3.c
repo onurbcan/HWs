@@ -29,34 +29,20 @@
 #include <stdlib.h>
 #include "Part3.h"
 
-void open_file_read(char *file_path) {
-	if ((fptr = fopen(file_path, "r")) == NULL) {
-		printf("Error! File not found.");
-		exit(1);
-	}
-	return;
-}
-
-void open_file_write() {
-	if ((fptw = fopen("output.txt", "w")) == NULL) {
-		printf("Error! File not created.");
-		exit(1);
-	}
-	return;
-}
-
-void close_file(FILE *file_pointer) {
-	if (fclose(file_pointer) != 0) {
-		printf("Error! File not closed.");
-		exit(1);
-	}
-	return;
-}
-
 void track_machine(){
+	/*
 	do{
 
 	}while();
+	*/
+	int i, j;
+
+	for(i = 1 ; i <= 11 ; ++i){
+		for(j = 1 ; j <= 11 ; ++j){
+			printf(".\t");
+		}
+		printf("\n");
+	}
 
 	return;
 }
