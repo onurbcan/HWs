@@ -34,28 +34,29 @@
 void track_machine() {
 	int X = 0, Y = 0;
 	double D, R;
-	char command;
+	char command = 'R';
 
-	refresh_position(&X, &Y, &D, &R);
-	printf(
-			"Enemies X position: %d, Y position: %d, Displacement: %f, Distance to our camp: %f\n",
-			X, Y, D, R);
-	do {
+	while (command != 'E' || command != 'e') {
+		if (command == 'R' || command == 'r') {
+			refresh_position(&X, &Y, &D, &R);
+			printf(
+					"Enemies X position: %d, Y position: %d, Displacement: %f, Distance to our camp: %f\n",
+					X, Y, D, R);
+		} else if (command == 'E' || command == 'e') {
+			break;
+		}
 		printf("Command (R / E) waiting...: ");
 		scanf("%c", &command);
 		printf("\n");
-	} while (command != 'R' && command != 'E'); //to get a valid command
-	return;
+	}
 }
 
 void refresh_position(int *X, int *Y, double *D, double *R) {
 	int i, j;
-
 	srand(time(NULL));
 
 	temp_X = *X;
 	temp_Y = *Y;
-
 	*X = (rand() % 11) + 1;
 	*Y = (rand() % 11) + 1;
 
@@ -71,10 +72,8 @@ void refresh_position(int *X, int *Y, double *D, double *R) {
 		}
 		printf("\n");
 	}
-
 	*D = sqrt(pow((*X - temp_X), 2) + pow((*Y - temp_Y), 2)); //distance between current position and the last position of the enemy camp
 	*R = sqrt(
 			pow((*X - OUR_X_COORDINATE), 2) + pow((*Y - OUR_Y_COORDINATE), 2)); //distance of enemy to our camp
-
 	return;
 }
