@@ -30,11 +30,15 @@ void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result) {
 
 	if (!feof(fptr)) {
 		*num1 = getc(fptr);
+		//if(*num1 == '\n')
+			//*result = 0;
 	} else {
 		return;
 	} //fails and concludes if nothing in the file, otherwise gets first integer
 	if (!feof(fptr)) {
 		*num2 = getc(fptr);
+		//if(*num2 == '\n')
+			//*result = *num1 % 7;
 	} else {
 		*result = (ascii_converter(*num1)) % 7;
 		fprintf(fptw, "%d\n", *result);
@@ -42,6 +46,8 @@ void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result) {
 	} //fails and calculates if no second integer in the file, otherwise gets second integer
 	if (!feof(fptr)) {
 		*num3 = getc(fptr);
+		//if(*num3 == '\n')
+			//*result = (*num1 + *num2) % 7;
 	} else {
 		*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
 		fprintf(fptw, "%d\n", *result);
