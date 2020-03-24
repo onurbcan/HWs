@@ -31,32 +31,30 @@
 #include <math.h>
 #include "Part3.h"
 
-void track_machine(){
+void track_machine() {
 	/*
-	do{
+	 do{
 
-	}while();
-	*/
-	int X = 0,
-		Y = 0,
-		in;
+	 }while();
+	 */
+	int X = 0, Y = 0, in;
 
 	double R, //distance between current position and the last position of the enemy camp
-		D; //distance of enemy to our camp
+			D; //distance of enemy to our camp
 
-	do{
-	refresh_position(&X, &Y, &D, &R);
-	printf("Xtra: %d\n", X);
-	printf("Ytra: %d\n", Y);
-	printf("D: %f\n", D);
-	printf("R: %f\n", R);
-	printf("in value: ");
-	scanf("%d", &in);
-	}while(in != 0);
+	do {
+		refresh_position(&X, &Y, &D, &R);
+		printf("Xtra: %d\n", X);
+		printf("Ytra: %d\n", Y);
+		printf("D: %f\n", D);
+		printf("R: %f\n", R);
+		printf("in value: ");
+		scanf("%d", &in);
+	} while (in != 0);
 	return;
 }
 
-void refresh_position (int *X, int *Y, double *D, double *R){
+void refresh_position(int *X, int *Y, double *D, double *R) {
 	int i, j;
 
 	srand(time(NULL));
@@ -70,24 +68,22 @@ void refresh_position (int *X, int *Y, double *D, double *R){
 	*X = (rand() % 11) + 1;
 	*Y = (rand() % 11) + 1;
 
-
-
-
-	for(i = 1 ; i <= 11 ; ++i){ //y - coordinate
-		for(j = 1 ; j <= 11 ; ++j){ //x - coordinate
-			if(i == OUR_X_COORDINATE && j == OUR_Y_COORDINATE){
+	for (i = 1; i <= 11; ++i) { //y - coordinate
+		for (j = 1; j <= 11; ++j) { //x - coordinate
+			if (i == OUR_X_COORDINATE && j == OUR_Y_COORDINATE) {
 				printf("O\t");
-			}else if(i == *X && j == *Y){
+			} else if (i == *X && j == *Y) {
 				printf("E\t");
-			}else{
+			} else {
 				printf(".\t");
 			}
 		}
 		printf("\n");
 	}
 
-	*D = sqrt(pow((*X - temp_X),2) + pow((*Y - temp_Y),2));
-	*R = sqrt(pow((*X - OUR_X_COORDINATE),2) + pow((*Y - OUR_Y_COORDINATE),2));
+	*D = sqrt(pow((*X - temp_X), 2) + pow((*Y - temp_Y), 2));
+	*R = sqrt(
+			pow((*X - OUR_X_COORDINATE), 2) + pow((*Y - OUR_Y_COORDINATE), 2));
 
 	return;
 }
