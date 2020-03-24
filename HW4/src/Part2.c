@@ -71,5 +71,4 @@ int ascii_converter(int number) {
 	default:
 		return (0);
 	}
-	return (0);
 }
