@@ -57,8 +57,10 @@ void refresh_position(int *X, int *Y, double *D, double *R) {
 
 	temp_X = *X;
 	temp_Y = *Y;
-	*X = (rand() % 11) + 1;
-	*Y = (rand() % 11) + 1;
+	do {
+		*X = (rand() % 11) + 1;
+		*Y = (rand() % 11) + 1;
+	} while (*X == OUR_X_COORDINATE && *Y == OUR_Y_COORDINATE); //not to place enemy on our coordinate
 
 	for (i = 1; i <= 11; ++i) { //y - coordinate
 		for (j = 1; j <= 11; ++j) { //x - coordinate
