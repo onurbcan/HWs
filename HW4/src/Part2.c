@@ -25,31 +25,58 @@
 #include "Part1.h"
 #include "Part2.h"
 
+void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result) {
+	*result = -1; //to check later if result is greater than -1
+
+	if (!feof(fptr)) {
+		*num1 = getc(fptr);
+	} else {
+		return;
+	} //fails and concludes if nothing in the file, otherwise gets first integer
+	if (!feof(fptr)) {
+		*num2 = getc(fptr);
+	} else {
+		*result = (ascii_converter(*num1)) % 7;
+		fprintf(fptw, "%d\n", *result);
+		return;
+	} //fails and calculates if no second integer in the file, otherwise gets second integer
+	if (!feof(fptr)) {
+		*num3 = getc(fptr);
+	} else {
+		*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
+		fprintf(fptw, "%d\n", *result);
+		return;
+	} //fails and calculates if no third integer in the file, otherwise gets third integer
+}
+
 void deep_decrypt_and_print(char *file_path) {
 	int num1, num2, num3, result;
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
+	beginning_of_line_operation(&num1, &num2, &num3, &result);
 
-	do {
-		num1 = getc(fptr);
-		num2 = getc(fptr);
-		num3 = getc(fptr);
-
-		if(feof(fptr)){
-			close_file(fptr);
-			close_file(fptw);
-			return;
-		}else if (num3 == '\n') {
-			result = (ascii_converter(num1) + ascii_converter(num2)) % 7;
-			fprintf(fptw, "%d\n", result);
-		} else {
+	while (!feof(fptr)) { //if there is still integer in the file
+		if (num3 == '\n') { //to separate end of lines
+			fprintf(fptw, "\n");
+			beginning_of_line_operation(&num1, &num2, &num3, &result);
+			if (!(result > -1)) {
+				result = (ascii_converter(num1) + ascii_converter(num2)
+						+ ascii_converter(num3)) % 7;
+				fprintf(fptw, "%d", result);
+			}
+		} else { //regular calculation for 3 integers
 			result = (ascii_converter(num1) + ascii_converter(num2)
 					+ ascii_converter(num3)) % 7;
-			fseek(fptr, -2, SEEK_CUR);
 			fprintf(fptw, "%d", result);
 		}
-	}while (!feof(fptr));
+		num1 = num2; //shifting 1 integer each time
+		num2 = num3; //shifting 1 integer each time
+		num3 = getc(fptr); //getting a new integer for the third operand
+	}
+	close_file(fptr); //closing file to be read
+	close_file(fptw); //closing file to be written
+	return;
 }
 
 int ascii_converter(int number) {
