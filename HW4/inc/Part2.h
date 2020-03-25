@@ -8,7 +8,7 @@
 #ifndef INC_PART2_H_
 #define INC_PART2_H_
 
-void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result);
+void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, int *flag);
 void deep_decrypt_and_print(char *file_path);
 int ascii_converter(int number);
 
