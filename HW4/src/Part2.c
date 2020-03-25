@@ -71,8 +71,9 @@ void deep_decrypt_and_print(char *file_path) {
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
+	printf("1: %d\n", feof(fptr));
 	beginning_of_line_operation(&num1, &num2, &num3, &result, &flag);
-
+	printf("2: %d\n", feof(fptr));
 	while (!feof(fptr)) { //if there is still integer in the file
 		if (num3 == '\n') { //to separate end of lines
 			fprintf(fptw, "\n");
@@ -93,6 +94,7 @@ void deep_decrypt_and_print(char *file_path) {
 		num2 = num3; //shifting 1 integer each time
 		num3 = getc(fptr); //getting a new integer for the third operand
 	}
+	printf("3: %d\n", feof(fptr));
 	close_file(fptr); //closing file to be read
 	close_file(fptw); //closing file to be written
 	return;
