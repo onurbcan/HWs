@@ -29,29 +29,33 @@ void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, i
 	*result = -1; //to check later if result is greater than -1
 	*flag = 0; //to separate num3 == '\n' case for this function or a regular line
 
-	if (!feof(fptr)) {
+	if (!feof(fptr)) {	//1st if-statement
 		*num1 = getc(fptr);
 		if(*num1 == '\n'){
 			*result = 0;
-			fprintf(fptw, "%d\n", *result);
+			fprintf(fptw, "\n");
 			return;
 		}
 	} else {
 		return;
 	} //fails and concludes if nothing in the file, otherwise gets first integer
-	if (!feof(fptr)) {
+
+	if (!feof(fptr)) { //2nd if-statement
 		*num2 = getc(fptr);
 		if(*num2 == '\n'){
 			*result = (ascii_converter(*num1)) % 7;
 			fprintf(fptw, "%d\n", *result);
 			return;
 		}
+	} else if(feof(fptr)) {
+		return;
 	} else {
 		*result = (ascii_converter(*num1)) % 7;
 		fprintf(fptw, "%d\n", *result);
 		return;
 	} //fails and calculates if no second integer in the file, otherwise gets second integer
-	if (!feof(fptr)) {
+
+	if (!feof(fptr)) { //3rd if-statement
 		*num3 = getc(fptr);
 		if(*num3 == '\n'){
 			*flag = 1;
@@ -59,6 +63,8 @@ void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, i
 			fprintf(fptw, "%d\n", *result);
 			return;
 		}
+	} else if(feof(fptr)) {
+		return;
 	} else {
 		*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
 		fprintf(fptw, "%d\n", *result);
@@ -71,9 +77,8 @@ void deep_decrypt_and_print(char *file_path) {
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
-	printf("1: %d\n", feof(fptr));
 	beginning_of_line_operation(&num1, &num2, &num3, &result, &flag);
-	printf("2: %d\n", feof(fptr));
+
 	while (!feof(fptr)) { //if there is still integer in the file
 		if (num3 == '\n') { //to separate end of lines
 			fprintf(fptw, "\n");
@@ -94,7 +99,6 @@ void deep_decrypt_and_print(char *file_path) {
 		num2 = num3; //shifting 1 integer each time
 		num3 = getc(fptr); //getting a new integer for the third operand
 	}
-	printf("3: %d\n", feof(fptr));
 	close_file(fptr); //closing file to be read
 	close_file(fptw); //closing file to be written
 	return;
