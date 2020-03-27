@@ -25,12 +25,58 @@
 #include "Part1.h"
 #include "Part2.h"
 
+int check_element(int *num, int num_version){
+	if(feof(fptr)) {
+		close_file(fptr); //closing file to be read
+		close_file(fptw); //closing file to be written
+		return 0;
+	} else if(*num == 10) { //new line
+		fprintf(fptw, "\n");
+		return 0;
+	} else if(!(*num >= 48 && *num <= 54)) {
+		//if(num_version == 2)
+			//fprintf(fptw, "%d", num1 % 7)
+		//else if(num_version == 3)
+			//fprintf(fptw, "%d", (num1 + num2) % 7)
+		printf("Error! Invalid character");
+		close_file(fptr); //closing file to be read
+		close_file(fptw); //closing file to be written
+		return 0;
+	} else {
+		*num = *num - 48;
+		return 1;
+	}
+
+}
+
+void deep_decrypt_and_print(char *file_path) {
+	int num1, num2, num3, result;
+
+	open_file_read(file_path);
+	open_file_write("output.txt");
+
+	num1 = getc(fptr);
+	if(check_element(&num1, 1) == 1) {
+		num2 = getc(fptr);
+	}
+	if(check_element(&num2, 2) == 1) {
+		num3 = getc(fptr);
+	}
+	if(check_element(&num3, 3) == 1) {
+		num3 = getc(fptr);
+	}
+
+
+	return;
+}
+
+/*
 void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, int *flag) {
 	*result = -1; //to check later if result is greater than -1
 	*flag = 0; //to separate num3 == '\n' case for this function or a regular line
 
-	if (!feof(fptr)) {	//1st if-statement
-		*num1 = getc(fptr);
+	if (!feof(fptr)) {	//1st number to read
+		*num1 = fgetc(fptr);
 		if(*num1 == '\n'){
 			*result = 0;
 			fprintf(fptw, "\n");
@@ -40,36 +86,40 @@ void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, i
 		return;
 	} //fails and concludes if nothing in the file, otherwise gets first integer
 
-	if (!feof(fptr)) { //2nd if-statement
-		*num2 = getc(fptr);
+	if(feof(fptr)) {
+			return;
+	}
+
+	if (!feof(fptr)) { //2nd number to read
+		*num2 = fgetc(fptr);
 		if(*num2 == '\n'){
 			*result = (ascii_converter(*num1)) % 7;
 			fprintf(fptw, "%d\n", *result);
 			return;
 		}
-	} else if(feof(fptr)) {
-		return;
 	} else {
 		*result = (ascii_converter(*num1)) % 7;
 		fprintf(fptw, "%d\n", *result);
 		return;
 	} //fails and calculates if no second integer in the file, otherwise gets second integer
 
-	if (!feof(fptr)) { //3rd if-statement
-		*num3 = getc(fptr);
+	if (!feof(fptr)) { //3rd number to read
+		*num3 = fgetc(fptr);
 		if(*num3 == '\n'){
 			*flag = 1;
 			*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
 			fprintf(fptw, "%d\n", *result);
 			return;
 		}
-	} else if(feof(fptr)) {
-		return;
 	} else {
 		*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
 		fprintf(fptw, "%d\n", *result);
 		return;
 	} //fails and calculates if no third integer in the file, otherwise gets third integer
+
+	if(feof(fptr)) {
+		return;
+	}
 }
 
 void deep_decrypt_and_print(char *file_path) {
@@ -97,7 +147,7 @@ void deep_decrypt_and_print(char *file_path) {
 		}
 		num1 = num2; //shifting 1 integer each time
 		num2 = num3; //shifting 1 integer each time
-		num3 = getc(fptr); //getting a new integer for the third operand
+		num3 = fgetc(fptr); //getting a new integer for the third operand
 	}
 	close_file(fptr); //closing file to be read
 	close_file(fptw); //closing file to be written
@@ -124,3 +174,4 @@ int ascii_converter(int number) {
 		return (0);
 	}
 }
+*/
