@@ -14,7 +14,7 @@
 #include "Part2.h"
 
 int main(int argc, char **argv) {
-	//decrypt_and_print(argv[1]);
+	decrypt_and_print(argv[1]);
 	deep_decrypt_and_print(argv[2]);
 	puts("!!!Hello World!!!"); /* prints !!!Hello World!!! */
 	return EXIT_SUCCESS;
