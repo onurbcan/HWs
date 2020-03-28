@@ -25,23 +25,25 @@
 #include "Part1.h"
 #include "Part2.h"
 
-/* VERSION 3 */
-void deep_decrypt_and_print(char *file_path){
-	int num1, num2, num3, result;
+void deep_decrypt_and_print(char *file_path) {
+	int num1, num2, num3, new_line;
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
 
-	do{
+	do {
+		new_line = 0;
+
 		num1 = getc(fptr);
-		if(feof(fptr)) {
+		if (feof(fptr)) {
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
-		} else if(num1 == 10){
+		} else if (num1 == 10) {
 			fprintf(fptw, "\n");
+			new_line = 1;
 			continue;
-		} else if(!(num1 >= 48 && num1 <= 54)){
+		} else if (!(num1 >= 48 && num1 <= 54)) {
 			printf("Error! Invalid character");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
@@ -49,19 +51,17 @@ void deep_decrypt_and_print(char *file_path){
 		}
 
 		num2 = getc(fptr);
-		if(feof(fptr)) {
-			result = (num1 - 48) % 7;
-			fprintf(fptw, "%d", result);
+		if (feof(fptr)) {
+			fprintf(fptw, "%d", (num1 - 48) % 7);
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
-		} else if(num2 == 10){
-			result = (num1 - 48) % 7;
-			fprintf(fptw, "%d\n", result);
+		} else if (num2 == 10) {
+			fprintf(fptw, "%d\n", (num1 - 48) % 7);
+			new_line = 1;
 			continue;
-		} else if(!(num2 >= 48 && num2 <= 54)){
-			result = (num1 - 48) % 7;
-			fprintf(fptw, "%d", result);
+		} else if (!(num2 >= 48 && num2 <= 54)) {
+			fprintf(fptw, "%d", (num1 - 48) % 7);
 			printf("Error! Invalid character");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
@@ -69,219 +69,30 @@ void deep_decrypt_and_print(char *file_path){
 		}
 
 		num3 = getc(fptr);
-		do{
-			if(feof(fptr)) {
-				result = ((num1 - 48) + (num2 - 48)) % 7;
-				fprintf(fptw, "%d", result);
-				result = (num2 - 48) % 7;
-				fprintf(fptw, "%d", result);
+		do {
+			if (feof(fptr)) {
+				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
+				fprintf(fptw, "%d", (num2 - 48) % 7);
 				close_file(fptr); //closing file to be read
 				close_file(fptw); //closing file to be written
 				return;
-			} else if(num3 == 10){
-				result = ((num1 - 48) + (num2 - 48)) % 7;
-				fprintf(fptw, "%d", result);
-				result = (num2 - 48) % 7;
-				fprintf(fptw, "%d\n", result);
-				continue;
-			} else if(!(num3 >= 48 && num3 <= 54)){
-				result = ((num1 - 48) + (num2 - 48)) % 7;
-				fprintf(fptw, "%d", result);
+			} else if (num3 == 10) {
+				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
+				fprintf(fptw, "%d\n", (num2 - 48) % 7);
+				new_line = 1;
+			} else if (!(num3 >= 48 && num3 <= 54)) {
+				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
 				printf("Error! Invalid character");
 				close_file(fptr); //closing file to be read
 				close_file(fptw); //closing file to be written
 				return;
 			} else {
+				fprintf(fptw, "%d",
+						((num1 - 48) + (num2 - 48) + (num3 - 48)) % 7);
 				num1 = num2;
 				num2 = num3;
 				num3 = getc(fptr);
 			}
-		} while(1);
-	}while(1);
+		} while (new_line != 1);
+	} while (1);
 }
-
-
-/* VERSION 2
-void deep_decrypt_and_print(char *file_path) {
-	int num1, num2, num3, new_line;
-
-	open_file_read(file_path);
-	open_file_write("output.txt");
-
-	while(1) {
-		new_line = 0;
-		num1 = getc(fptr);
-		if(check_element(num1, num2, num3, 1, &new_line) == 1) {
-			num2 = getc(fptr);
-		}
-		if(check_element(num1, num2, num3, 2, &new_line) == 1) {
-			num3 = getc(fptr);
-		} else {
-			return;
-		}
-		while(check_element(num1, num2, num3, 3, &new_line)){
-			if(new_line != 1) {
-				num1 = num2;
-				num2 = num3;
-				num3 = getc(fptr);
-			}
-		}
-	}
-}
-
-int check_element(int num1, int num2, int num3, int num_version, int *new_line){
-	int num, status;
-
-	if(num_version == 1)
-		num = num1;
-	else if(num_version == 2)
-		num = num2;
-	else if(num_version == 3)
-		num = num3;
-
-	if(feof(fptr)) {
-		if(num_version == 2) {
-			fprintf(fptw, "%d", (num1 - 48) % 7);
-		} else if(num_version == 3) {
-			fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
-			fprintf(fptw, "%d", (num2 - 48) % 7);
-		}
-		close_file(fptr); //closing file to be read
-		close_file(fptw); //closing file to be written
-		status = 0;
-	} else if(num == 10) { //new line
-		*new_line = 1;
-		if(num_version == 1) {
-			fprintf(fptw, "\n");
-		} else if(num_version == 2) {
-			fprintf(fptw, "%d\n", (num1 - 48) % 7);
-		} else if(num_version == 3) {
-			fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
-			fprintf(fptw, "%d\n", (num2 - 48) % 7);
-		}
-		status = 1;
-	} else if(!(num >= 48 && num <= 54)) {
-		if(num_version == 2)
-			fprintf(fptw, "%d", (num1 - 48) % 7);
-		else if(num_version == 3)
-			fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
-		printf("Error! Invalid character");
-		close_file(fptr); //closing file to be read
-		close_file(fptw); //closing file to be written
-		status = 0;
-	} else {
-		if(num_version == 3) {
-			fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48) + (num3 - 48)) % 7);
-		}
-		status = 1;
-	}
-
-	return (status);
-}
-*/
-
-/* VERSION 1
-void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, int *flag) {
-	*result = -1; //to check later if result is greater than -1
-	*flag = 0; //to separate num3 == '\n' case for this function or a regular line
-
-	if (!feof(fptr)) {	//1st number to read
-		*num1 = fgetc(fptr);
-		if(*num1 == '\n'){
-			*result = 0;
-			fprintf(fptw, "\n");
-			return;
-		}
-	} else {
-		return;
-	} //fails and concludes if nothing in the file, otherwise gets first integer
-
-	if(feof(fptr)) {
-			return;
-	}
-
-	if (!feof(fptr)) { //2nd number to read
-		*num2 = fgetc(fptr);
-		if(*num2 == '\n'){
-			*result = (ascii_converter(*num1)) % 7;
-			fprintf(fptw, "%d\n", *result);
-			return;
-		}
-	} else {
-		*result = (ascii_converter(*num1)) % 7;
-		fprintf(fptw, "%d\n", *result);
-		return;
-	} //fails and calculates if no second integer in the file, otherwise gets second integer
-
-	if (!feof(fptr)) { //3rd number to read
-		*num3 = fgetc(fptr);
-		if(*num3 == '\n'){
-			*flag = 1;
-			*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
-			fprintf(fptw, "%d\n", *result);
-			return;
-		}
-	} else {
-		*result = (ascii_converter(*num1) + ascii_converter(*num2)) % 7;
-		fprintf(fptw, "%d\n", *result);
-		return;
-	} //fails and calculates if no third integer in the file, otherwise gets third integer
-
-	if(feof(fptr)) {
-		return;
-	}
-}
-
-void deep_decrypt_and_print(char *file_path) {
-	int num1, num2, num3, result, flag;
-
-	open_file_read(file_path);
-	open_file_write("output.txt");
-	beginning_of_line_operation(&num1, &num2, &num3, &result, &flag);
-
-	while (!feof(fptr)) { //if there is still integer in the file
-		if (num3 == '\n') { //to separate end of lines
-			fprintf(fptw, "\n");
-			do{
-				beginning_of_line_operation(&num1, &num2, &num3, &result, &flag);
-				if (!(result > -1)) {
-					result = (ascii_converter(num1) + ascii_converter(num2)
-							+ ascii_converter(num3)) % 7;
-					fprintf(fptw, "%d", result);
-				}
-			} while (num1 == '\n' || num2 == '\n' || flag == 1); //doing the function recursion for 0, 1, 2 integer in a line case
-		} else { //regular calculation for 3 integers
-			result = (ascii_converter(num1) + ascii_converter(num2)
-					+ ascii_converter(num3)) % 7;
-			fprintf(fptw, "%d", result);
-		}
-		num1 = num2; //shifting 1 integer each time
-		num2 = num3; //shifting 1 integer each time
-		num3 = fgetc(fptr); //getting a new integer for the third operand
-	}
-	close_file(fptr); //closing file to be read
-	close_file(fptw); //closing file to be written
-	return;
-}
-
-int ascii_converter(int number) {
-	switch (number) {
-	case ZERO:
-		return (0);
-	case ONE:
-		return (1);
-	case TWO:
-		return (2);
-	case THREE:
-		return (3);
-	case FOUR:
-		return (4);
-	case FIVE:
-		return (5);
-	case SIX:
-		return (6);
-	default:
-		return (0);
-	}
-}
-*/
