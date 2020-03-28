@@ -25,6 +25,83 @@
 #include "Part1.h"
 #include "Part2.h"
 
+/* VERSION 3 */
+void deep_decrypt_and_print(char *file_path){
+	int num1, num2, num3, result;
+
+	open_file_read(file_path);
+	open_file_write("output.txt");
+
+	do{
+		num1 = getc(fptr);
+		if(feof(fptr)) {
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		} else if(num1 == 10){
+			fprintf(fptw, "\n");
+			continue;
+		} else if(!(num1 >= 48 && num1 <= 54)){
+			printf("Error! Invalid character");
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		}
+
+		num2 = getc(fptr);
+		if(feof(fptr)) {
+			result = (num1 - 48) % 7;
+			fprintf(fptw, "%d", result);
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		} else if(num2 == 10){
+			result = (num1 - 48) % 7;
+			fprintf(fptw, "%d\n", result);
+			continue;
+		} else if(!(num2 >= 48 && num2 <= 54)){
+			result = (num1 - 48) % 7;
+			fprintf(fptw, "%d", result);
+			printf("Error! Invalid character");
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		}
+
+		num3 = getc(fptr);
+		do{
+			if(feof(fptr)) {
+				result = ((num1 - 48) + (num2 - 48)) % 7;
+				fprintf(fptw, "%d", result);
+				result = (num2 - 48) % 7;
+				fprintf(fptw, "%d", result);
+				close_file(fptr); //closing file to be read
+				close_file(fptw); //closing file to be written
+				return;
+			} else if(num3 == 10){
+				result = ((num1 - 48) + (num2 - 48)) % 7;
+				fprintf(fptw, "%d", result);
+				result = (num2 - 48) % 7;
+				fprintf(fptw, "%d\n", result);
+				continue;
+			} else if(!(num3 >= 48 && num3 <= 54)){
+				result = ((num1 - 48) + (num2 - 48)) % 7;
+				fprintf(fptw, "%d", result);
+				printf("Error! Invalid character");
+				close_file(fptr); //closing file to be read
+				close_file(fptw); //closing file to be written
+				return;
+			} else {
+				num1 = num2;
+				num2 = num3;
+				num3 = getc(fptr);
+			}
+		} while(1);
+	}while(1);
+}
+
+
+/* VERSION 2
 void deep_decrypt_and_print(char *file_path) {
 	int num1, num2, num3, new_line;
 
@@ -101,8 +178,9 @@ int check_element(int num1, int num2, int num3, int num_version, int *new_line){
 
 	return (status);
 }
+*/
 
-/*
+/* VERSION 1
 void beginning_of_line_operation(int *num1, int *num2, int *num3, int *result, int *flag) {
 	*result = -1; //to check later if result is greater than -1
 	*flag = 0; //to separate num3 == '\n' case for this function or a regular line
