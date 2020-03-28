@@ -25,49 +25,80 @@
 #include "Part1.h"
 #include "Part2.h"
 
-int check_element(int *num, int num_version){
-	if(feof(fptr)) {
-		close_file(fptr); //closing file to be read
-		close_file(fptw); //closing file to be written
-		return 0;
-	} else if(*num == 10) { //new line
-		fprintf(fptw, "\n");
-		return 0;
-	} else if(!(*num >= 48 && *num <= 54)) {
-		//if(num_version == 2)
-			//fprintf(fptw, "%d", num1 % 7)
-		//else if(num_version == 3)
-			//fprintf(fptw, "%d", (num1 + num2) % 7)
-		printf("Error! Invalid character");
-		close_file(fptr); //closing file to be read
-		close_file(fptw); //closing file to be written
-		return 0;
-	} else {
-		*num = *num - 48;
-		return 1;
-	}
-
-}
-
 void deep_decrypt_and_print(char *file_path) {
-	int num1, num2, num3, result;
+	int num1, num2, num3;
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
 
+
 	num1 = getc(fptr);
-	if(check_element(&num1, 1) == 1) {
+	if(check_element(num1, num2, num3, 1) == 1) {
 		num2 = getc(fptr);
 	}
-	if(check_element(&num2, 2) == 1) {
+	if(check_element(num1, num2, num3, 2) == 1) {
 		num3 = getc(fptr);
 	}
-	if(check_element(&num3, 3) == 1) {
+	while(check_element(num1, num2, num3, 3)){
+		num1 = num2;
+		num2 = num3;
 		num3 = getc(fptr);
 	}
 
 
 	return;
+}
+
+void beginning_of_line_operation(){
+
+}
+
+int check_element(int *num1, *num2, *num3, int num_version){
+	int num, status;
+	if(num_version == 1)
+		num = *num1;
+	else if(num_version == 2)
+		num = *num2;
+	else if(num_version == 3)
+		num = *num3;
+
+	if(feof(fptr)) {
+		if(num_version == 2) {
+			fprintf(fptw, "%d", (*num1 - 48) % 7);
+		} else if(num_version == 3) {
+			fprintf(fptw, "%d", ((*num1 - 48) + (*num2 - 48)) % 7);
+			fprintf(fptw, "%d", (*num2 - 48) % 7);
+		}
+		close_file(fptr); //closing file to be read
+		close_file(fptw); //closing file to be written
+		status = 0;
+	} else if(num == 10) { //new line
+		if(num_version == 1) {
+			fprintf(fptw, "\n");
+		} else if(num_version == 2) {
+			fprintf(fptw, "%d\n", (*num1 - 48) % 7);
+		} else if(num_version == 3) {
+			fprintf(fptw, "%d", ((*num1 - 48) + (*num2 - 48)) % 7);
+			fprintf(fptw, "%d\n", (*num2 - 48) % 7);
+		}
+		status = 0;
+	} else if(!(num >= 48 && num <= 54)) {
+		if(num_version == 2)
+			fprintf(fptw, "%d", (*num1 - 48) % 7);
+		else if(num_version == 3)
+			fprintf(fptw, "%d", ((*num1 - 48) + (*num2 - 48)) % 7);
+		printf("Error! Invalid character");
+		close_file(fptr); //closing file to be read
+		close_file(fptw); //closing file to be written
+		status = 0;
+	} else {
+		if(num_version == 3) {
+			fprintf(fptw, "%d", ((*num1 - 48) + (*num2 - 48) + (*num3 - 48)) % 7);
+		}
+		status = 1;
+	}
+
+	return (status);
 }
 
 /*
