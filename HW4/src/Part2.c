@@ -44,7 +44,7 @@ void deep_decrypt_and_print(char *file_path) {
 			new_line = 1;
 			continue;
 		} else if (!(num1 >= 48 && num1 <= 54)) {
-			printf("Error! Invalid character");
+			printf("Error! Invalid character.\n");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
@@ -62,7 +62,7 @@ void deep_decrypt_and_print(char *file_path) {
 			continue;
 		} else if (!(num2 >= 48 && num2 <= 54)) {
 			fprintf(fptw, "%d", (num1 - 48) % 7);
-			printf("Error! Invalid character");
+			printf("Error! Invalid character.\n");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
@@ -82,7 +82,7 @@ void deep_decrypt_and_print(char *file_path) {
 				new_line = 1;
 			} else if (!(num3 >= 48 && num3 <= 54)) {
 				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
-				printf("Error! Invalid character");
+				printf("Error! Invalid character.\n");
 				close_file(fptr); //closing file to be read
 				close_file(fptw); //closing file to be written
 				return;
