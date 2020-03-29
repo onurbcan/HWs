@@ -26,57 +26,75 @@
 #include "Part4.h"
 
 void encrypt_messages(char *file_path) {
-	int num1, num2, num3, new_line;
+	int num1, num2, num3;
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
 
-	do{
-		new_line = 0;
-
+	do {
 		num1 = getc(fptr);
-		if (feof(fptr)) {
+		if (num1 == EOF) {
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
 		} else if (num1 == 10) {
 			fprintf(fptw, "\n");
-			new_line = 1;
-			continue;
-		} else if (!(num1 == 32 || num1 == 45 || num1 == 95 || num1 == 124 || num1 == 47 || num1 == 92 || num1 == 79)) {
+			break;
+		} else if (!(num1 == 32 || num1 == 45 || num1 == 95 || num1 == 124
+				|| num1 == 47 || num1 == 92 || num1 == 79)) {
 			printf("Error! Invalid character.\n");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
+		} else {
+			num1 = encrypt_characters(num1);
+			fprintf(fptw, "%d", num1 % 7);
 		}
 
-
-	} while(1);
-
-
-	return;
-}
-
-/* VERSION  1
-void encrypt_messages(char *file_path) {
-	char character;
-	open_file_read(file_path); //fptr file pointer read
-	open_file_write("encrypted_p4.img"); //fptw file pointer write
-	while (!feof(fptr)) {
-		character = fgetc(fptr);
-		fprintf(fptw, "%d", encrypt_characters(character));
-		if (character == '\n') {
+		num2 = getc(fptr);
+		if (num2 == EOF) {
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		} else if (num2 == 10) {
 			fprintf(fptw, "\n");
+			break;
+		} else if (!(num2 == 32 || num2 == 45 || num2 == 95 || num2 == 124
+				|| num2 == 47 || num2 == 92 || num2 == 79)) {
+			printf("Error! Invalid character.\n");
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		} else {
+			num2 = encrypt_characters(num2);
+			fprintf(fptw, "%d", (num1 + num2) % 7);
 		}
-	}
-	close_file(fptr);
-	close_file(fptw);
 
-	open_file_read("encrypted_p4.img"); //fptr file pointer read
-
-	return;
+		num3 = getc(fptr);
+		do {
+			if (num3 == EOF) {
+				close_file(fptr); //closing file to be read
+				close_file(fptw); //closing file to be written
+				return;
+			} else if (num3 == 10) {
+				fprintf(fptw, "\n");
+				break;
+			} else if (!(num3 == 32 || num3 == 45 || num3 == 95 || num3 == 124
+					|| num3 == 47 || num3 == 92 || num3 == 79)) {
+				printf("Error! Invalid character.\n");
+				close_file(fptr); //closing file to be read
+				close_file(fptw); //closing file to be written
+				return;
+			} else {
+				num3 = encrypt_characters(num3);
+				fprintf(fptw, "%d", (num1 + num2 + num3) % 7);
+				num1 = num2;
+				num2 = num3;
+				num3 = getc(fptr);
+			}
+		} while (1);
+	} while (1);
 }
-*/
 
 int encrypt_characters(int character) {
 	switch (character) {

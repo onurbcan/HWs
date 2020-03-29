@@ -9,6 +9,6 @@
 #define INC_PART4_H_
 
 void encrypt_messages(char *file_path);
-int encrypt_characters(char character);
+int encrypt_characters(int character);
 
 #endif /* INC_PART4_H_ */
