@@ -33,7 +33,7 @@ void deep_decrypt_and_print(char *file_path) {
 
 	do {
 		num1 = getc(fptr);
-		if (feof(fptr)) {
+		if (num1 == EOF) {
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
 			return;
@@ -48,7 +48,7 @@ void deep_decrypt_and_print(char *file_path) {
 		}
 
 		num2 = getc(fptr);
-		if (feof(fptr)) {
+		if (num2 == EOF) {
 			fprintf(fptw, "%d", (num1 - 48) % 7);
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
@@ -65,13 +65,20 @@ void deep_decrypt_and_print(char *file_path) {
 		}
 
 		num3 = getc(fptr);
-		while(!feof(fptr)) {
-			if (num3 == 10) {
+		do {
+			if(num3 == EOF){
+				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
+				fprintf(fptw, "%d", (num2 - 48) % 7);
+				close_file(fptr); //closing file to be read
+				close_file(fptw); //closing file to be written
+				return;
+			} else if (num3 == 10) {
 				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
 				fprintf(fptw, "%d\n", (num2 - 48) % 7);
 				break;
 			} else if (!(num3 >= 48 && num3 <= 54)) {
 				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
+				fprintf(fptw, "%d", (num2 - 48) % 7);
 				printf("Error! Invalid character.\n");
 				close_file(fptr); //closing file to be read
 				close_file(fptw); //closing file to be written
@@ -83,11 +90,6 @@ void deep_decrypt_and_print(char *file_path) {
 				num2 = num3;
 				num3 = getc(fptr);
 			}
-		}
-		fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
-		fprintf(fptw, "%d", (num2 - 48) % 7);
-		close_file(fptr); //closing file to be read
-		close_file(fptw); //closing file to be written
-		return;
+		} while(1);
 	} while (1);
 }
