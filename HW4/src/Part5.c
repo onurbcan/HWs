@@ -34,12 +34,19 @@ void menu() {
 
 void menu_cases(int menu_index){
 	switch (menu_index) {
-	case (0):
-		decrypt_and_print("files/encrypted_p1.img");
 	case (1):
-		deep_decrypt_and_print("files/encrypted_p2.img");
+		decrypt_and_print("files/encrypted_p1.img");
+		break;
 	case (2):
-
-		"files/decrypted_p4.img"
+		deep_decrypt_and_print("files/encrypted_p2.img");
+		break;
+	case (3):
+		track_machine();
+		break;
+	case (4):
+		encrypt_messages("files/decrypted_p4.img");
+		break;
+	case (5):
+		break;
 	return;
 }
