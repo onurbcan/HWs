@@ -26,14 +26,12 @@
 #include "Part2.h"
 
 void deep_decrypt_and_print(char *file_path) {
-	int num1, num2, num3, new_line;
+	int num1, num2, num3;
 
 	open_file_read(file_path);
 	open_file_write("output.txt");
 
 	do {
-		new_line = 0;
-
 		num1 = getc(fptr);
 		if (feof(fptr)) {
 			close_file(fptr); //closing file to be read
@@ -41,8 +39,7 @@ void deep_decrypt_and_print(char *file_path) {
 			return;
 		} else if (num1 == 10) {
 			fprintf(fptw, "\n");
-			new_line = 1;
-			continue;
+			break;
 		} else if (!(num1 >= 48 && num1 <= 54)) {
 			printf("Error! Invalid character.\n");
 			close_file(fptr); //closing file to be read
@@ -58,8 +55,7 @@ void deep_decrypt_and_print(char *file_path) {
 			return;
 		} else if (num2 == 10) {
 			fprintf(fptw, "%d\n", (num1 - 48) % 7);
-			new_line = 1;
-			continue;
+			break;
 		} else if (!(num2 >= 48 && num2 <= 54)) {
 			fprintf(fptw, "%d", (num1 - 48) % 7);
 			printf("Error! Invalid character.\n");
@@ -69,17 +65,11 @@ void deep_decrypt_and_print(char *file_path) {
 		}
 
 		num3 = getc(fptr);
-		do {
-			if (feof(fptr)) {
-				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
-				fprintf(fptw, "%d", (num2 - 48) % 7);
-				close_file(fptr); //closing file to be read
-				close_file(fptw); //closing file to be written
-				return;
-			} else if (num3 == 10) {
+		while(!feof(fptr)) {
+			if (num3 == 10) {
 				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
 				fprintf(fptw, "%d\n", (num2 - 48) % 7);
-				new_line = 1;
+				break;
 			} else if (!(num3 >= 48 && num3 <= 54)) {
 				fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
 				printf("Error! Invalid character.\n");
@@ -93,6 +83,11 @@ void deep_decrypt_and_print(char *file_path) {
 				num2 = num3;
 				num3 = getc(fptr);
 			}
-		} while (new_line != 1);
+		}
+		fprintf(fptw, "%d", ((num1 - 48) + (num2 - 48)) % 7);
+		fprintf(fptw, "%d", (num2 - 48) % 7);
+		close_file(fptr); //closing file to be read
+		close_file(fptw); //closing file to be written
+		return;
 	} while (1);
 }
