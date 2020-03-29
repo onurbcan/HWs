@@ -94,41 +94,43 @@ void encrypt_messages(char *file_path) {
 }
 
 int check_invalid_characters(int character) {
-	if(character == 32) // ‘ ’
-		return (0);
-	else if(character == 45) // ‘-’
-		return (0);
-	else if(character == 95) // ‘_’
-		return (0);
-	else if(character == 124) // ‘|’
-		return (0);
-	else if(character == 47) // ‘/’
-		return (0);
-	else if(character == 92) // ‘\’
-		return (0);
-	else if(character == 79) // ‘O‘
-		return (0);
-	else
-		return (1);
-}
-
-int encrypt_characters(int character) {
 	switch (character) {
-	case ' ':
+	case 32: // ‘ ’
 		return (0);
-	case '-':
-		return (1);
-	case '_':
-		return (2);
-	case '|':
-		return (3);
-	case '/':
-		return (4);
-	case '\\': //backslash (\) character
-		return (5);
-	case 'O':
-		return (6);
+	case 45: // ‘-’
+		return (0);
+	case 95: // ‘_’
+		return (0);
+	case 124: // ‘|’
+		return (0);
+	case 47: // ‘/’
+		return (0);
+	case 92: // ‘\’
+		return (0);
+	case 79: // ‘O‘
+		return (0);
 	default:
-		return (0);
+		return (1);
 	}
 }
+
+	int encrypt_characters(int character) {
+		switch (character) {
+		case ' ':
+			return (0);
+		case '-':
+			return (1);
+		case '_':
+			return (2);
+		case '|':
+			return (3);
+		case '/':
+			return (4);
+		case '\\': //backslash (\) character
+			return (5);
+		case 'O':
+			return (6);
+		default:
+			return (0);
+		}
+	}
