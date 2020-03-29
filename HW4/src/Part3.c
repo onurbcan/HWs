@@ -32,16 +32,16 @@
 #include "Part3.h"
 
 void track_machine() {
-	int X = 0, Y = 0;
-	double D, R;
+	int x = 0, y = 0;
+	double d, r;
 	char command = 'R';
 
 	while (command != 'E' || command != 'e') {
 		if (command == 'R' || command == 'r') {
-			refresh_position(&X, &Y, &D, &R);
+			refresh_position(&x, &y, &d, &r);
 			printf(
 					"Enemies X position: %d, Y position: %d, Displacement: %f, Distance to our camp: %f\n",
-					X, Y, D, R);
+					x, y, d, r);
 		} else if (command == 'E' || command == 'e') {
 			break;
 		}
@@ -51,22 +51,22 @@ void track_machine() {
 	}
 }
 
-void refresh_position(int *X, int *Y, double *D, double *R) {
-	int i, j;
+void refresh_position(int *x, int *y, double *d, double *r) {
+	int i, j, temp_x, temp_y;
 	srand(time(NULL));
 
-	temp_X = *X;
-	temp_Y = *Y;
+	temp_x = *x;
+	temp_y = *y;
 	do {
-		*X = (rand() % 11) + 1;
-		*Y = (rand() % 11) + 1;
-	} while (*X == OUR_X_COORDINATE && *Y == OUR_Y_COORDINATE); //not to place enemy on our coordinate
+		*x = (rand() % 11) + 1;
+		*y = (rand() % 11) + 1;
+	} while (*x == OUR_X_COORDINATE && *y == OUR_Y_COORDINATE); //not to place enemy on our coordinate
 
 	for (i = 1; i <= 11; ++i) { //y - coordinate
 		for (j = 1; j <= 11; ++j) { //x - coordinate
 			if (i == OUR_X_COORDINATE && j == OUR_Y_COORDINATE) {
 				printf("O\t");
-			} else if (i == *X && j == *Y) {
+			} else if (i == *x && j == *y) {
 				printf("E\t");
 			} else {
 				printf(".\t");
@@ -74,8 +74,8 @@ void refresh_position(int *X, int *Y, double *D, double *R) {
 		}
 		printf("\n");
 	}
-	*D = sqrt(pow((*X - temp_X), 2) + pow((*Y - temp_Y), 2)); //distance between current position and the last position of the enemy camp
-	*R = sqrt(
-			pow((*X - OUR_X_COORDINATE), 2) + pow((*Y - OUR_Y_COORDINATE), 2)); //distance of enemy to our camp
+	*d = sqrt(pow((*x - temp_x), 2) + pow((*y - temp_y), 2)); //distance between current position and the last position of the enemy camp
+	*r = sqrt(
+			pow((*x - OUR_X_COORDINATE), 2) + pow((*y - OUR_Y_COORDINATE), 2)); //distance of enemy to our camp
 	return;
 }
