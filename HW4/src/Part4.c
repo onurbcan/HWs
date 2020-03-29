@@ -26,6 +26,39 @@
 #include "Part4.h"
 
 void encrypt_messages(char *file_path) {
+	int num1, num2, num3, new_line;
+
+	open_file_read(file_path);
+	open_file_write("output.txt");
+
+	do{
+		new_line = 0;
+
+		num1 = getc(fptr);
+		if (feof(fptr)) {
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		} else if (num1 == 10) {
+			fprintf(fptw, "\n");
+			new_line = 1;
+			continue;
+		} else if (!(num1 == 32 || num1 == 45 || num1 == 95 || num1 == 124 || num1 == 47 || num1 == 92 || num1 == 79)) {
+			printf("Error! Invalid character.\n");
+			close_file(fptr); //closing file to be read
+			close_file(fptw); //closing file to be written
+			return;
+		}
+
+
+	} while(1);
+
+
+	return;
+}
+
+/* VERSION  1
+void encrypt_messages(char *file_path) {
 	char character;
 	open_file_read(file_path); //fptr file pointer read
 	open_file_write("encrypted_p4.img"); //fptw file pointer write
@@ -43,8 +76,9 @@ void encrypt_messages(char *file_path) {
 
 	return;
 }
+*/
 
-int encrypt_characters(char character) {
+int encrypt_characters(int character) {
 	switch (character) {
 	case ' ':
 		return (0);
@@ -58,6 +92,8 @@ int encrypt_characters(char character) {
 		return (4);
 	case '\\': //backslash (\) character
 		return (5);
+	case 'O':
+		return (6);
 	default:
 		return (0);
 	}
