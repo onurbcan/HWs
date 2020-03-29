@@ -40,8 +40,7 @@ void encrypt_messages(char *file_path) {
 		} else if (num1 == 10) {
 			fprintf(fptw, "\n");
 			continue;
-		} else if (!(num1 == 32 || num1 == 45 || num1 == 95 || num1 == 124
-				|| num1 == 47 || num1 == 92 || num1 == 79)) {
+		} else if (check_invalid_characters(num1)) {
 			printf("Error! Invalid character.\n");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
@@ -59,8 +58,7 @@ void encrypt_messages(char *file_path) {
 		} else if (num2 == 10) {
 			fprintf(fptw, "\n");
 			continue;
-		} else if (!(num2 == 32 || num2 == 45 || num2 == 95 || num2 == 124
-				|| num2 == 47 || num2 == 92 || num2 == 79)) {
+		} else if (check_invalid_characters(num2)) {
 			printf("Error! Invalid character.\n");
 			close_file(fptr); //closing file to be read
 			close_file(fptw); //closing file to be written
@@ -79,8 +77,7 @@ void encrypt_messages(char *file_path) {
 			} else if (num3 == 10) {
 				fprintf(fptw, "\n");
 				break;
-			} else if (!(num3 == 32 || num3 == 45 || num3 == 95 || num3 == 124
-					|| num3 == 47 || num3 == 92 || num3 == 79)) {
+			} else if (check_invalid_characters(num3)) {
 				printf("Error! Invalid character.\n");
 				close_file(fptr); //closing file to be read
 				close_file(fptw); //closing file to be written
@@ -94,6 +91,25 @@ void encrypt_messages(char *file_path) {
 			}
 		} while (1);
 	} while (1);
+}
+
+int check_invalid_characters(int character) {
+	if(character == 32) // ‘ ’
+		return (0);
+	else if(character == 45) // ‘-’
+		return (0);
+	else if(character == 95) // ‘_’
+		return (0);
+	else if(character == 124) // ‘|’
+		return (0);
+	else if(character == 47) // ‘/’
+		return (0);
+	else if(character == 92) // ‘\’
+		return (0);
+	else if(character == 79) // ‘O‘
+		return (0);
+	else
+		return (1);
 }
 
 int encrypt_characters(int character) {
