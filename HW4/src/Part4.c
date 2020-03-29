@@ -39,7 +39,7 @@ void encrypt_messages(char *file_path) {
 			return;
 		} else if (num1 == 10) {
 			fprintf(fptw, "\n");
-			break;
+			continue;
 		} else if (!(num1 == 32 || num1 == 45 || num1 == 95 || num1 == 124
 				|| num1 == 47 || num1 == 92 || num1 == 79)) {
 			printf("Error! Invalid character.\n");
@@ -58,7 +58,7 @@ void encrypt_messages(char *file_path) {
 			return;
 		} else if (num2 == 10) {
 			fprintf(fptw, "\n");
-			break;
+			continue;
 		} else if (!(num2 == 32 || num2 == 45 || num2 == 95 || num2 == 124
 				|| num2 == 47 || num2 == 92 || num2 == 79)) {
 			printf("Error! Invalid character.\n");
