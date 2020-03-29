@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Part1.h"
+#include "Part2.h"
 #include "Part5.h"
 
 void menu() {
@@ -27,12 +28,18 @@ void menu() {
 	printf("4-) Encrypt the message\n");
 	printf("5-) Switch off\n");
 	printf("\n");
-	printf("Please make your choice:\n");
-	scanf("%d",&choice);
+
+	do {
+		printf("Please make your choice:\n");
+		scanf("%d", &choice);
+		if (choice < 1 || choice > 5)
+			printf("Invalid choice! Please try again.\n");
+	} while (choice < 1 || choice > 5);
+	menu_cases(choice);
 	return;
 }
 
-void menu_cases(int menu_index){
+void menu_cases(int menu_index) {
 	switch (menu_index) {
 	case (1):
 		decrypt_and_print("files/encrypted_p1.img");
@@ -48,5 +55,6 @@ void menu_cases(int menu_index){
 		break;
 	case (5):
 		break;
+	}
 	return;
 }
