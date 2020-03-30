@@ -26,6 +26,7 @@ void menu() {
 	char quit_choice;
 
 	do {
+		system("clear");
 		menu_screen();
 		printf("Please make your choice:\n");
 		scanf("%d", &choice);
@@ -34,8 +35,7 @@ void menu() {
 			printf("Invalid choice! Please try again.\n\n");
 		if (choice == 5) {
 			do {
-				while (getchar() != '\n')
-					;
+				while (getchar() != '\n');
 				printf("Are you sure to switch off? Y/N\n");
 				scanf("%c", &quit_choice);
 				if (quit_choice == 'N' || quit_choice == 'n') {
@@ -54,7 +54,7 @@ void menu() {
 	return;
 }
 
-void menu_screen(){
+void menu_screen() {
 	printf("1-) Decrypt and print encrypted_p1.img\n");
 	printf("2-) Decrypt and print encrypted_p2.img\n");
 	printf("3-) Switch on the tracking machine\n");
