@@ -37,6 +37,7 @@ void track_machine() {
 	char command = 'R';
 
 	while (command != 'E' || command != 'e') {
+		system("clear");
 		if (command == 'R' || command == 'r') {
 			refresh_position(&x, &y, &d, &r);
 			printf(
@@ -44,9 +45,12 @@ void track_machine() {
 					x, y, d, r);
 		} else if (command == 'E' || command == 'e') {
 			break;
+		} else {
+			printf("Please enter a valid command.\n");
 		}
 		printf("Command (R / E) waiting...: ");
 		scanf("%c", &command);
+		while(getchar() != '\n');
 		printf("\n");
 	}
 }
