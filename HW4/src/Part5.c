@@ -29,27 +29,25 @@ void menu() {
 		system("clear");
 		menu_screen();
 		printf("Please make your choice:\n");
-		scanf("%d", &choice);
+		if(choice != 5)
+			scanf("%d", &choice);
 
 		if (choice < 1 || choice > 5)
 			printf("Invalid choice! Please try again.\n\n");
 		if (choice == 5) {
-			do {
-				while (getchar() != '\n');
-				printf("Are you sure to switch off? Y/N\n");
-				scanf("%c", &quit_choice);
-				if (quit_choice == 'N' || quit_choice == 'n') {
-					choice = -1;
-				} else if (quit_choice == 'Y' || quit_choice == 'y') {
-					menu_cases(choice);
-					return;
-				} else {
-					printf("Please enter a valid choice (Y/N).\n");
-				}
-			} while (!(quit_choice == 'N' || quit_choice == 'n'
-					|| quit_choice == 'Y' || quit_choice == 'y'));
+			while (getchar() != '\n');
+			printf("Are you sure to switch off? Y/N\n");
+			scanf("%c", &quit_choice);
+			if (quit_choice == 'N' || quit_choice == 'n') {
+				choice = -1;
+			} else if (quit_choice == 'Y' || quit_choice == 'y') {
+				menu_cases(choice);
+				return;
+			} else {
+				printf("Please enter a valid choice (Y/N).\n");
+			}
 		}
-	} while (choice < 1 || choice > 5);
+	} while (choice < 1 || choice > 4);
 	menu_cases(choice);
 	return;
 }
