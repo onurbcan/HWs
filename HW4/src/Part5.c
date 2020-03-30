@@ -22,8 +22,7 @@
 #include "Part5.h"
 
 void menu() {
-	int choice;
-	char quit_choice;
+	int choice = 0;
 
 	do {
 		system("clear");
@@ -34,20 +33,7 @@ void menu() {
 
 		if (choice < 1 || choice > 5)
 			printf("Invalid choice! Please try again.\n\n");
-		if (choice == 5) {
-			while (getchar() != '\n');
-			printf("Are you sure to switch off? Y/N\n");
-			scanf("%c", &quit_choice);
-			if (quit_choice == 'N' || quit_choice == 'n') {
-				choice = -1;
-			} else if (quit_choice == 'Y' || quit_choice == 'y') {
-				menu_cases(choice);
-				return;
-			} else {
-				printf("Please enter a valid choice (Y/N).\n");
-			}
-		}
-	} while (choice < 1 || choice > 4);
+	} while (choice < 1 || choice > 5);
 	menu_cases(choice);
 	return;
 }
@@ -60,6 +46,19 @@ void menu_screen() {
 	printf("5-) Switch off\n");
 	printf("\n");
 	return;
+}
+
+void quit_case() {
+	char quit_choice;
+
+	while (getchar() != '\n');
+	printf("Are you sure to switch off? Y/N\n");
+	scanf("%c", &quit_choice);
+	if (quit_choice == 'N' || quit_choice == 'n') {
+		//choice = -1;
+	} else if (quit_choice == 'Y' || quit_choice == 'y') {
+		return;
+	}
 }
 
 void menu_cases(int menu_index) {
@@ -77,6 +76,7 @@ void menu_cases(int menu_index) {
 		encrypt_messages("files/decrypted_p4.img");
 		break;
 	case (5):
+		quit_case();
 		break;
 	default:
 		break;
