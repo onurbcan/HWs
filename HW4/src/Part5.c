@@ -25,18 +25,13 @@ void menu() {
 	int choice;
 	char quit_choice;
 
-	printf("1-) Decrypt and print encrypted_p1.img\n");
-	printf("2-) Decrypt and print encrypted_p2.img\n");
-	printf("3-) Switch on the tracking machine\n");
-	printf("4-) Encrypt the message\n");
-	printf("5-) Switch off\n");
-	printf("\n");
-
 	do {
+		menu_screen();
 		printf("Please make your choice:\n");
 		scanf("%d", &choice);
+
 		if (choice < 1 || choice > 5)
-			printf("Invalid choice! Please try again.\n");
+			printf("Invalid choice! Please try again.\n\n");
 		if (choice == 5) {
 			do {
 				while (getchar() != '\n')
@@ -56,6 +51,16 @@ void menu() {
 		}
 	} while (choice < 1 || choice > 5);
 	menu_cases(choice);
+	return;
+}
+
+void menu_screen(){
+	printf("1-) Decrypt and print encrypted_p1.img\n");
+	printf("2-) Decrypt and print encrypted_p2.img\n");
+	printf("3-) Switch on the tracking machine\n");
+	printf("4-) Encrypt the message\n");
+	printf("5-) Switch off\n");
+	printf("\n");
 	return;
 }
 
