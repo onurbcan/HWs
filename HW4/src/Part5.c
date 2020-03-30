@@ -23,6 +23,7 @@
 
 void menu() {
 	int choice;
+	char quit_choice;
 
 	printf("1-) Decrypt and print encrypted_p1.img\n");
 	printf("2-) Decrypt and print encrypted_p2.img\n");
@@ -36,6 +37,23 @@ void menu() {
 		scanf("%d", &choice);
 		if (choice < 1 || choice > 5)
 			printf("Invalid choice! Please try again.\n");
+		if (choice == 5) {
+			do {
+				while (getchar() != '\n')
+					;
+				printf("Are you sure to switch off? Y/N\n");
+				scanf("%c", &quit_choice);
+				if (quit_choice == 'N' || quit_choice == 'n') {
+					choice = -1;
+				} else if (quit_choice == 'Y' || quit_choice == 'y') {
+					menu_cases(choice);
+					return;
+				} else {
+					printf("Please enter a valid choice (Y/N).\n");
+				}
+			} while (!(quit_choice == 'N' || quit_choice == 'n'
+					|| quit_choice == 'Y' || quit_choice == 'y'));
+		}
 	} while (choice < 1 || choice > 5);
 	menu_cases(choice);
 	return;
@@ -56,6 +74,8 @@ void menu_cases(int menu_index) {
 		encrypt_messages("files/decrypted_p4.img");
 		break;
 	case (5):
+		break;
+	default:
 		break;
 	}
 	return;
