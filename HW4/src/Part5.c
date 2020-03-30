@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 #include "Part2.h"
-//#include "Part3.h"
+#include "Part3.h"
 #include "Part4.h"
 #include "Part5.h"
 
@@ -50,7 +50,7 @@ void menu_cases(int menu_index) {
 		deep_decrypt_and_print("files/encrypted_p2.img");
 		break;
 	case (3):
-		//track_machine();
+		track_machine();
 		break;
 	case (4):
 		encrypt_messages("files/decrypted_p4.img");
