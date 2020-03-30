@@ -64,10 +64,13 @@ void refresh_position(int *x, int *y, double *d, double *r) {
 	do {
 		*x = (rand() % 11) + 1;
 		*y = (rand() % 11) + 1;
-	} while (*x == OUR_X_COORDINATE && *y == OUR_Y_COORDINATE); //not to place enemy on our coordinate
+		//not to place enemy on our coordinate
+	} while (*x == OUR_X_COORDINATE && *y == OUR_Y_COORDINATE);
 
-	for (i = 1; i <= 11; ++i) { //y - coordinate
-		for (j = 1; j <= 11; ++j) { //x - coordinate
+	//i for y - coordinate
+	for (i = 1; i <= 11; ++i) {
+		//j for x - coordinate
+		for (j = 1; j <= 11; ++j) {
 			if (i == OUR_X_COORDINATE && j == OUR_Y_COORDINATE) {
 				printf("O\t");
 			} else if (i == *x && j == *y) {
@@ -78,8 +81,10 @@ void refresh_position(int *x, int *y, double *d, double *r) {
 		}
 		printf("\n");
 	}
-	*d = sqrt(pow((*x - temp_x), 2) + pow((*y - temp_y), 2)); //distance between current position and the last position of the enemy camp
+	//d: distance between current position and the last position of the enemy camp
+	*d = sqrt(pow((*x - temp_x), 2) + pow((*y - temp_y), 2));
+	//r: distance of enemy to our camp
 	*r = sqrt(
-			pow((*x - OUR_X_COORDINATE), 2) + pow((*y - OUR_Y_COORDINATE), 2)); //distance of enemy to our camp
+			pow((*x - OUR_X_COORDINATE), 2) + pow((*y - OUR_Y_COORDINATE), 2));
 	return;
 }
