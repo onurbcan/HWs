@@ -22,20 +22,20 @@
 #include "Part5.h"
 
 void menu() {
-	int choice = 0;
-
+	int choice = 0, value;
 	do {
-		menu_screen();
-		printf("Please make your choice:\n");
-		if (choice != 5)
+		do {
+			menu_screen();
+			printf("Please make your choice:\n");
 			scanf("%d", &choice);
 
-		if (choice < 1 || choice > 5) {
-			system("clear");
-			printf("Invalid choice! Please try again.\n\n");
-		}
-	} while (choice < 1 || choice > 5);
-	menu_cases(choice);
+			if (choice < 1 || choice > 5) {
+				system("clear");
+				printf("Invalid choice! Please try again.\n\n");
+			}
+		} while (choice < 1 || choice > 5);
+		value = menu_cases(choice);
+	} while (value);
 	return;
 }
 
@@ -49,7 +49,7 @@ void menu_screen() {
 	return;
 }
 
-void quit_case() {
+int quit_case() {
 	char quit_choice;
 
 	do {
@@ -59,16 +59,19 @@ void quit_case() {
 		scanf("%c", &quit_choice);
 		if (quit_choice == 'N' || quit_choice == 'n') {
 			system("clear");
-			menu();
-			return;
+			//returns (1) to continue while loop in menu function
+			return (1);
 		} else if (quit_choice == 'Y' || quit_choice == 'y') {
-			return;
+			//returns (1) to stop while loop in menu function
+			return (0);
 		}
 	} while (!(quit_choice == 'N' || quit_choice == 'n' || quit_choice == 'Y'
 			|| quit_choice == 'y'));
+	return (1);
 }
 
-void menu_cases(int menu_index) {
+int menu_cases(int menu_index) {
+	int value;
 	switch (menu_index) {
 	case (1):
 		decrypt_and_print("files/encrypted_p1.img");
@@ -83,10 +86,10 @@ void menu_cases(int menu_index) {
 		encrypt_messages("files/decrypted_p4.img");
 		break;
 	case (5):
-		quit_case();
+		value = quit_case();
 		break;
 	default:
 		break;
 	}
-	return;
+	return value;
 }
