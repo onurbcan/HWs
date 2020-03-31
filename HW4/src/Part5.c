@@ -25,14 +25,15 @@ void menu() {
 	int choice = 0;
 
 	do {
-		system("clear");
 		menu_screen();
 		printf("Please make your choice:\n");
-		if(choice != 5)
+		if (choice != 5)
 			scanf("%d", &choice);
 
-		if (choice < 1 || choice > 5)
+		if (choice < 1 || choice > 5) {
+			system("clear");
 			printf("Invalid choice! Please try again.\n\n");
+		}
 	} while (choice < 1 || choice > 5);
 	menu_cases(choice);
 	return;
@@ -51,14 +52,20 @@ void menu_screen() {
 void quit_case() {
 	char quit_choice;
 
-	while (getchar() != '\n');
-	printf("Are you sure to switch off? Y/N\n");
-	scanf("%c", &quit_choice);
-	if (quit_choice == 'N' || quit_choice == 'n') {
-		//choice = -1;
-	} else if (quit_choice == 'Y' || quit_choice == 'y') {
-		return;
-	}
+	do {
+		while (getchar() != '\n')
+			;
+		printf("Are you sure to switch off? Y/N\n");
+		scanf("%c", &quit_choice);
+		if (quit_choice == 'N' || quit_choice == 'n') {
+			system("clear");
+			menu();
+			return;
+		} else if (quit_choice == 'Y' || quit_choice == 'y') {
+			return;
+		}
+	} while (!(quit_choice == 'N' || quit_choice == 'n' || quit_choice == 'Y'
+			|| quit_choice == 'y'));
 }
 
 void menu_cases(int menu_index) {
