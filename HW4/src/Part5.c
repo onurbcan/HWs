@@ -34,7 +34,8 @@ void menu() {
 				printf("Invalid choice! Please try again.\n\n");
 			}
 		} while (choice < 1 || choice > 5);
-		system("clear");
+		if(choice != 5)
+			system("clear");
 	} while (menu_cases(choice));
 	return;
 }
