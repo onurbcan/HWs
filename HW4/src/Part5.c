@@ -22,7 +22,7 @@
 #include "Part5.h"
 
 void menu() {
-	int choice = 0, value;
+	int choice = 0;
 	do {
 		do {
 			menu_screen();
@@ -34,8 +34,7 @@ void menu() {
 				printf("Invalid choice! Please try again.\n\n");
 			}
 		} while (choice < 1 || choice > 5);
-		value = menu_cases(choice);
-	} while (value);
+	} while (menu_cases(choice));
 	return;
 }
 
@@ -71,7 +70,7 @@ int quit_case() {
 }
 
 int menu_cases(int menu_index) {
-	int value;
+	int value = 1;
 	switch (menu_index) {
 	case (1):
 		decrypt_and_print("files/encrypted_p1.img");
