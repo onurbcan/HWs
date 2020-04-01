@@ -53,9 +53,9 @@ void menu_screen() {
 int quit_case() {
 	char quit_choice;
 
+	while (getchar() != '\n');
+	printf("Are you sure to switch off? Y/N\n");
 	do {
-		while (getchar() != '\n');
-		printf("Are you sure to switch off? Y/N\n");
 		scanf("%c", &quit_choice);
 		if (quit_choice == 'N' || quit_choice == 'n') {
 			system("clear");
