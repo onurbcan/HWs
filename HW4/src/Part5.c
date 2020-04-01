@@ -34,6 +34,7 @@ void menu() {
 				printf("Invalid choice! Please try again.\n\n");
 			}
 		} while (choice < 1 || choice > 5);
+		system("clear");
 	} while (menu_cases(choice));
 	return;
 }
@@ -52,8 +53,7 @@ int quit_case() {
 	char quit_choice;
 
 	do {
-		while (getchar() != '\n')
-			;
+		while (getchar() != '\n');
 		printf("Are you sure to switch off? Y/N\n");
 		scanf("%c", &quit_choice);
 		if (quit_choice == 'N' || quit_choice == 'n') {
