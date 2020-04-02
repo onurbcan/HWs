@@ -38,7 +38,9 @@
 #include "Part1.h"
 
 void menu() {
-	int menu_choice
+	newfunc();
+	/*
+	int menu_choice;
 	char continue_choice;
 
 	printf("**********Daily Press**********\n\n");
@@ -53,6 +55,49 @@ void menu() {
 	printf("Readed news are listed below:");
 	printf("Do you want to continue? Yes(y)/No(n):");
 	printf("Good Bye");
+	*/
+	return;
+}
+
+void menu_cases() {
+
+	return;
+}
+
+void newfunc() {
+	char num;
+	open_file_read("files/1.txt"); //fptr file pointer read
+	///open_file_write("output.txt"); //fptw file pointer write
+	do {
+		num = fgetc(fptr);
+		printf("%c", num);
+	} while (num != '\n');
+	close_file(fptr);
+	//close_file(fptw);
+	return;
+}
+
+void open_file_read(char *file_path) {
+	if ((fptr = fopen(file_path, "r")) == NULL) {
+		printf("Error! File not found.");
+		exit(1);
+	}
+	return;
+}
+
+void open_file_write(char *file_path) {
+	if ((fptw = fopen(file_path, "w")) == NULL) {
+		printf("Error! File not created.");
+		exit(1);
+	}
+	return;
+}
+
+void close_file(FILE *file_pointer) {
+	if (fclose(file_pointer) != 0) {
+		printf("Error! File not closed.");
+		exit(1);
+	}
 	return;
 }
 
