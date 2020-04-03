@@ -12,9 +12,10 @@ FILE *fptr; //fptr file pointer read
 FILE *fptw; //fptw file pointer write
 
 void menu();
-void menu_cases();
-void news_titles();
-void read_news(char buffer[500], char file_path[10], int is_Only_Title);
+int menu_cases();
+void print_news(int);
+void print_arrays(char [], int);
+int read_news(char [], char [], int);
 
 void open_file_read(char *file_path);
 void open_file_write(char *file_path);
