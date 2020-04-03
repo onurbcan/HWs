@@ -13,7 +13,7 @@ FILE *fptw; //fptw file pointer write
 
 void menu();
 void menu_cases();
-void newfunc();
+void news_titles();
 void read_news(char buffer[500], char file_path[10], int is_Only_Title);
 
 void open_file_read(char *file_path);
