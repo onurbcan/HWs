@@ -41,7 +41,7 @@ void menu() {
 	do {
 		printf("**********Daily Press**********\n\n");
 		printf("Today's news are listed for you:\n\n");
-		print_news(1); //1 to print only titles
+		print_news(0, 1); //0 to print all news and 1 to print only titles
 	} while (menu_cases());
 	printf("Good Bye");
 	return;
@@ -59,11 +59,12 @@ int menu_cases() {
 	scanf("%c", &menu_choice);
 	switch (menu_choice) {
 	case ('a'):
-		printf("Which news text would you like to read?");
-		do{
+		printf("Which news text would you like to read?\n");
+		do {
 			scanf("%d", &news_choice);
-		} while(news_choice > all_news_index || news_choice <= 0);
-		print_news(0)
+		} while (news_choice > all_news_index || news_choice <= 0);
+		print_news(news_choice, 0);
+
 		break;
 	case ('b'):
 		printf("Readed news are listed below:\n");
@@ -80,7 +81,7 @@ int menu_cases() {
 	default:
 		break;
 	}
-	printf("Do you want to continue? Yes(y)/No(n):");
+	printf("Do you want to continue? Yes(y)/No(n):\n");
 	do {
 		scanf("%c", &continue_choice);
 		if (continue_choice == 'N' || continue_choice == 'n') {
@@ -95,38 +96,60 @@ int menu_cases() {
 	return (1);
 }
 
-void print_news(int only_titles) {
-	int news_index, array_length, all_news_index = number_of_news();
-	char buffer[500]; //, file_path[10];
+void print_news(int news_choice, int is_only_title) {
+	int news_index, //index variable to print news
+			array_length, //value that returns from read_news function
+			all_news_index = number_of_news(); //amount of all news
+	char buffer[500], file_path[15];
 
-	for (news_index = 1; news_index <= all_news_index; ++news_index) {
+	//if news_choice flag carries 0, loop to print all news performed
+	if (news_choice == 0)
+		news_index = 1;
+	//else only news_choice is printed
+	else
+		news_index = news_choice;
+
+	do {
 		switch (news_index) {
 		case (1):
-			array_length = read_news(buffer, "files/1.txt", only_titles);
-			if (only_titles)
+			file_path[10] = "files/1.txt";
+			array_length = read_news(buffer, file_path, is_only_title);
+			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
 		case (2):
-			array_length = read_news(buffer, "files/2.txt", only_titles);
-			if (only_titles)
+			file_path[10] = "files/2.txt";
+			array_length = read_news(buffer, file_path, is_only_title);
+			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
 		case (3):
-			array_length = read_news(buffer, "files/3.txt", only_titles);
-			if (only_titles)
+			file_path[10] = "files/3.txt";
+			array_length = read_news(buffer, file_path, is_only_title);
+			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
 		case (4):
-			array_length = read_news(buffer, "files/4.txt", only_titles);
-			if (only_titles)
+			file_path[10] = "files/4.txt";
+			array_length = read_news(buffer, file_path, is_only_title);
+			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
+		default:
+			break;
 		}
-	}
+		//if all news to be printed, continue the loop
+		if (news_choice == 0)
+			++news_index;
+		//else break the loop
+		else
+			break;
+		//append_file(char* file_path, news_choice);
+	} while (news_index <= all_news_index);
 	return;
 }
 
@@ -135,15 +158,16 @@ void print_arrays(char buffer[], int length) {
 	for (i = 0; i < length; ++i) {
 		printf("%c", buffer[i]);
 	}
+	printf("\n\n");
 	return;
 }
 
-int read_news(char buffer[], char file_path[], int is_Only_Title) {
+int read_news(char buffer[], char file_path[], int is_only_title) {
 	int i = 0;
 	char c;
 
 	open_file_read(file_path); //fptr file pointer read
-	switch (is_Only_Title) {
+	switch (is_only_title) {
 	case 0:
 		do {
 			c = getc(fptr);
@@ -168,15 +192,22 @@ int number_of_news() {
 
 	open_file_read("files/all_news_id.txt");
 	amount = getc(fptr);
-	while(temp_amount != EOF) {
+	while (temp_amount != EOF) {
 		temp_amount = getc(fptr);
-		if(temp_amount > amount && temp_amount != '\n')
+		if (temp_amount > amount && temp_amount != '\n')
 			amount = temp_amount;
 	}
 	close_file(fptr);
 	//converting ASCII value to decimal by decrementing 48
 	amount -= 48;
 	return amount;
+}
+
+void append_file(char* file_path, char c) {
+
+
+
+	return;
 }
 
 void open_file_read(char *file_path) {
