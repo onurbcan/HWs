@@ -49,39 +49,46 @@ void menu() {
 
 int menu_cases() {
 	char c, menu_choice, continue_choice;
-	int news_choice, all_news_index = number_of_news();
+	int news_choice, readed_news, all_news_index = number_of_news();
 
 	printf("\n");
 	printf("What do you want to do?\n");
 	printf("a.Read a news\n");
 	printf("b.List the readed news\n");
 	printf("c.Get decrypted information from the news\n");
-	scanf("%c", &menu_choice);
-	switch (menu_choice) {
-	case ('a'):
-		printf("Which news text would you like to read?\n");
-		do {
-			scanf("%d", &news_choice);
-		} while (news_choice > all_news_index || news_choice <= 0);
-		print_news(news_choice, 0);
-
-		break;
-	case ('b'):
-		printf("Readed news are listed below:\n");
-		open_file_read("files/readed_news_id.txt"); //fptr file pointer read
-		do {
-			c = getc(fptr);
-			printf("%c", c);
-		} while (c != EOF);
-		close_file(fptr);
-		break;
-	case ('c'):
-		//printf("Which news would you like to decrypt? ");
-		break;
-	default:
-		break;
-	}
-	printf("Do you want to continue? Yes(y)/No(n):\n");
+	do {
+		scanf("%c", &menu_choice);
+		while(getchar() != '\n');
+		switch (menu_choice) {
+		case ('a'):
+			printf("Which news text would you like to read?\n");
+			do {
+				scanf("%d", &news_choice);
+			} while (news_choice > all_news_index || news_choice <= 0);
+			print_news(news_choice, 0);
+			//readed news calculated by converting news_choice to ASCII value
+			readed_news = news_choice + 48;
+			append_file("files/all_news_id.txt", readed_news);
+			break;
+		case ('b'):
+			printf("Readed news are listed below:\n");
+			open_file_read("files/readed_news_id.txt"); //fptr file pointer read
+			do {
+				c = getc(fptr);
+				if(c == '\n' || c == EOF)
+					continue;
+				printf("%c", c);
+			} while (c != EOF);
+			close_file(fptr);
+			break;
+		case ('c'):
+			//printf("Which news would you like to decrypt? ");
+			break;
+		default:
+			break;
+		}
+	} while(!(menu_choice == 'a' || menu_choice == 'b' || menu_choice == 'c'));
+	printf("\nDo you want to continue? Yes(y)/No(n):\n");
 	do {
 		scanf("%c", &continue_choice);
 		if (continue_choice == 'N' || continue_choice == 'n') {
@@ -100,7 +107,7 @@ void print_news(int news_choice, int is_only_title) {
 	int news_index, //index variable to print news
 			array_length, //value that returns from read_news function
 			all_news_index = number_of_news(); //amount of all news
-	char buffer[500], file_path[15];
+	char buffer[500]; //, file_path[15];
 
 	//if news_choice flag carries 0, loop to print all news performed
 	if (news_choice == 0)
@@ -112,29 +119,29 @@ void print_news(int news_choice, int is_only_title) {
 	do {
 		switch (news_index) {
 		case (1):
-			file_path[10] = "files/1.txt";
-			array_length = read_news(buffer, file_path, is_only_title);
+			//file_path[15] = "files/1.txt";
+			array_length = read_news(buffer, "files/1.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
 		case (2):
-			file_path[10] = "files/2.txt";
-			array_length = read_news(buffer, file_path, is_only_title);
+			//file_path[15] = "files/2.txt";
+			array_length = read_news(buffer, "files/2.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
 		case (3):
-			file_path[10] = "files/3.txt";
-			array_length = read_news(buffer, file_path, is_only_title);
+			//file_path[15] = "files/3.txt";
+			array_length = read_news(buffer, "files/3.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
 			break;
 		case (4):
-			file_path[10] = "files/4.txt";
-			array_length = read_news(buffer, file_path, is_only_title);
+			//file_path[15] = "files/4.txt";
+			array_length = read_news(buffer, "files/4.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer, array_length);
@@ -158,7 +165,7 @@ void print_arrays(char buffer[], int length) {
 	for (i = 0; i < length; ++i) {
 		printf("%c", buffer[i]);
 	}
-	printf("\n\n");
+	//printf("\n\n");
 	return;
 }
 
@@ -171,6 +178,8 @@ int read_news(char buffer[], char file_path[], int is_only_title) {
 	case 0:
 		do {
 			c = getc(fptr);
+			if(c == EOF)
+				continue;
 			buffer[i] = c;
 			++i;
 		} while (c != EOF);
@@ -204,9 +213,9 @@ int number_of_news() {
 }
 
 void append_file(char* file_path, char c) {
-
-
-
+	open_file_edit("files/readed_news_id.txt"); //fptr file pointer read
+	fprintf(fpte, "%c", c);
+	close_file(fpte);
 	return;
 }
 
@@ -221,6 +230,14 @@ void open_file_read(char *file_path) {
 void open_file_write(char *file_path) {
 	if ((fptw = fopen(file_path, "w")) == NULL) {
 		printf("Error! File not created.");
+		exit(1);
+	}
+	return;
+}
+
+void open_file_edit(char *file_path) {
+	if ((fpte = fopen(file_path, "a+")) == NULL) {
+		printf("Error! File not edited.");
 		exit(1);
 	}
 	return;

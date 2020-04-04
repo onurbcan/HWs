@@ -10,6 +10,7 @@
 
 FILE *fptr; //fptr file pointer read
 FILE *fptw; //fptw file pointer write
+FILE *fpte; //fptw file pointer edit
 
 void menu();
 int menu_cases();
@@ -21,6 +22,7 @@ void append_file(char* file_path, char c);
 
 void open_file_read(char *file_path);
 void open_file_write(char *file_path);
+void open_file_edit(char *file_path);
 void close_file(FILE *file_pointer);
 
 #endif /* INC_PART1_H_ */
