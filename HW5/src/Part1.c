@@ -49,15 +49,21 @@ void menu() {
 
 int menu_cases() {
 	char c, menu_choice, continue_choice;
+	int news_choice, all_news_index = number_of_news();
 
 	printf("\n");
 	printf("What do you want to do?\n");
-	printf("a.Read a new\n");
+	printf("a.Read a news\n");
 	printf("b.List the readed news\n");
 	printf("c.Get decrypted information from the news\n");
 	scanf("%c", &menu_choice);
 	switch (menu_choice) {
 	case ('a'):
+		printf("Which news text would you like to read?");
+		do{
+			scanf("%d", &news_choice);
+		} while(news_choice > all_news_index || news_choice <= 0);
+		print_news(0)
 		break;
 	case ('b'):
 		printf("Readed news are listed below:\n");
@@ -90,10 +96,10 @@ int menu_cases() {
 }
 
 void print_news(int only_titles) {
-	int news_index, array_length;
+	int news_index, array_length, all_news_index = number_of_news();
 	char buffer[500]; //, file_path[10];
 
-	for (news_index = 1; news_index <= 4; ++news_index) {
+	for (news_index = 1; news_index <= all_news_index; ++news_index) {
 		switch (news_index) {
 		case (1):
 			array_length = read_news(buffer, "files/1.txt", only_titles);
@@ -155,6 +161,22 @@ int read_news(char buffer[], char file_path[], int is_Only_Title) {
 	}
 	close_file(fptr);
 	return (i);
+}
+
+int number_of_news() {
+	int amount, temp_amount;
+
+	open_file_read("files/all_news_id.txt");
+	amount = getc(fptr);
+	while(temp_amount != EOF) {
+		temp_amount = getc(fptr);
+		if(temp_amount > amount && temp_amount != '\n')
+			amount = temp_amount;
+	}
+	close_file(fptr);
+	//converting ASCII value to decimal by decrementing 48
+	amount -= 48;
+	return amount;
 }
 
 void open_file_read(char *file_path) {
