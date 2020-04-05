@@ -91,6 +91,7 @@ int menu_cases() {
 	printf("\nDo you want to continue? Yes(y)/No(n):\n");
 	do {
 		scanf("%c", &continue_choice);
+		while(getchar() != '\n');
 		if (continue_choice == 'N' || continue_choice == 'n') {
 			//returns (0) to continue while loop in menu function
 			return (0);
@@ -213,8 +214,23 @@ int number_of_news() {
 }
 
 void append_file(char* file_path, char c) {
-	open_file_edit("files/readed_news_id.txt"); //fptr file pointer read
-	fprintf(fpte, "%c", c);
+	char current_c;
+	int write_flag = 1;
+
+	open_file_read("files/readed_news_id.txt"); //fptr file pointer read
+	do {
+		current_c = getc(fptr);
+		if(current_c == '\n' || current_c == EOF)
+			continue;
+		else if(c == current_c)
+			write_flag = 0;
+	} while (current_c != EOF);
+	close_file(fptr);
+
+	open_file_edit("files/readed_news_id.txt"); //fpte file pointer read
+	if(write_flag)
+		fprintf(fpte, "%c", c);
+		//printf("%c", c);
 	close_file(fpte);
 	return;
 }
