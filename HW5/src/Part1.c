@@ -35,13 +35,14 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "Part1.h"
 
 void menu() {
 	do {
 		printf("**********Daily Press**********\n\n");
 		printf("Today's news are listed for you:\n\n");
-		print_news(0, 1); //0 to print all news and 1 to print only titles
+		print_news(0, 1, 0); //0 to print all news and 1 to print only titles
 	} while (menu_cases());
 	printf("Good Bye");
 	return;
@@ -65,7 +66,7 @@ int menu_cases() {
 			do {
 				scanf("%d", &news_choice);
 			} while (news_choice > all_news_index || news_choice <= 0);
-			print_news(news_choice, 0);
+			print_news(news_choice, 0, 0);
 			//readed news calculated by converting news_choice to ASCII value
 			readed_news = news_choice + 48;
 			append_file("files/all_news_id.txt", readed_news);
@@ -82,7 +83,13 @@ int menu_cases() {
 			close_file(fptr);
 			break;
 		case ('c'):
-			//printf("Which news would you like to decrypt? ");
+			printf("Which news would you like to decrypt?\n");
+			do {
+				scanf("%d", &news_choice);
+			} while (news_choice > all_news_index || news_choice <= 0);
+			print_news(news_choice, 0, 0);
+
+
 			break;
 		default:
 			break;
@@ -104,11 +111,12 @@ int menu_cases() {
 	return (1);
 }
 
-void print_news(int news_choice, int is_only_title) {
+void print_news(int news_choice, int is_only_title, int is_decrypt) {
 	int news_index, //index variable to print news
-			array_length, //value that returns from read_news function
+			buffer_length, //value that returns from read_news function
+			buffer_magic_length, //value that returns from print_arrays function
 			all_news_index = number_of_news(); //amount of all news
-	char buffer[500]; //, file_path[15];
+	char buffer[500], buffer_magic[10]; //, file_path[15];
 
 	//if news_choice flag carries 0, loop to print all news performed
 	if (news_choice == 0)
@@ -121,31 +129,33 @@ void print_news(int news_choice, int is_only_title) {
 		switch (news_index) {
 		case (1):
 			//file_path[15] = "files/1.txt";
-			array_length = read_news(buffer, "files/1.txt", is_only_title);
+			buffer_length = read_news(buffer, "files/1.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
-			print_arrays(buffer, array_length);
+			print_arrays(buffer_magic, buffer, buffer_length);
+			if(is_decrypt)
+				read_magic_numbers(buffer_magic, buffer);
 			break;
 		case (2):
 			//file_path[15] = "files/2.txt";
-			array_length = read_news(buffer, "files/2.txt", is_only_title);
+			buffer_length = read_news(buffer, "files/2.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
-			print_arrays(buffer, array_length);
+			print_arrays(buffer_magic, buffer, buffer_length);
 			break;
 		case (3):
 			//file_path[15] = "files/3.txt";
-			array_length = read_news(buffer, "files/3.txt", is_only_title);
+			buffer_length = read_news(buffer, "files/3.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
-			print_arrays(buffer, array_length);
+			print_arrays(buffer_magic, buffer, buffer_length);
 			break;
 		case (4):
 			//file_path[15] = "files/4.txt";
-			array_length = read_news(buffer, "files/4.txt", is_only_title);
+			buffer_length = read_news(buffer, "files/4.txt", is_only_title);
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
-			print_arrays(buffer, array_length);
+			print_arrays(buffer_magic, buffer, buffer_length);
 			break;
 		default:
 			break;
@@ -156,17 +166,19 @@ void print_news(int news_choice, int is_only_title) {
 		//else break the loop
 		else
 			break;
-		//append_file(char* file_path, news_choice);
 	} while (news_index <= all_news_index);
 	return;
 }
 
-void print_arrays(char buffer[], int length) {
-	int i;
+void print_arrays(char buffer_magic[], char buffer[], int length) {
+	int i, j = 0;
 	for (i = 0; i < length; ++i) {
 		printf("%c", buffer[i]);
+		if(buffer[i] == '#') {
+			buffer_magic[j] = buffer[i+1];
+			++j;
+		}
 	}
-	//printf("\n\n");
 	return;
 }
 
@@ -229,10 +241,30 @@ void append_file(char* file_path, char c) {
 
 	open_file_edit("files/readed_news_id.txt"); //fpte file pointer read
 	if(write_flag)
-		fprintf(fpte, "%c", c);
-		//printf("%c", c);
+		fprintf(fpte, "\n%c", c);
 	close_file(fpte);
 	return;
+}
+
+void read_magic_numbers(char buffer_magic[10], char buffer_news[500]) {
+	int i = 0;
+	double sum = 0;
+
+	while(buffer_magic[i] != '\0') {
+		//sum += g_func(f_func(buffer_magic[i]), i);
+		++i;
+	}
+	//printf("%f", g_func(f_func(1), 1));
+	return;
+}
+
+double f_func(int x) {
+	return pow(x, 3) - pow(x, 2) + 2;
+}
+
+double g_func(double f(int x), int a) {
+	//return pow(f_func(x), 2);
+	return 0;
 }
 
 void open_file_read(char *file_path) {

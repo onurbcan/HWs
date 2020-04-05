@@ -14,11 +14,14 @@ FILE *fpte; //fptw file pointer edit
 
 void menu();
 int menu_cases();
-void print_news(int, int);
-void print_arrays(char [], int);
+void print_news(int, int, int);
+void print_arrays(char [], char[], int);
 int read_news(char [], char [], int);
 int number_of_news();
-void append_file(char* file_path, char c);
+void append_file(char*, char);
+void read_magic_numbers(char [], char []);
+double f_func(int x);
+double g_func(double f(int x), int a);
 
 void open_file_read(char *file_path);
 void open_file_write(char *file_path);
