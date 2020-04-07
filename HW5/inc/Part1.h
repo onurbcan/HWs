@@ -8,6 +8,13 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
+#define FIRST_TEXT_FILE "files/1.txt"
+#define SECOND_TEXT_FILE "files/2.txt"
+#define THIRD_TEXT_FILE "files/3.txt"
+#define FORTH_TEXT_FILE "files/4.txt"
+#define ALL_NEWS_TEXT_FILE "files/all_news_id.txt"
+#define READED_NEWS_TEXT_FILE "files/readed_news_id.txt"
+
 FILE *fptr; //fptr file pointer read
 FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
