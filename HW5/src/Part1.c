@@ -44,7 +44,7 @@ void menu() {
 		printf("Today's news are listed for you:\n\n");
 		print_news(0, 1, 0); //0 to print all news and 1 to print only titles
 	} while (menu_cases());
-	printf("Good Bye");
+	printf("Good Bye!\n");
 	return;
 }
 
@@ -53,14 +53,16 @@ int menu_cases() {
 	int news_choice, readed_news, all_news_index = number_of_news();
 
 	printf("\n");
-	printf("What do you want to do?\n");
-	printf("a.Read a news\n");
-	printf("b.List the readed news\n");
-	printf("c.Get decrypted information from the news\n");
+	printf("What do you want to do? (a/b/c/q)\n");
+	printf("a. Read a news\n");
+	printf("b. List the readed news\n");
+	printf("c. Get decrypted information from the news\n");
+	printf("q. Quit\n");
 	do {
 		scanf("%c", &menu_choice);
 		switch (menu_choice) {
 		case ('a'):
+		case ('A'):
 			printf("Which news text would you like to read?\n");
 			do {
 				scanf("%d", &news_choice);
@@ -71,13 +73,14 @@ int menu_cases() {
 			append_file(READED_NEWS_TEXT_FILE, readed_news);
 			break;
 		case ('b'):
+		case ('B'):
 			printf("Readed news are listed below:\n");
 			open_file_read(READED_NEWS_TEXT_FILE); //fptr file pointer read
 			c = getc(fptr);
-			if(c == EOF)
+			if (c == EOF)
 				printf("No news was readed\n");
 			while (c != EOF) {
-				if(c == '\n')
+				if (c == '\n')
 					printf("\n");
 				else
 					printf("%c. news was readed", c);
@@ -86,6 +89,7 @@ int menu_cases() {
 			close_file(fptr);
 			break;
 		case ('c'):
+		case ('C'):
 			printf("Which news would you like to decrypt?\n");
 			do {
 				scanf("%d", &news_choice);
@@ -95,20 +99,33 @@ int menu_cases() {
 			readed_news = news_choice + 48;
 			append_file(READED_NEWS_TEXT_FILE, readed_news);
 			break;
+		case ('q'):
+		case ('Q'):
+			return (0);
+			break;
 		default:
+			system("clear");
+			printf("Invalid choice! Please try again.\n\n");
+			while (getchar() != '\n')
+				;
+			return (1);
 			break;
 		}
-	} while(!(menu_choice == 'a' || menu_choice == 'b' || menu_choice == 'c'));
+	} while (!(menu_choice == 'a' || menu_choice == 'b' || menu_choice == 'c'
+			|| menu_choice == 'A' || menu_choice == 'B' || menu_choice == 'C'));
 	printf("\nDo you want to continue? Yes(y)/No(n):\n");
 	do {
-		while(getchar() != '\n');
+		while (getchar() != '\n')
+			;
 		scanf("%c", &continue_choice);
 		if (continue_choice == 'N' || continue_choice == 'n') {
 			//returns (0) to continue while loop in menu function
 			return (0);
 		} else if (continue_choice == 'Y' || continue_choice == 'y') {
 			//returns (1) to continue while loop in menu function
-			while(getchar() != '\n');
+			system("clear");
+			while (getchar() != '\n')
+				;
 			return (1);
 		}
 	} while (!(continue_choice == 'N' || continue_choice == 'n'
@@ -136,7 +153,7 @@ void print_news(int news_choice, int is_only_title, int is_decrypt) {
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer_magic, buffer, buffer_length);
-			if(is_decrypt)
+			if (is_decrypt)
 				read_magic_numbers(buffer_magic, buffer);
 			break;
 		case (2):
@@ -144,7 +161,7 @@ void print_news(int news_choice, int is_only_title, int is_decrypt) {
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer_magic, buffer, buffer_length);
-			if(is_decrypt)
+			if (is_decrypt)
 				read_magic_numbers(buffer_magic, buffer);
 			break;
 		case (3):
@@ -152,7 +169,7 @@ void print_news(int news_choice, int is_only_title, int is_decrypt) {
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer_magic, buffer, buffer_length);
-			if(is_decrypt)
+			if (is_decrypt)
 				read_magic_numbers(buffer_magic, buffer);
 			break;
 		case (4):
@@ -160,7 +177,7 @@ void print_news(int news_choice, int is_only_title, int is_decrypt) {
 			if (is_only_title)
 				printf("Title of %d. news: ", news_index);
 			print_arrays(buffer_magic, buffer, buffer_length);
-			if(is_decrypt)
+			if (is_decrypt)
 				read_magic_numbers(buffer_magic, buffer);
 			break;
 		default:
@@ -169,7 +186,7 @@ void print_news(int news_choice, int is_only_title, int is_decrypt) {
 		//if all news to be printed, continue the loop
 		if (news_choice == 0)
 			++news_index;
-		//else break the loop
+		//else break the do-while loop
 		else
 			break;
 	} while (news_index <= all_news_index);
@@ -180,8 +197,8 @@ void print_arrays(char buffer_magic[], char buffer[], int length) {
 	int i, j = 0;
 	for (i = 0; i < length; ++i) {
 		printf("%c", buffer[i]);
-		if(buffer[i] == '#') {
-			buffer_magic[j] = buffer[i+1] - 48;
+		if (buffer[i] == '#') {
+			buffer_magic[j] = buffer[i + 1] - 48;
 			++j;
 		}
 	}
@@ -198,7 +215,7 @@ int read_news(char buffer[], char file_path[], int is_only_title) {
 	case 0:
 		do {
 			c = getc(fptr);
-			if(c == EOF)
+			if (c == EOF)
 				continue;
 			buffer[i] = c;
 			++i;
@@ -232,22 +249,22 @@ int number_of_news() {
 	return amount;
 }
 
-void append_file(char* file_path, char c) {
+void append_file(char *file_path, char c) {
 	char current_c;
 	int write_flag = 1;
 
 	open_file_read(file_path); //fptr file pointer read
 	do {
 		current_c = getc(fptr);
-		if(current_c == '\n' || current_c == EOF)
+		if (current_c == '\n' || current_c == EOF)
 			continue;
-		else if(c == current_c)
+		else if (c == current_c)
 			write_flag = 0;
 	} while (current_c != EOF);
 	close_file(fptr);
 
 	open_file_edit(file_path); //fpte file pointer read
-	if(write_flag)
+	if (write_flag)
 		fprintf(fpte, "%c\n", c);
 	close_file(fpte);
 	return;
@@ -257,11 +274,11 @@ void read_magic_numbers(char buffer_magic[10], char buffer_news[500]) {
 	int i = 0;
 	double sum = 0;
 
-	while(buffer_magic[i] != '\0') {
+	while (buffer_magic[i] != '\0') {
 		sum += g_func(f_func, buffer_magic[i]);
 		++i;
 	}
-	printf("%f", sum);
+	printf("%.2f", sum);
 	return;
 }
 
