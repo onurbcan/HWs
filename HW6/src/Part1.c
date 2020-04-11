@@ -64,8 +64,8 @@ void word_hunter() {
 void fill_board(char **board) {
 	int i, j;
 
-	for (i = 0; i < DIMENSION_LENGTH; ++i) {
-		for (j = 0; j < DIMENSION_LENGTH; ++j) {
+	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
+		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
 			//generating random numbers between 0 and 25 as index values for alphabet matrix
 			board[i][j] = random_char();
 		}
@@ -76,8 +76,8 @@ void fill_board(char **board) {
 void print_board(char **board) {
 	int i, j;
 
-	for (i = 0; i < DIMENSION_LENGTH; ++i) {
-		for (j = 0; j < DIMENSION_LENGTH; ++j) {
+	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
+		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
 			printf("%c ", board[i][j]);
 		}
 		printf("\n");
