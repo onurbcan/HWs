@@ -13,7 +13,6 @@
 #include "Part1.h"
 
 int main(void) {
-	//word_hunter();
-	random_word();
+	word_hunter();
 	return EXIT_SUCCESS;
 }

@@ -56,27 +56,112 @@
 #include "Part1.h"
 
 void word_hunter() {
-	int i, j;
-	char board[DIMENSION_LENGTH][DIMENSION_LENGTH];
+	char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH];
+
 
 	srand(time(0));
 
 
-	/*
 	fill_board(board);
 	print_board(board);
-	*/
-	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
-		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
+
+	return;
+}
+
+void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
+	int i, j, direction, board_y, board_x, error, word_index, word_array_index = 0;
+	char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH];
+	generate_random_words(words);
+
+	do {
+		error = 0;
+		word_index = 0;
+		direction = srand % 8;
+		do {
+			board_y = srand % 20;
+			board_x = srand % 20;
+		} while (96 < board[board_y][board_x] && board[board_y][board_x] < 123);
+
+
+		//different direction operation word_array_index in cases
+		switch(direction) {
+		case 0: //North
+			do {
+				board[board_y][board_x] = words[word_array_index][word_index];
+				if (board_y < 0 || board_x < 0 || board_y > 20 || board_x > 20) {
+					error = 1;
+					break;
+				} else if ((96 < board[board_y][board_x] && board[board_y][board_x] < 123) && strcmp(board[board_y][board_x], words[word_array_index][word_index]) != 0) {
+					error = 1;
+					break;
+				}
+
+				++word_index;
+
+				--board_y;
+			} while (words[word_array_index][word_index] != '\0');
+
+			break;
+		case 1: //North-East
+
+			--board_y;
+			++board_x;
+
+			break;
+		case 2: //East
+
+			++board_x;
+
+			break;
+		case 3: //South-East
+
+			++board_y;
+			++board_x;
+
+			break;
+		case 4: //South
+
+			++board_y;
+
+			break;
+		case 5: //South-West
+
+			++board_y;
+			--board_x;
+
+			break;
+		case 6: //West
+
+			--board_x;
+
+			break;
+		case 7: //North-West
+
+			--board_y;
+			--board_x;
+
+			break;
+		}
+
+		if(!error)
+			++word_array_index;
+	} while(word_array_index <= NUMBER_OF_CHOSEN_WORDS);
+
+
+	for (i = 0; i < Y_DIMENSION_LENGTH; ++i) {
+		for (j = 0; j < X_DIMENSION_LENGTH - 1; ++j) {
 			//generating random numbers between 0 and 25 as index values for alphabet matrix
-			//i_alphabet = rand() % 26;
-			//board[i][j] = alphabet[i_alphabet];
 			board[i][j] = random_char();
 		}
 		board[i][j + 1] = '\0';
 	}
-	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
-		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
+}
+
+void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
+	int i, j;
+
+	for (i = 0; i < Y_DIMENSION_LENGTH; ++i) {
+		for (j = 0; j < X_DIMENSION_LENGTH - 1; ++j) {
 			printf("%c ", board[i][j]);
 		}
 		printf("\n");
@@ -84,32 +169,7 @@ void word_hunter() {
 
 	return;
 }
-/*
-void fill_board(char **board) {
-	int i, j;
 
-	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
-		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
-			//generating random numbers between 0 and 25 as index values for alphabet matrix
-			board[i][j] = random_char();
-		}
-		board[i][j + 1] = '\0';
-	}
-}
-
-void print_board(char **board) {
-	int i, j;
-
-	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
-		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
-			printf("%c ", board[i][j]);
-		}
-		printf("\n");
-	}
-
-	return;
-}
-*/
 char random_char() {
 	int i_alphabet;
 
@@ -122,9 +182,8 @@ char random_char() {
 	return alphabet[i_alphabet];
 }
 
-void words_array(char** words) {
+void words_array(char words[NUMBER_OF_WORDS][WORD_LENGTH]) {
 	int i_words = 0;
-
 
 	open_file_read("files/words.txt");
 	while (fgets(words[i_words], WORD_LENGTH, fptr) != NULL) {
@@ -134,12 +193,27 @@ void words_array(char** words) {
 	close_file(fptr);
 }
 
-void random_word() {
-	//char random_word[WORD_LENGTH];
-	char words[NUMBER_OF_WORDS][WORD_LENGTH];
-	words_array(words);
-	printf("%s", words[5]);
+void generate_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
+	int i, j, i_random_word;
 
+	char words[NUMBER_OF_WORDS][WORD_LENGTH];
+
+	words_array(words);
+	for (i = 0; i < 10; ++i) {
+		i_random_word = rand() % 100;
+		strcpy(random_words[i], words[i_random_word]);
+		j = 0;
+		while (j < i) {
+			//checks not to choose an already chosen word
+			if (strcmp(random_words[j], random_words[i]) == 0) {
+				random_words[i][0] = '\0';
+				--i;
+			}
+			++j;
+		}
+	}
+	for (i = 0; i < 10; ++i)
+		printf("%d: %s", i, random_words[i]);
 	return;
 }
 
