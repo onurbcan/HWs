@@ -51,16 +51,40 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 #include "Part1.h"
 
 void word_hunter() {
+	int i, j;
 	char board[DIMENSION_LENGTH][DIMENSION_LENGTH];
+
+	srand(time(0));
+
+
+	/*
 	fill_board(board);
 	print_board(board);
+	*/
+	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
+		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
+			//generating random numbers between 0 and 25 as index values for alphabet matrix
+			//i_alphabet = rand() % 26;
+			//board[i][j] = alphabet[i_alphabet];
+			board[i][j] = random_char();
+		}
+		board[i][j + 1] = '\0';
+	}
+	for (i = 0; i < DIMENSION_LENGTH - 1; ++i) {
+		for (j = 0; j < DIMENSION_LENGTH - 1; ++j) {
+			printf("%c ", board[i][j]);
+		}
+		printf("\n");
+	}
+
 	return;
 }
-
+/*
 void fill_board(char **board) {
 	int i, j;
 
@@ -85,11 +109,10 @@ void print_board(char **board) {
 
 	return;
 }
-
+*/
 char random_char() {
 	int i_alphabet;
 
-	srand(time(0));
 	char alphabet[27] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 			'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
 			'y', 'z' };
@@ -97,4 +120,57 @@ char random_char() {
 	i_alphabet = rand() % 26;
 
 	return alphabet[i_alphabet];
+}
+
+void words_array(char** words) {
+	int i_words = 0;
+
+
+	open_file_read("files/words.txt");
+	while (fgets(words[i_words], WORD_LENGTH, fptr) != NULL) {
+		strtok(words[i_words], "\n");
+		++i_words;
+	}
+	close_file(fptr);
+}
+
+void random_word() {
+	//char random_word[WORD_LENGTH];
+	char words[NUMBER_OF_WORDS][WORD_LENGTH];
+	words_array(words);
+	printf("%s", words[5]);
+
+	return;
+}
+
+void open_file_read(char *file_path) {
+	if ((fptr = fopen(file_path, "r")) == NULL) {
+		printf("Error! File not found.");
+		exit(1);
+	}
+	return;
+}
+
+void open_file_write(char *file_path) {
+	if ((fptw = fopen(file_path, "w")) == NULL) {
+		printf("Error! File not created.");
+		exit(1);
+	}
+	return;
+}
+
+void open_file_edit(char *file_path) {
+	if ((fpte = fopen(file_path, "a+")) == NULL) {
+		printf("Error! File not edited.");
+		exit(1);
+	}
+	return;
+}
+
+void close_file(FILE *file_pointer) {
+	if (fclose(file_pointer) != 0) {
+		printf("Error! File not closed.");
+		exit(1);
+	}
+	return;
 }
