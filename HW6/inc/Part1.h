@@ -8,8 +8,10 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
-#define X_DIMENSION_LENGTH 21 //21 columns, last ones will be '\0'
-#define Y_DIMENSION_LENGTH 20 //20 rows
+
+#define X_DIMENSION_LENGTH 31 //21 columns, last ones will be '\0'
+#define Y_DIMENSION_LENGTH 30 //20 rows
+#define BORDER_INDEX 29
 #define NUMBER_OF_WORDS 100
 #define WORD_LENGTH 15
 #define NUMBER_OF_CHOSEN_WORDS 10
