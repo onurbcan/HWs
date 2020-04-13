@@ -332,7 +332,7 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 	scanf("%s %s", coordinate, word);
 	board_y = coordinate[0] - 97;
 	board_x = ((coordinate[1] - 48) * 10) + (coordinate[2] - 48);
-
+	printf("%d %d\n", board_y, board_x);
 	if (board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
 		printf("%s is not a valid coordinate. Please try again.\n", coordinate);
 
@@ -342,39 +342,48 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 
 	} else {
 		//watch out! word_index set to 0 in the beginning of the function
-		++word_index;
-		if (board[board_y - 1][board_x] == word[word_index])
+		//++word_index;
+		if (board[board_y - 1][board_x] == word[word_index + 1]) {
 			directions[N] = 1; //North
-		else if (board[board_y - 1][board_x + 1] == word[word_index])
+		}
+		if (board[board_y - 1][board_x + 1] == word[word_index + 1]) {
 			directions[NE] = 1; //North-East
-		else if (board[board_y][board_x + 1] == word[word_index])
+		}
+		if (board[board_y][board_x + 1] == word[word_index + 1]) {
 			directions[E] = 1; //East
-		else if (board[board_y + 1][board_x + 1] == word[word_index])
+		}
+		if (board[board_y + 1][board_x + 1] == word[word_index + 1]) {
 			directions[SE] = 1; //South-East
-		else if (board[board_y + 1][board_x] == word[word_index])
+		}
+		if (board[board_y + 1][board_x] == word[word_index + 1]) {
 			directions[S] = 1; //South
-		else if (board[board_y + 1][board_x - 1] == word[word_index])
+		}
+		if (board[board_y + 1][board_x - 1] == word[word_index + 1]) {
 			directions[SW] = 1; //South-West
-		else if (board[board_y][board_x - 1] == word[word_index])
+		}
+		if (board[board_y][board_x - 1] == word[word_index + 1]) {
 			directions[W] = 1; //West
-		else if (board[board_y - 1][board_x - 1] == word[word_index])
+		}
+		if (board[board_y - 1][board_x - 1] == word[word_index + 1]) {
 			directions[NW] = 1; //North-West
+		}
 	}
 
 	for (i = 0; i < NUMBER_OF_DIRECTIONS; ++i) {
 		if (directions[i] != 1)
 			continue;
 
-		switch(directions[i]){
+		switch(i){
 		case N:
 			success = 1;
+			printf("here_new1.0\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				--board_y;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -387,14 +396,15 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case NE:
 			success = 1;
+			printf("here_new1.1\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				--board_y;
 				++board_x;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -408,13 +418,14 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case E:
 			success = 1;
+			printf("here_new1.2\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				++board_x;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -427,14 +438,15 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case SE:
 			success = 1;
+			printf("here_new1.3\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				++board_y;
 				++board_x;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -448,13 +460,14 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case S:
 			success = 1;
+			printf("here_new1.4\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				++board_y;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -467,14 +480,15 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case SW:
 			success = 1;
+			printf("here_new1.5\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				++board_y;
 				--board_x;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -488,13 +502,14 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case W:
 			success = 1;
+			printf("here_new1.6\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				--board_x;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
@@ -507,14 +522,15 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 			break;
 		case NW:
 			success = 1;
+			printf("here_new1.7\n");
 			while (word[word_index] != '\0') {
 				++word_index;
 				--board_y;
 				--board_x;
-				if (board[board_y][board_x] != word[word_index]) {
+				if (word[word_index] != '\0' && board[board_y][board_x] != word[word_index]) {
 					success = 0;
 					directions[i] = 0;
-					break;
+					continue;
 				}
 			}
 			if (success) {
