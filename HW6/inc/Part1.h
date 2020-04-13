@@ -14,8 +14,8 @@
 #define BORDER_INDEX 19
 #define NUMBER_OF_ALL_WORDS 100
 #define WORD_LENGTH 15
-#define COORDINATE_LENGTH 4
-#define NUMBER_OF_CHOSEN_WORDS 2
+#define COORDINATE_LENGTH 5
+#define NUMBER_OF_CHOSEN_WORDS 10
 #define NUMBER_OF_DIRECTIONS 8
 
 #define N 0 //North
@@ -37,10 +37,10 @@ void word_hunter();
 void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
 
 void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]);
-void print_words(char words[NUMBER_OF_CHOSEN_WORDS]);
+void print_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
 
 void check_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *complete);
-void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
+void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *quit, int *correct);
 char random_char();
 void words_array(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]);
 void generate_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
