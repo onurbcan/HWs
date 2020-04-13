@@ -56,23 +56,44 @@
 #include "Part1.h"
 
 void word_hunter() {
+	int complete, quit, correct;
 	char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH];
-
+	char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH];
 	srand(time(0));
+
+	generate_random_words(words);
+	fill_board(board, words);
 	printf("here1\n");
-	fill_board(board);
-	printf("here2\n");
-	print_board(board);
-	printf("here3\n");
-	solve_board(board);
-	print_board(board);
+
+	printf("This is a %d%c%d puzzle. There are %d words hidden in this puzzle.\n", Y_DIMENSION_LENGTH, 'x', Y_DIMENSION_LENGTH, NUMBER_OF_CHOSEN_WORDS);
+	printf("Word list:\n");
+	do {
+		printf("Word list: (SOLVED/remaining)\n");
+		print_words(words);
+		printf("here2\n");
+		print_board(board);
+		printf("here3\n");
+		if (complete) {
+			printf("Congrats!\n");
+			break;
+		}
+		solve_board(board, words);
+		if (quit) {
+			printf("Good bye!\n");
+			break;
+		} else if (correct) {
+			printf("Good job!\n");
+			check_words(words, &complete);
+		} else {
+			printf("Try again.\n");
+		}
+	} while(1);
 	return;
 }
 
-void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
+void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int i, j, direction, count, error, word_index, word_array_index = 0;
-	char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH];
-	generate_random_words(words);
+
 	printf("here1.1\n");
 	//board_y = 0;
 	//board_x = 0;
@@ -324,7 +345,28 @@ void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 	return;
 }
 
-void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
+void print_words(char words[NUMBER_OF_CHOSEN_WORDS]) {
+	int i;
+
+	for (i = 0; i < NUMBER_OF_CHOSEN_WORDS; ++i) {
+		printf("%s", words[i]);
+	}
+	return;
+}
+
+void check_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *complete) {
+	int i, j;
+	*complete = 1;
+	for (i = 0; i < NUMBER_OF_CHOSEN_WORDS; ++i) {
+		for (j = 0; j < strlen(words[i]); ++j) {
+			if (96 < words[i][j] && words[i][j] < 123)
+				*complete = 0;
+		}
+	}
+	return;
+}
+
+void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int i, word_index = 0, success, directions[NUMBER_OF_DIRECTIONS];
 	char word[WORD_LENGTH], coordinate[COORDINATE_LENGTH];
 
@@ -563,12 +605,12 @@ char random_char() {
 	return alphabet[i_alphabet];
 }
 
-void words_array(char words[NUMBER_OF_WORDS][WORD_LENGTH]) {
+void words_array(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]) {
 	int i_words = 0;
 
 	open_file_read("files/words.txt");
-	while (fgets(words[i_words], WORD_LENGTH, fptr) != NULL) {
-		strtok(words[i_words], "\n");
+	while (fgets(all_words[i_words], WORD_LENGTH, fptr) != NULL) {
+		strtok(all_words[i_words], "\n");
 		++i_words;
 	}
 	close_file(fptr);
@@ -578,12 +620,12 @@ void generate_random_words(
 		char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int i, j, i_random_word;
 
-	char words[NUMBER_OF_WORDS][WORD_LENGTH];
+	char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH];
 
-	words_array(words);
+	words_array(all_words);
 	for (i = 0; i < NUMBER_OF_CHOSEN_WORDS; ++i) {
 		i_random_word = rand() % 100;
-		strcpy(random_words[i], words[i_random_word]);
+		strcpy(random_words[i], all_words[i_random_word]);
 		j = 0;
 		while (j < i) {
 			//checks not to choose an already chosen word
@@ -594,7 +636,7 @@ void generate_random_words(
 			++j;
 		}
 	}
-
+	//delete it after debugging
 	for (i = 0; i < NUMBER_OF_CHOSEN_WORDS; ++i)
 		printf("%d: %s", i, random_words[i]);
 
