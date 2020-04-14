@@ -92,7 +92,8 @@ void word_hunter() {
 }
 
 void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
-	int i, j, direction, count, error, word_index, word_array_index = 0;
+	int i, j, direction, count, error;
+	word_array_index = 0;
 
 	printf("here1.1\n");
 	//board_y = 0;
@@ -101,7 +102,7 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 	//check if the number of chosen words does not reach to NUMBER_OF_CHOSEN_WORDS
 	while (word_array_index < NUMBER_OF_CHOSEN_WORDS) {
 		error = 0;
-		word_index = 0;
+		words_index = 0;
 		direction = rand() % NUMBER_OF_DIRECTIONS;
 		//direction = 4;
 		//board_y = 0;
@@ -112,21 +113,22 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 			board_x = rand() % (BORDER_INDEX + 1);
 		} while ((96 < board[board_y][board_x] && board[board_y][board_x] < 123)
 				&& (board[board_y][board_x]
-						!= words[word_array_index][word_index]));
+						!= words[word_array_index][words_index]));
 
 		printf("here1.2\n");
 		//operations to different directions in cases for a chosen word (word_array_index)
 		switch (direction) {
 		case N: //North
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				--board_y;
+				printf("here1.3 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						++board_y;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.3.1 %d %d\n", board_y, board_x);
@@ -136,9 +138,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						++board_y;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.3.2 %d %d\n", board_y, board_x);
@@ -146,21 +148,21 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.3 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case NE: //North-East
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				--board_y;
 				++board_x;
+				printf("here1.4 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						++board_y;
 						--board_x;
 						board[board_y][board_x] = 32; //space character
@@ -171,9 +173,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						++board_y;
 						--board_x;
 						board[board_y][board_x] = 32; //space character
@@ -182,20 +184,20 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.4 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case E: //East
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				++board_x;
+				printf("here1.5 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						--board_x;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.5.1 %d %d\n", board_y, board_x);
@@ -205,9 +207,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						--board_x;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.5.2 %d %d\n", board_y, board_x);
@@ -215,21 +217,21 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.5 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case SE: //South-East
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				++board_y;
 				++board_x;
+				printf("here1.6 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						--board_y;
 						--board_x;
 						board[board_y][board_x] = 32; //space character
@@ -240,9 +242,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						--board_y;
 						--board_x;
 						board[board_y][board_x] = 32; //space character
@@ -251,20 +253,20 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.6 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case S: //South
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				++board_y;
+				printf("here1.7 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						--board_y;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.7.1 %d %d\n", board_y, board_x);
@@ -274,9 +276,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						--board_y;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.7.2 %d %d\n", board_y, board_x);
@@ -284,21 +286,21 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.7 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case SW: //South-West
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				++board_y;
 				--board_x;
+				printf("here1.8 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						--board_y;
 						++board_x;
 						board[board_y][board_x] = 32; //space character
@@ -309,9 +311,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						--board_y;
 						++board_x;
 						board[board_y][board_x] = 32; //space character
@@ -320,20 +322,20 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.8 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case W: //West
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				--board_x;
+				printf("here1.9 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						++board_x;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.9.1 %d %d\n", board_y, board_x);
@@ -343,9 +345,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						++board_x;
 						board[board_y][board_x] = 32; //space character
 						printf("here1.9.2 %d %d\n", board_y, board_x);
@@ -353,21 +355,21 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.9 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		case NW: //North-West
 			do {
-				board[board_y][board_x] = words[word_array_index][word_index];
-				++word_index;
+				board[board_y][board_x] = words[word_array_index][words_index];
+				++words_index;
 				--board_y;
 				--board_x;
+				printf("here1.10 %d %d\n", board_y, board_x);
 
 				if (board_y
 						< 0|| board_x < 0 || board_y > BORDER_INDEX || board_x > BORDER_INDEX) {
-					while (word_index >= 0) {
-						--word_index;
+					while (words_index > 0) {
+						--words_index;
 						++board_y;
 						++board_x;
 						board[board_y][board_x] = 32; //space character
@@ -378,9 +380,9 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 				} else if ((96 < board[board_y][board_x]
 						&& board[board_y][board_x] < 123)
 						&& (board[board_y][board_x]
-								!= words[word_array_index][word_index])) {
-					while (word_index >= 0) {
-						--word_index;
+								!= words[word_array_index][words_index])) {
+					while (words_index > 0) {
+						--words_index;
 						++board_y;
 						++board_x;
 						board[board_y][board_x] = 32; //space character
@@ -389,9 +391,8 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 					error = 1;
 					break;
 				}
-				printf("here1.10 %d %d\n", board_y, board_x);
-			} while (words[word_array_index][word_index] != '\0');
-			printf("%d %d\n", error, words[word_array_index][word_index]);
+			} while (words[word_array_index][words_index] != '\0');
+			printf("%d %d\n", error, words[word_array_index][words_index]);
 			break;
 		default:
 			break;
@@ -451,6 +452,23 @@ void print_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 		printf("%s", words[i]);
 	}
 	return;
+}
+
+int find_in_words(char word[WORD_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *word_array_index) {
+	int i, j, success;
+	*word_array_index = -1; //removes value from previous call to prevent to return it wrong
+	for (i = 0; i < NUMBER_OF_CHOSEN_WORDS; ++i) {
+		success = 0;
+		for (j = 0; j < strlen(word); ++j) {
+			if (word[j] == words[i][j])
+				++success;
+		}
+		if (success == strlen(word)) {
+			*word_array_index = i;
+			return (1);
+		}
+	}
+	return (0);
 }
 
 void check_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *complete) {
@@ -537,11 +555,12 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					++board_y;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -564,12 +583,13 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					++board_y;
 					--board_x;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -589,11 +609,12 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					--board_x;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -616,12 +637,13 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					--board_y;
 					--board_x;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -641,11 +663,12 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					--board_y;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -668,12 +691,13 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					--board_y;
 					++board_x;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -693,11 +717,12 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					++board_x;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;
@@ -720,12 +745,13 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[
 					continue;
 				}
 			}
-			if (success) {
+			if (success && find_in_words(word, words, &word_array_index)) {
 				while (word_index > 0) {
 					--word_index;
 					++board_y;
 					++board_x;
 					board[board_y][board_x] -= 32;
+					words[word_array_index][word_index] -= 32;
 				}
 			}
 			break;

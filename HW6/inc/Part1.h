@@ -32,6 +32,7 @@ FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
 
 int board_y, board_x;
+int words_index, word_array_index;
 
 void word_hunter();
 void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
@@ -39,6 +40,7 @@ void fill_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[N
 void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]);
 void print_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
 
+int find_in_words(char word[WORD_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *word_array_index);
 void check_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *complete);
 void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *quit, int *correct);
 char random_char();
