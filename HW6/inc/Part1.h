@@ -8,6 +8,8 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
+//#define DEBUG 1
+
 //Board properties
 #define X_DIMENSION_LENGTH 21 //21 columns, last ones will be '\0'
 #define Y_DIMENSION_LENGTH 20 //20 rows
@@ -37,11 +39,6 @@ FILE *fptr; //fptr file pointer read
 FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
 
-//Common variables
-int i, j;
-int board_y, board_x;
-int words_index, words_array_index;
-
 //Word hunter game
 void word_hunter();
 
@@ -69,5 +66,7 @@ void open_file_read(char *file_path);
 void open_file_write(char *file_path);
 void open_file_edit(char *file_path);
 void close_file(FILE *file_pointer);
+
+void myprintf(char str[255]);
 
 #endif /* INC_PART1_H_ */
