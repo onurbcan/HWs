@@ -8,7 +8,8 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
-//#define DEBUG 1
+//Debug switch
+#define DEBUG 1
 
 //Board properties
 #define X_DIMENSION_LENGTH 21 //21 columns, last ones will be '\0'
@@ -67,6 +68,7 @@ void open_file_write(char *file_path);
 void open_file_edit(char *file_path);
 void close_file(FILE *file_pointer);
 
-void myprintf(char str[255]);
+//Debug
+void debug_printf(int debug_value, char str[255], char c, int x);
 
 #endif /* INC_PART1_H_ */
