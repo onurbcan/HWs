@@ -76,15 +76,15 @@ void word_hunter() {
 		}
 		solve_board(board, words, &quit, &correct);
 		if (quit) {
-			//system("clear");
+			system("clear");
 			printf("Good bye!\n");
 			return;
 		} else if (correct) {
-			//system("clear");
+			system("clear");
 			printf("Good job!\n\n");
 			are_words_solved(words, &complete);
 		} else {
-			//system("clear");
+			system("clear");
 			printf("Please try again.\n\n");
 		}
 	}
