@@ -48,7 +48,8 @@ void choose_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH])
 void get_all_words(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]);
 
 //Fill board
-void fill_board_words(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
+void fill_board_words(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
+		char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
 void fill_board_random_char(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]);
 char random_char();
 
@@ -57,10 +58,14 @@ void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]);
 void print_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
 
 //Solve board
-void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *quit, int *correct);
+void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
+		char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *quit,
+		int *correct);
 void is_word_valid(char word[WORD_LENGTH], int *word_valid);
-void find_in_words(char word[WORD_LENGTH], char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *word_array_index);
-void are_words_solved(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *complete);
+void find_in_words(char word[WORD_LENGTH],
+		char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *word_array_index);
+void are_words_solved(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH],
+		int *complete);
 
 //File operations
 void open_file_read(char *file_path);
