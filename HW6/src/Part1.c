@@ -55,6 +55,12 @@
 #include <time.h>
 #include "Part1.h"
 
+/** 1.0) Word hunter game
+ * The word hunter game typically consists of scrambled letters in
+ * a grid in which a player seeks for hidden meaningful words. Hidden words are
+ * placed vertically, horizontally or diagonally. They may overlap but cannot be
+ * in a zigzag form or wrap around.
+ */
 void word_hunter() {
 	int complete = 0, quit = 0, correct; //boolean flag operators
 	char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH];
@@ -94,7 +100,8 @@ void word_hunter() {
 	return;
 }
 
-//Words list
+/** 2.1) Choose random words
+ * 10 random words are chosen from the given list */
 void choose_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int i, j, i_random_word, same; //, length;
 	char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH];
@@ -118,7 +125,8 @@ void choose_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH])
 	return;
 }
 
-//Words list
+/** 2.2) Get all words
+ * Given a list of 100 words. */
 void get_all_words(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]) {
 	int i_words = 0;
 	open_file_read("files/words.txt");
@@ -130,7 +138,12 @@ void get_all_words(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]) {
 	return;
 }
 
-//Fill board
+/** 3.1) Fill board words
+ * A puzzle map with a 20x20 grid created where each cell contains a character.
+ * It is built as follows:
+ * • Each word is placed in the puzzle table with random directions and
+ * positions. (Words are scribed left to right, top-down, diagonally or in the
+ * reverse order of these directions) */
 void fill_board_words(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
 		char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int board_y, board_x, words_index, words_array_index = 0, direction, error;
@@ -418,7 +431,8 @@ void fill_board_words(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
 	fill_board_random_char(board);
 }
 
-//Fill board
+/** 3.2) Fill board random char
+ * After word placement, rest of the board is filled with random characters. */
 void fill_board_random_char(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 	int i, j;
 
@@ -432,7 +446,8 @@ void fill_board_random_char(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) 
 	}
 }
 
-//Fill board
+/** 3.3) Random char
+ * Random characters are generated for the function of fill_board_random_char. */
 char random_char() {
 	int i_alphabet;
 	char alphabet[27] = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
@@ -443,7 +458,10 @@ char random_char() {
 	return alphabet[i_alphabet];
 }
 
-//Print
+/** 4.1) Print board
+ * After each new input, 20x20 board is printed in the form of words' letters
+ * and random letters mixed. User follows the ones solved whether they are
+ * written with upper-case letters */
 void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 	int i, j;
 
@@ -467,7 +485,10 @@ void print_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH]) {
 	return;
 }
 
-//Print
+/** 4.2) Print words
+ * After each new input, chosen 10 words are printed together with their index
+ * numbers. User follows the ones solved whether they are written with
+ * upper-case letters */
 void print_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int i;
 
@@ -477,7 +498,12 @@ void print_words(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	return;
 }
 
-//Solve board
+/** 5.1) Solve board
+ * As soon as the player enters a new guess, the program searches for all
+ * 8 directions. If the guess is correct, the corresponding word on the board
+ * and the list is converted to upper-case and reprinted. Otherwise, there is no
+ * change on the board and the list. If the player finds all the words in the
+ * puzzle or enters "exit now" instead of a valid guess, game is terminated. */
 void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
 		char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *exit,
 		int *correct) {
@@ -815,7 +841,9 @@ void solve_board(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
 	return;
 }
 
-//Solve board
+/** 5.2) Is word valid
+ * As soon as the player enters a new guess, the program checks whether the
+ * entered word contains valid lower-case letters. */
 void is_word_valid(char word[WORD_LENGTH], int *word_valid) {
 	int i = 0;
 	*word_valid = 1;
@@ -830,7 +858,9 @@ void is_word_valid(char word[WORD_LENGTH], int *word_valid) {
 	return;
 }
 
-//Solve board
+/** 5.3) Find in words
+ * Index number of a word in the 10 chosen word list is needed for the operation
+ * in the solve_board function. find_in_words function returns this value. */
 void find_in_words(char word[WORD_LENGTH],
 		char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH], int *word_array_index) {
 	int i, j, count;
@@ -850,7 +880,10 @@ void find_in_words(char word[WORD_LENGTH],
 	return;
 }
 
-//Solve board
+/** 5.4) Are words solved
+ * As soon as the player enters a new guess and it is a correct one, it is
+ * checked whether all words solved. If so, game is terminated in the following
+ * step of this function call. */
 void are_words_solved(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH],
 		int *complete) {
 	int i, j;
@@ -867,7 +900,9 @@ void are_words_solved(char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH],
 	return;
 }
 
-//File operations
+/** 6.1) Open file read
+ * Opens the file to be read using the address and file name (together with
+ * file type) in the parameter path. */
 void open_file_read(char *file_path) {
 	if ((fptr = fopen(file_path, "r")) == NULL) {
 		printf("Error! File not found.");
@@ -876,7 +911,9 @@ void open_file_read(char *file_path) {
 	return;
 }
 
-//File operations
+/** 6.2) Open file write
+ * Opens the file to be written using the address and file name (together with
+ * file type) in the parameter path. */
 void open_file_write(char *file_path) {
 	if ((fptw = fopen(file_path, "w")) == NULL) {
 		printf("Error! File not created.");
@@ -885,7 +922,9 @@ void open_file_write(char *file_path) {
 	return;
 }
 
-//File operations
+/** 6.3) Open file edit
+ * Opens the file to be edited using the address and file name (together with
+ * file type) in the parameter path. */
 void open_file_edit(char *file_path) {
 	if ((fpte = fopen(file_path, "a+")) == NULL) {
 		printf("Error! File not edited.");
@@ -894,7 +933,8 @@ void open_file_edit(char *file_path) {
 	return;
 }
 
-//File operations
+/** 6.4) Close file
+ * Closes the file using the file pointer in the parameter. */
 void close_file(FILE *file_pointer) {
 	if (fclose(file_pointer) != 0) {
 		printf("Error! File not closed.");
@@ -903,7 +943,10 @@ void close_file(FILE *file_pointer) {
 	return;
 }
 
-//Debug
+/** 7.1) Debug
+ * Prints debug message depending on the debug_value (1 or 2) coming from the
+ * function parameter. This function can be switched off by changing the defined
+ * DEBUG constant to 0. */
 void debug_printf(int debug_value, char str[255], char c, int x) {
 #ifdef DEBUG
 #if (DEBUG == 1)

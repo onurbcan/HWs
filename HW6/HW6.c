@@ -13,6 +13,7 @@
 #include "Part1.h"
 
 int main(void) {
+	/*! Word hunter game */
 	word_hunter();
 	return EXIT_SUCCESS;
 }
