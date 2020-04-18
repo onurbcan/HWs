@@ -55,6 +55,11 @@
 #include <time.h>
 #include "Part1.h"
 
+/*! \mainpage HW6 Documentation
+ *
+ * This project is the implementation of Word Hunter Game.
+ */
+
 /** 1.0) Word hunter game
  * The word hunter game typically consists of scrambled letters in
  * a grid in which a player seeks for hidden meaningful words. Hidden words are
