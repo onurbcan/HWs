@@ -15,6 +15,5 @@
 int main(void) {
 	/*! Word hunter game */
 	word_hunter();
-	/* last comment */
 	return EXIT_SUCCESS;
 }
