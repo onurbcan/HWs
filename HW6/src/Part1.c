@@ -67,7 +67,7 @@
  * in a zigzag form or wrap around.
  */
 void word_hunter() {
-	int complete = 0, quit = 0, correct; //boolean flag operators
+	int complete = 0, quit = 0, correct = 0; //boolean flag operators
 	char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH];
 	char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH];
 	srand(time(0));
