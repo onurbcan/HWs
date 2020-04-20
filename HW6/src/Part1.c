@@ -66,13 +66,13 @@
  * placed vertically, horizontally or diagonally. They may overlap but cannot be
  * in a zigzag form or wrap around.
  */
-void word_hunter() {
+void word_hunter(char *file_path) {
 	int complete = 0, quit = 0, correct; //boolean flag operators
 	char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH];
 	char words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH];
 	srand(time(0));
 
-	choose_random_words(words);
+	choose_random_words(file_path, words);
 	fill_board_words(board, words);
 
 	printf(
@@ -107,11 +107,11 @@ void word_hunter() {
 
 /** 2.1) Choose random words
  * 10 random words are chosen from the given list */
-void choose_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
+void choose_random_words(char *file_path, char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]) {
 	int i, j, i_random_word, same; //, length;
 	char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH];
 
-	get_all_words(all_words);
+	get_all_words(file_path, all_words);
 	for (i = 0; i < NUMBER_OF_CHOSEN_WORDS; ++i) {
 		i_random_word = rand() % 100;
 		same = 0;
@@ -132,9 +132,9 @@ void choose_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH])
 
 /** 2.2) Get all words
  * Given a list of 100 words. */
-void get_all_words(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]) {
+void get_all_words(char *file_path, char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]) {
 	int i_words = 0;
-	open_file_read("files/words.txt");
+	open_file_read(file_path);
 	while (fgets(all_words[i_words], WORD_LENGTH, fptr) != NULL) {
 		strtok(all_words[i_words], "\n");
 		++i_words;

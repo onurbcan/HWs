@@ -57,11 +57,11 @@ FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
 
 /*! 1.0) Word hunter game */
-void word_hunter();
+void word_hunter(char *file_path);
 
 /*! 2.0) Words list */
-void choose_random_words(char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
-void get_all_words(char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]);
+void choose_random_words(char *file_path, char random_words[NUMBER_OF_CHOSEN_WORDS][WORD_LENGTH]);
+void get_all_words(char *file_path, char all_words[NUMBER_OF_ALL_WORDS][WORD_LENGTH]);
 
 /*! 3.0) Fill board */
 void fill_board_words(char board[Y_DIMENSION_LENGTH][X_DIMENSION_LENGTH],
