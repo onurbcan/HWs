@@ -22,25 +22,32 @@ void video_games(char *file_path){
 	int i, i_words = 0;
     //int year[FILE_LINE],na_sales[FILE_LINE],eu_sales[FILE_LINE],global_sales[FILE_LINE],user_score[FILE_LINE]
     char c;
-    char all_games[FILE_LINE][FILE_LINE_LENGTH], games[FILE_LINE][GAME_LENGTH];
-    char genres[FILE_LINE][GENRE_LENGTH], platforms[FILE_LINE][PLATFORM_LENGTH];
+    char all_games[FILE_LINE][FILE_LINE_LENGTH];
+    char *games[FILE_LINE];
+    char *genres[FILE_LINE];
+	char *platforms[FILE_LINE];
 	open_file_read(file_path);
 
     while (c != '\n') {
     	c = fgetc(fptr);
     }
-
+    /*
     while (fptr != EOF) {
     	fscanf(fptr, "%s, %s, %s, ", games, genres, platforms)
 
     }
-
+	*/
 	while (fgets(all_games[i_words], FILE_LINE_LENGTH, fptr) != NULL) {
-		strtok(all_games[i_words], "\n");
+		games[i_words] = strtok(all_games[i_words], ",");
+		genres[i_words] = strtok(NULL, ",");
+		platforms[i_words] = strtok(NULL, ",");
+
+
+		strtok(NULL, "\n");
 		++i_words;
 	}
     for (i = 0; i < 10; ++i) {
-        printf("%s\n", all_games[i]);
+        printf("%s\t %s\t %s\t %s\n", games[i], genres[i], platforms[i], all_games[i]);
     }
 	close_file(fptr);
 }
