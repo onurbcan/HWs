@@ -1,6 +1,6 @@
 /*
  ============================================================================
- Name        : HW6.c
+ Name        : HW7.c
  Author      : Onur
  Version     :
  Copyright   : Your copyright notice
@@ -10,10 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "Part1.h"
 
-int main(int argc, char **argv) {
-	/*! Word hunter game */
-	word_hunter(argv[1]);
+int main(void) {
 	return EXIT_SUCCESS;
 }
