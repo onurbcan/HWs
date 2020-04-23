@@ -17,12 +17,6 @@
 #define FILE_LINE 2000
 #define FILE_LINE_LENGTH 200
 
-#define YEAR_LENGTH 5
-#define NA_SALES_LENGTH 10
-#define EU_SALES_LENGTH 10
-#define GLOBAL_SALES_LENGTH 10
-#define USER_SCORE_LENGTH 10
-
 /*! File pointer to read the file */
 FILE *fptr; //fptr file pointer read
 /*! File pointer to write the file */
@@ -35,8 +29,9 @@ void video_games(char *file_path);
 void menu(int *menu_choice);
 void menu_cases(int menu_choice);
 void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genres[][GENRE_OR_PLATFORM_LENGTH], char *platforms[][GENRE_OR_PLATFORM_LENGTH]);
-void sort_char_array(char *array[][20], int size);
+void sort_char_array(char *array[][GENRE_OR_PLATFORM_LENGTH], int size);
 void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LENGTH]);
+int get_array_index(char *element[] ,char *array[][GENRE_OR_PLATFORM_LENGTH]);
 
 /*! 6.0) File operations */
 void open_file_read(char *file_path);

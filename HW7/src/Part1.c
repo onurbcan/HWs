@@ -19,13 +19,55 @@
  * The Video games accounting 
  */
 void video_games(char *file_path){
+
+    //char *games[GAME_LINE][GAME_LENGTH];
+    char *genres[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
+	char *platforms[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
+
+
+	int i, result, result2, temp, same, i_games = 0;
+    char c, *temp_char[20], *temp_char2[20];
+    char all_table[FILE_LINE][FILE_LINE_LENGTH];
+    float games_data[FILE_LINE][10];
+    char *games[GAME_LINE][GAME_LENGTH];
+
+	build_single_arrays(file_path, games, genres, platforms);
+
+
+	open_file_read(file_path);
+
+	//removes the first line which is for column titles
+    while (c != '\n') {
+    	c = fgetc(fptr);
+    }
+
+	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
+		//builds games array
+		strtok(all_table[i_games], ",");
+
+		temp_char[0] = strtok(NULL, ",");
+		temp_char2[0] = strtok(NULL, ",");
+		//result = 0;
+		result = get_array_index(temp_char, genres);
+		//result2 = get_array_index(temp_char2, platforms);
+
+		//printf("%s %s \t result = %d and %d\n", temp_char[0], temp_char2[0], result, result2);
+
+		strtok(NULL, "\n");
+		++i_games;
+	}
+
+    close_file(fptr);
+
+
+	/*
 	int menu_choice;
 
     char *games[GAME_LINE][GAME_LENGTH];
     char *genres[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
 	char *platforms[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
 
-	float *games_data[FILE_LINE][FILE_LINE_LENGTH];
+	float *games_data[FILE_LINE][10];
 
 
 	do {
@@ -35,10 +77,10 @@ void video_games(char *file_path){
 
 	build_single_arrays(file_path, games, genres, platforms);
 
-	build_data_array(file_path, games_data);
+	//build_data_array(file_path, games_data);
+	*/
 
-
-
+	return;
 }
 
 void menu(int *menu_choice) {
@@ -144,8 +186,24 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
 	}
 	close_file(fptr);
 
+    printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
+    --i_genres;
+    while (i_genres >= 0) {
+    	printf("%d: %s\n", i_genres, *genres[i_genres]);
+    	--i_genres;
+    }
+    printf("\n");
+    --i_platforms;
+    while (i_platforms >= 0) {
+    	printf("%d: %s\n", i_platforms, *platforms[i_platforms]);
+    	--i_platforms;
+    }
+
+    i_genres = 12;
+    i_platforms = 10;
+
     sort_char_array(genres, i_genres);
-    sort_char_array(platforms, i_platforms);
+	sort_char_array(platforms, i_platforms);
 
     printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
     --i_genres;
@@ -167,9 +225,11 @@ void sort_char_array(char *array[][GENRE_OR_PLATFORM_LENGTH], int size) {
 	int i, j;
 	char temp[GENRE_OR_PLATFORM_LENGTH];
 
-	for (i = 0; i < size; ++i) {
+	for (i = 0; i < size - 1; ++i) {
 		for (j = i + 1; j < size; ++j) {
+			printf("for: %s and %s\n", *array[i], *array[j]);
 			if (strcmp(*array[i], *array[j]) > 0) {
+				printf("if: %s and %s\n", *array[i], *array[j]);
 				strcpy(temp, *array[i]);
 				strcpy(*array[i], *array[j]);
 				strcpy(*array[j], temp);
@@ -178,7 +238,7 @@ void sort_char_array(char *array[][GENRE_OR_PLATFORM_LENGTH], int size) {
 	}
 	return;
 }
-
+/*
 void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LENGTH]) {
 	int i, temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
     char c;
@@ -254,13 +314,18 @@ void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LEN
     	--i_platforms;
     }
 }
-
-/*
-void get_array_index(char *element[] ,char *array[][GENRE_OR_PLATFORM_LENGTH]) {
-
-
-}
 */
+
+int get_array_index(char *element[] ,char *array[][GENRE_OR_PLATFORM_LENGTH]) {
+	int i = 0;
+
+	for (i = 0; i < GENRE_OR_PLATFORM_LENGTH; ++i) {
+		if (strcmp(element[0], *array[i]) == 0)
+			return (i);
+	}
+	return (i);
+}
+
 
 /** 6.1) Open file read
  * Opens the file to be read using the address and file name (together with
