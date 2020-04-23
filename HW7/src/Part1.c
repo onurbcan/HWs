@@ -21,19 +21,20 @@
 void video_games(char *file_path){
 
     //char *games[GAME_LINE][GAME_LENGTH];
-    char *genres[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
-	char *platforms[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
+    char *genres[GENRE_OR_PLATFORM_LINE];
+	char *platforms[GENRE_OR_PLATFORM_LINE];
 
-
-	int i, result, result2, temp, same, i_games = 0;
+	char *tempc[20];
+	float result, result2;
+	int i, temp, same, i_games = 0;
     char c, *temp_char[20], *temp_char2[20];
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
     float games_data[FILE_LINE][10];
-    char *games[GAME_LINE][GAME_LENGTH];
+    char *games[GAME_LINE];
 
 	build_single_arrays(file_path, games, genres, platforms);
 
-
+/*
 	open_file_read(file_path);
 
 	//removes the first line which is for column titles
@@ -48,17 +49,26 @@ void video_games(char *file_path){
 		temp_char[0] = strtok(NULL, ",");
 		temp_char2[0] = strtok(NULL, ",");
 		//result = 0;
-		result = get_array_index(temp_char, genres);
-		//result2 = get_array_index(temp_char2, platforms);
 
-		//printf("%s %s \t result = %d and %d\n", temp_char[0], temp_char2[0], result, result2);
+		//genre
+		games_data[i_games][0] = get_array_index(temp_char, genres);
+
+		//platform
+		games_data[i_games][1] = get_array_index(temp_char2, platforms);
+
+		//year of release
+		tempc[0] = strtok(NULL, ",");
+		//if (strcmp(tempc[0], "not_available") == 0);
+		//games_data[i_games][2]
+
+		//printf("%s %s \t result = %f and %f\n", temp_char[0], temp_char2[0], games_data[i_games][0], games_data[i_games][1]);
 
 		strtok(NULL, "\n");
 		++i_games;
 	}
 
     close_file(fptr);
-
+*/
 
 	/*
 	int menu_choice;
@@ -127,7 +137,7 @@ void menu_cases(int menu_choice) {
 	return;
 }
 
-void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genres[][GENRE_OR_PLATFORM_LENGTH], char *platforms[][GENRE_OR_PLATFORM_LENGTH]) {
+void build_single_arrays(char *file_path, char **games, char **genres, char **platforms) {
 	int i, temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
     char c;
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
@@ -141,10 +151,10 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
 
 	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
 		//builds games array
-		games[i_games][0] = strtok(all_table[i_games], ",");
+		games[i_games] = strtok(all_table[i_games], ",");
 
 		//builds genres array
-		genres[i_genres][0] = strtok(NULL, ",");
+		genres[i_genres] = strtok(NULL, ",");
 		//checks not to write an already written genre
 		if (i_genres == 0)
 			++i_genres;
@@ -152,7 +162,7 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
 			same = 0;
 			temp = i_genres - 1;
 			while (temp >= 0) {
-				if (strcmp(*genres[i_genres], *genres[temp]) == 0) {
+				if (strcmp(genres[i_genres], genres[temp]) == 0) {
 					same = 1;
 					break;
 				}
@@ -163,7 +173,7 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
 		}
 
 		//builds platforms array
-		platforms[i_platforms][0] = strtok(NULL, ",");
+		platforms[i_platforms] = strtok(NULL, ",");
 		//checks not to write an already written platform
 		if (i_platforms == 0)
 			++i_platforms;
@@ -171,7 +181,7 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
 			same = 0;
 			temp = i_platforms - 1;
 			while (temp >= 0) {
-				if (strcmp(*platforms[i_platforms], *platforms[temp]) == 0) {
+				if (strcmp(platforms[i_platforms], platforms[temp]) == 0) {
 					same = 1;
 					break;
 				}
@@ -186,16 +196,17 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
 	}
 	close_file(fptr);
 
+
     printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
     --i_genres;
     while (i_genres >= 0) {
-    	printf("%d: %s\n", i_genres, *genres[i_genres]);
+    	printf("%d: %s\n", i_genres, genres[i_genres]);
     	--i_genres;
     }
     printf("\n");
     --i_platforms;
     while (i_platforms >= 0) {
-    	printf("%d: %s\n", i_platforms, *platforms[i_platforms]);
+    	printf("%d: %s\n", i_platforms, platforms[i_platforms]);
     	--i_platforms;
     }
 
@@ -205,34 +216,35 @@ void build_single_arrays(char *file_path, char *games[][GAME_LENGTH], char *genr
     sort_char_array(genres, i_genres);
 	sort_char_array(platforms, i_platforms);
 
+
     printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
     --i_genres;
     while (i_genres >= 0) {
-    	printf("%d: %s\n", i_genres, *genres[i_genres]);
+    	printf("%d: %s\n", i_genres, genres[i_genres]);
     	--i_genres;
     }
     printf("\n");
     --i_platforms;
     while (i_platforms >= 0) {
-    	printf("%d: %s\n", i_platforms, *platforms[i_platforms]);
+    	printf("%d: %s\n", i_platforms, platforms[i_platforms]);
     	--i_platforms;
     }
 
 	return;
 }
 
-void sort_char_array(char *array[][GENRE_OR_PLATFORM_LENGTH], int size) {
+void sort_char_array(char *array[], int size) {
 	int i, j;
-	char temp[GENRE_OR_PLATFORM_LENGTH];
+	char *temp;
 
 	for (i = 0; i < size - 1; ++i) {
 		for (j = i + 1; j < size; ++j) {
-			printf("for: %s and %s\n", *array[i], *array[j]);
-			if (strcmp(*array[i], *array[j]) > 0) {
-				printf("if: %s and %s\n", *array[i], *array[j]);
-				strcpy(temp, *array[i]);
-				strcpy(*array[i], *array[j]);
-				strcpy(*array[j], temp);
+			//printf("for: %s and %s\n", array[i], array[j]);
+			if (strcmp(array[i], array[j]) > 0) {
+				//printf("if: %s and %s\n", array[i], array[j]);
+				temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
 			}
 		}
 	}
@@ -316,14 +328,14 @@ void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LEN
 }
 */
 
-int get_array_index(char *element[] ,char *array[][GENRE_OR_PLATFORM_LENGTH]) {
+float get_array_index(char *element[] ,char *array[][GENRE_OR_PLATFORM_LENGTH]) {
 	int i = 0;
 
 	for (i = 0; i < GENRE_OR_PLATFORM_LENGTH; ++i) {
 		if (strcmp(element[0], *array[i]) == 0)
-			return (i);
+			return (float)(i);
 	}
-	return (i);
+	return (float)(i);
 }
 
 
