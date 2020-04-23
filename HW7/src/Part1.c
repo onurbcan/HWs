@@ -19,22 +19,24 @@
  * The Video games accounting 
  */
 void video_games(char *file_path){
+	int i_games = 0;
 
-    //char *games[GAME_LINE][GAME_LENGTH];
+    char *games[GAME_LINE];
     char *genres[GENRE_OR_PLATFORM_LINE];
 	char *platforms[GENRE_OR_PLATFORM_LINE];
 
-	char *tempc[20];
+	//char *tempc[20];
 	float result, result2;
-	int i, temp, same, i_games = 0;
+
     char c, *temp_char[20], *temp_char2[20];
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
-    float games_data[FILE_LINE][10];
-    char *games[GAME_LINE];
+    //float games_data[FILE_LINE][10];
 
 	build_single_arrays(file_path, games, genres, platforms);
+	//result = get_array_index("x", platforms);
+	//printf("%f\n", result);
 
-/*
+
 	open_file_read(file_path);
 
 	//removes the first line which is for column titles
@@ -45,30 +47,30 @@ void video_games(char *file_path){
 	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
 		//builds games array
 		strtok(all_table[i_games], ",");
-
+		printf("here\n");
 		temp_char[0] = strtok(NULL, ",");
 		temp_char2[0] = strtok(NULL, ",");
 		//result = 0;
-
+		printf("%s %s\n", temp_char[0], temp_char2[0]);
 		//genre
-		games_data[i_games][0] = get_array_index(temp_char, genres);
-
+		//games_data[i_games][0] = get_array_index(temp_char, genres);
+		result = get_array_index(temp_char, genres);
 		//platform
-		games_data[i_games][1] = get_array_index(temp_char2, platforms);
-
+		//games_data[i_games][1] = get_array_index(temp_char2, platforms);
+		result2 = get_array_index(temp_char2, platforms);
 		//year of release
-		tempc[0] = strtok(NULL, ",");
+		//tempc[0] = strtok(NULL, ",");
 		//if (strcmp(tempc[0], "not_available") == 0);
 		//games_data[i_games][2]
 
-		//printf("%s %s \t result = %f and %f\n", temp_char[0], temp_char2[0], games_data[i_games][0], games_data[i_games][1]);
+		printf("%s %s \t result = %f and %f\n", temp_char[0], temp_char2[0], result, result2);
 
 		strtok(NULL, "\n");
 		++i_games;
 	}
 
     close_file(fptr);
-*/
+
 
 	/*
 	int menu_choice;
@@ -138,7 +140,7 @@ void menu_cases(int menu_choice) {
 }
 
 void build_single_arrays(char *file_path, char **games, char **genres, char **platforms) {
-	int i, temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
+	int temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
     char c;
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
 
@@ -328,14 +330,57 @@ void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LEN
 }
 */
 
-float get_array_index(char *element[] ,char *array[][GENRE_OR_PLATFORM_LENGTH]) {
+float get_array_index(char *element, char *array[]) {
 	int i = 0;
 
 	for (i = 0; i < GENRE_OR_PLATFORM_LENGTH; ++i) {
-		if (strcmp(element[0], *array[i]) == 0)
+		if (strcmp(element, array[i]) == 0)
 			return (float)(i);
 	}
 	return (float)(i);
+}
+
+float string_float_converter(char *num_str) {
+	int i, d, p, if_dec = 0, to_power = 0;
+	float num = 0, multiplier;
+
+	if (strcmp(num_str, "not_available") == 0)
+		return (-1);
+
+
+	for (d = 0; d < strlen(num_str); ++d) {
+		if (num_str[d] == '.') {
+			if_dec = 1;
+			break;
+		}
+	}
+
+	if (if_dec) {
+		for (i = d - 1; i >= 0; --i) {
+			multiplier = 1;
+			for (p = 0; p < to_power; ++p)
+				multiplier *= 10;
+			num += ((num_str[i] - 48) * multiplier);
+			++to_power;
+		}
+		to_power = 0;
+		for (i = d + 1; i < strlen(num_str); ++i) {
+			multiplier = 0.1;
+			for (p = 0; p < to_power; ++p)
+				multiplier /= 10;
+			num += ((num_str[i] - 48) * multiplier);
+			++to_power;
+		}
+	} else {
+		for (i = strlen(num_str) - 1; i >= 0; --i) {
+			multiplier = 1;
+			for (p = 0; p < to_power; ++p)
+				multiplier *= 10;
+			num += ((num_str[i] - 48) * multiplier);
+			++to_power;
+		}
+	}
+	return (num);
 }
 
 
