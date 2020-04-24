@@ -55,7 +55,7 @@ void menu(int *menu_choice) {
 void menu_cases(int menu_choice, char **names, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	int i, index, year, choice, temp;
 	float temp_f;
-	char game_name[GAME_LENGTH], *temp_c;
+	char game_name[GAME_LENGTH], temp_c[15];
 
 	switch (menu_choice) {
 	case 0:
@@ -121,14 +121,56 @@ void menu_cases(int menu_choice, char **names, char **genres, char **platforms, 
 		printf("%-13s\t%s\n", "Genre:", genres[temp]);
 		temp = game_data[index][1];
 		printf("%-13s\t%s\n", "Platform:", platforms[temp]);
+
 		temp_f = game_data[index][2];
+		check_if_valid_float(temp_f, temp_c);
+				/*
 		if (temp_f < 0)
-			temp_c = "not available";
+			strcpy(temp_c, "not available");
+		else
+			float_string_converter(temp_f, temp_c);
+			*/
 		printf("%-13s\t%s\n", "Year:", temp_c);
-		printf("%-13s\t%.2f\n", "Sales is NA:", game_data[index][3]);
-		printf("%-13s\t%.2f\n", "Sales in EU:", game_data[index][4]);
-		printf("%-13s\t%.2f\n", "Total sales:", game_data[index][5]);
-		printf("%-13s\t%.2f\n", "User score:", game_data[index][6]);
+
+		temp_f = game_data[index][3];
+		check_if_valid_float(temp_f, temp_c);
+		/*
+		if (temp_f < 0)
+			strcpy(temp_c, "not available");
+		else
+			float_string_converter(temp_f, temp_c);
+			*/
+		printf("%-13s\t%s\n", "Sales is NA:", temp_c);
+
+		temp_f = game_data[index][4];
+		check_if_valid_float(temp_f, temp_c);
+		/*
+		if (temp_f < 0)
+			strcpy(temp_c, "not available");
+		else
+			float_string_converter(temp_f, temp_c);
+			*/
+		printf("%-13s\t%s\n", "Sales in EU:", temp_c);
+
+		temp_f = game_data[index][5];
+		check_if_valid_float(temp_f, temp_c);
+		/*
+		if (temp_f < 0)
+			strcpy(temp_c, "not available");
+		else
+			float_string_converter(temp_f, temp_c);
+			*/
+		printf("%-13s\t%s\n", "Total sales:", temp_c);
+
+		temp_f = game_data[index][6];
+		check_if_valid_float(temp_f, temp_c);
+		/*
+		if (temp_f < 0)
+			strcpy(temp_c, "not available");
+		else
+			float_string_converter(temp_f, temp_c);
+			*/
+		printf("%-13s\t%s\n", "User score:", temp_c);
 		break;
 	case 4:
 		for (i = 0; i < GAME_LINE; ++i) {
@@ -323,6 +365,42 @@ float get_array_index(char *element, char *array[]) {
 	return (i);
 }
 
+void float_string_converter(float num, char *num_str) {
+	int i, i_int = 0, i_frac, temp_i = num;
+	float temp_f = num - (float)temp_i;
+
+	while (temp_i != 0) {
+		temp_i /= 10;
+		++i_int;
+	}
+
+	// integer part of num
+	if (i_int == 0) {
+		num_str[i_int] = '0';
+		num_str[i_int + 1] = '.';
+		i_frac = i_int + 2;
+	} else {
+		temp_i = num;
+		i_frac = i_int + 1;
+		num_str[i_int] = '.';
+		for (i = i_int - 1; i >= 0; --i) {
+			num_str[i] = (temp_i % 10) + 48;
+			temp_i /= 10;
+		}
+	}
+
+	// fractional part of num
+	temp_f = (temp_f * 100); // to round up to nearest integer value
+	//if ((int)temp_f != 0)
+		//temp_f += 1;
+	for (i = i_frac + 1; i >= i_frac; --i) {
+		num_str[i] = ((int)temp_f % 10) + 48;
+		temp_f = (int)temp_f /10;
+	}
+	num_str[i_frac + 2] = '\0';
+	return;
+}
+
 float string_float_converter(char *num_str) {
 	int i, d, p, if_dec = 0, to_power = 0;
 	float num = 0, multiplier;
@@ -363,6 +441,13 @@ float string_float_converter(char *num_str) {
 		}
 	}
 	return (num);
+}
+
+void check_if_valid_float(float num, char *num_str) {
+	if (num < 0)
+		strcpy(num_str, "not available");
+	else
+		float_string_converter(num, num_str);
 }
 
 

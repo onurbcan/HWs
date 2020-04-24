@@ -31,6 +31,8 @@ void build_arrays(char *file_path, char **games, char **genres, char **platforms
 void sort_char_array(char *array[], int size);
 float get_array_index(char *element, char *array[]);
 float string_float_converter(char *num_str);
+void float_string_converter(float num, char *num_str);
+void check_if_valid_float(float num, char *num_str);
 
 /*! 6.0) File operations */
 void open_file_read(char *file_path);
