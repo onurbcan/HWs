@@ -19,66 +19,163 @@
  * The Video games accounting 
  */
 void video_games(char *file_path){
-
+	int menu_choice;
     char *names[GAME_LINE];
-    char *genres[GENRE_OR_PLATFORM_LINE];
-	char *platforms[GENRE_OR_PLATFORM_LINE];
+    char *genres[GENRE_LINE];
+	char *platforms[PLATFORM_LINE];
     float games_data[GAME_LINE][GAME_DATA_ELEMENTS];
-
 
 	build_arrays(file_path, names, genres, platforms, games_data);
 
-	/*
-	int menu_choice;
 	do {
 		menu(&menu_choice);
-		menu_cases(menu_choice);
+		menu_cases(menu_choice, names, genres, platforms, games_data);
 	} while (menu_choice != 8);
-	*/
 
 	return;
 }
 
 void menu(int *menu_choice) {
-	printf("%d: List of the genres\n", 0);
-	printf("%d: List of the platforms\n", 1);
-	printf("%d: List of the games through the years\n", 2);
-	printf("%d: All information of a single game\n", 3);
-	printf("%d: Average of the user score\n", 4);
-	printf("%d: Geographical information of a single game\n", 5);
-	printf("%d: Frequence of the genres\n", 6);
-	printf("%d: Frequence of the platforms\n", 7);
-	printf("%d: Exit\n", 8);
+	printf("%d) List of the genres\n", 0);
+	printf("%d) List of the platforms\n", 1);
+	printf("%d) List of the games through the years\n", 2);
+	printf("%d) All information of a single game\n", 3);
+	printf("%d) Average of the user score\n", 4);
+	printf("%d) Geographical information of a single game\n", 5);
+	printf("%d) Frequence of the genres\n", 6);
+	printf("%d) Frequence of the platforms\n", 7);
+	printf("%d) Exit\n", 8);
 
-	printf("Please select an operation: ");
+	printf("\nPlease select an operation: ");
 	scanf("%d", menu_choice);
-
+	printf("\n");
 	return;
 }
 
-void menu_cases(int menu_choice) {
+void menu_cases(int menu_choice, char **names, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
+	int i, index, year, choice, temp;
+	float temp_f;
+	char game_name[GAME_LENGTH], *temp_c;
+
 	switch (menu_choice) {
 	case 0:
+		for (i = 0; i < GENRE_LINE; ++i)
+			printf("%d: %s\n", i, genres[i]);
 		break;
 	case 1:
+		for (i = 0; i < PLATFORM_LINE; ++i)
+			printf("%d: %s\n", i, platforms[i]);
 		break;
 	case 2:
+		do {
+			do {
+				printf("Enter a year: ");
+				scanf("%d", &year);
+				if (!(1985 <= year && year <= 2005))
+					printf("There is no game until 1985 or since 2005. Please try again accordingly.\n");
+			} while (!(1985 <= year && year <= 2005));
+			do{
+				printf("Until (0) or since (1) %d: ", year);
+				scanf("%d", &choice);
+				if (!(choice == 0 || choice == 1))
+					printf("%d is an invalid choice. It should be either 0 or 1. Please try again.\n", choice);
+			} while (!(choice == 0 || choice == 1));
+			if ((year == 1985 && choice == 0) || (year == 2005 && choice == 1)) {
+				if (choice == 0)
+					printf("There is no game until 1985. Please try again accordingly.\n");
+				else
+					printf("There is no game since 2005. Please try again accordingly.\n");
+			}
+		} while ((year == 1985 && choice == 0) || (year == 2005 && choice == 1));
+		index = 0;
+		switch (choice) {
+		case 0:
+			for (i = 0; i < GAME_LINE; ++i) {
+				if (game_data[i][2] <= year) {
+					printf("%d: %s\n", index, names[i]);
+					++index;
+				}
+			}
+			break;
+		case 1:
+			for (i = 0; i < GAME_LINE; ++i) {
+				if (game_data[i][2] >= year) {
+					printf("%d: %s\n", index, names[i]);
+					++index;
+				}
+			}
+			break;
+		}
+		printf("\nTotal %d results listed above.\n", index);
 		break;
 	case 3:
+		do {
+			printf("Please enter the name of the game: ");
+			scanf("%s", game_name);
+			index = get_array_index(game_name, names);
+			if (index >= GAME_LINE)
+				printf("%s is an invalid game name. Please try again.\n", game_name);
+		} while (index >= GAME_LINE);
+		printf("%-13s\t%s\n", "Name:", game_name);
+		temp = game_data[index][0];
+		printf("%-13s\t%s\n", "Genre:", genres[temp]);
+		temp = game_data[index][1];
+		printf("%-13s\t%s\n", "Platform:", platforms[temp]);
+		temp_f = game_data[index][2];
+		if (temp_f < 0)
+			temp_c = "not available";
+		printf("%-13s\t%s\n", "Year:", temp_c);
+		printf("%-13s\t%.2f\n", "Sales is NA:", game_data[index][3]);
+		printf("%-13s\t%.2f\n", "Sales in EU:", game_data[index][4]);
+		printf("%-13s\t%.2f\n", "Total sales:", game_data[index][5]);
+		printf("%-13s\t%.2f\n", "User score:", game_data[index][6]);
 		break;
 	case 4:
+		for (i = 0; i < GAME_LINE; ++i) {
+			temp_f += game_data[i][6];
+		}
+		temp_f /= GAME_LINE;
+		printf("Average: %f\n", temp_f);
 		break;
 	case 5:
+		do {
+			printf("Please enter the name of the game: ");
+			scanf("%s", game_name);
+			index = get_array_index(game_name, names);
+			if (index >= GAME_LINE)
+				printf("%s is an invalid game name. Please try again.\n", game_name);
+		} while (index >= GAME_LINE);
+		if (game_data[index][3] > game_data[index][4])
+			printf("This game was more popular in North America\n");
+		else
+			printf("This game was more popular in Europe\n");
 		break;
 	case 6:
+		for (i = 0; i < GENRE_LINE; ++i) {
+			temp = 0;
+			for (index = 0; index < GAME_LINE; ++index) {
+				if (game_data[index][0] == i)
+					++temp;
+			}
+			printf("%-15s\t%d\n", genres[i], temp);
+		}
 		break;
 	case 7:
+		for (i = 0; i < PLATFORM_LINE; ++i) {
+			temp = 0;
+			for (index = 0; index < GAME_LINE; ++index) {
+				if (game_data[index][1] == i)
+					++temp;
+			}
+			printf("%-5s\t%d\n", platforms[i], temp);
+		}
 		break;
 	case 8:
 		printf("Good bye!\n");
 		break;
 	default:
 		printf("Please try again.\n\n");
+		break;
 	}
 	return;
 }
@@ -86,7 +183,7 @@ void menu_cases(int menu_choice) {
 void build_arrays(char *file_path, char **names, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	int temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
     char c, *temp_str;
-    char all_table[FILE_LINE][FILE_LINE_LENGTH];
+    char all_table[GAME_LINE][FILE_LINE_LENGTH];
 
 	open_file_read(file_path);
 
@@ -175,14 +272,15 @@ void build_arrays(char *file_path, char **names, char **genres, char **platforms
 		temp_str = strtok(NULL, "\n");
 		game_data[i_games][6] = string_float_converter(temp_str);
 
-		printf("i_games: %d: %f %f %f %f %f %f %f\n", i_games, game_data[i_games][0], game_data[i_games][1], game_data[i_games][2],game_data[i_games][3],game_data[i_games][4], game_data[i_games][5], game_data[i_games][6]);
+		//Debug
+		//printf("%d: %f %f %f %f %f %f %f\n", i_games, game_data[i_games][0], game_data[i_games][1], game_data[i_games][2],game_data[i_games][3],game_data[i_games][4], game_data[i_games][5], game_data[i_games][6]);
+		//printf("%d: %s\n", i_games, names[i_games]);
 
 		++i_games;
 	}
 	close_file(fptr);
 
-
-
+	/* Debug */
     printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
     --i_genres;
     while (i_genres >= 0) {
@@ -218,7 +316,7 @@ void sort_char_array(char *array[], int size) {
 float get_array_index(char *element, char *array[]) {
 	int i = 0;
 
-	for (i = 0; i < GENRE_OR_PLATFORM_LENGTH; ++i) {
+	for (i = 0; i < GAME_LINE; ++i) {
 		if (strcmp(element, array[i]) == 0)
 			return (i);
 	}

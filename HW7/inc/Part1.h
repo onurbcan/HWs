@@ -9,14 +9,12 @@
 #define INC_PART1_H_
 
 #define GAME_LINE 2000
-#define GAME_LENGTH 100
 #define GAME_DATA_ELEMENTS 7
-
-#define GENRE_OR_PLATFORM_LINE 20 // 10 and 12 elements, respectively
-#define GENRE_OR_PLATFORM_LENGTH 20
-
-#define FILE_LINE 2000
+#define GAME_LENGTH 100
 #define FILE_LINE_LENGTH 200
+
+#define GENRE_LINE 12
+#define PLATFORM_LINE 10
 
 /*! File pointer to read the file */
 FILE *fptr; //fptr file pointer read
@@ -28,10 +26,9 @@ FILE *fpte; //fptw file pointer edit
 /*! 1.0) Video games accounting */
 void video_games(char *file_path);
 void menu(int *menu_choice);
-void menu_cases(int menu_choice);
-void build_arrays(char *file_path, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) ;
+void menu_cases(int menu_choice, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
+void build_arrays(char *file_path, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
 void sort_char_array(char *array[], int size);
-void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LENGTH]);
 float get_array_index(char *element, char *array[]);
 float string_float_converter(char *num_str);
 
