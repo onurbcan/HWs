@@ -28,10 +28,10 @@ FILE *fpte; //fptw file pointer edit
 void video_games(char *file_path);
 void menu(int *menu_choice);
 void menu_cases(int menu_choice);
-void build_single_arrays(char *file_path, char **games, char **genres, char **platforms) ;
+void build_arrays(char *file_path, char **games, char **genres, char **platforms, float game_data[][10]) ;
 void sort_char_array(char *array[], int size);
 void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LENGTH]);
-float get_array_index(char *element ,char *array[]);
+float get_array_index(char *element, char *array[]);
 float string_float_converter(char *num_str);
 
 /*! 6.0) File operations */

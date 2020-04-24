@@ -21,18 +21,18 @@
 void video_games(char *file_path){
 	int i_games = 0;
 
-    char *games[GAME_LINE];
+    char *names[GAME_LINE];
     char *genres[GENRE_OR_PLATFORM_LINE];
 	char *platforms[GENRE_OR_PLATFORM_LINE];
 
 	//char *tempc[20];
 	float result, result2;
 
-    char c, *temp_char[20], *temp_char2[20];
+    char c, *temp_char, *temp_char2;
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
-    //float games_data[FILE_LINE][10];
+    float games_data[FILE_LINE][10];
 
-	build_single_arrays(file_path, games, genres, platforms);
+	build_arrays(file_path, names, genres, platforms, games_data);
 	//result = get_array_index("x", platforms);
 	//printf("%f\n", result);
 
@@ -47,11 +47,11 @@ void video_games(char *file_path){
 	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
 		//builds games array
 		strtok(all_table[i_games], ",");
-		printf("here\n");
-		temp_char[0] = strtok(NULL, ",");
-		temp_char2[0] = strtok(NULL, ",");
+
+		temp_char = strtok(NULL, ",");
+		temp_char2 = strtok(NULL, ",");
 		//result = 0;
-		printf("%s %s\n", temp_char[0], temp_char2[0]);
+		//printf("%s %s\n", temp_char, temp_char2);
 		//genre
 		//games_data[i_games][0] = get_array_index(temp_char, genres);
 		result = get_array_index(temp_char, genres);
@@ -63,7 +63,7 @@ void video_games(char *file_path){
 		//if (strcmp(tempc[0], "not_available") == 0);
 		//games_data[i_games][2]
 
-		printf("%s %s \t result = %f and %f\n", temp_char[0], temp_char2[0], result, result2);
+		printf("%s %s \t result = %f and %f\n", temp_char, temp_char2, result, result2);
 
 		strtok(NULL, "\n");
 		++i_games;
@@ -139,7 +139,7 @@ void menu_cases(int menu_choice) {
 	return;
 }
 
-void build_single_arrays(char *file_path, char **games, char **genres, char **platforms) {
+void build_arrays(char *file_path, char **names, char **genres, char **platforms, float game_data[][10]) {
 	int temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
     char c;
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
@@ -153,7 +153,7 @@ void build_single_arrays(char *file_path, char **games, char **genres, char **pl
 
 	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
 		//builds games array
-		games[i_games] = strtok(all_table[i_games], ",");
+		names[i_games] = strtok(all_table[i_games], ",");
 
 		//builds genres array
 		genres[i_genres] = strtok(NULL, ",");
@@ -335,9 +335,9 @@ float get_array_index(char *element, char *array[]) {
 
 	for (i = 0; i < GENRE_OR_PLATFORM_LENGTH; ++i) {
 		if (strcmp(element, array[i]) == 0)
-			return (float)(i);
+			return (i);
 	}
-	return (float)(i);
+	return (i);
 }
 
 float string_float_converter(char *num_str) {
