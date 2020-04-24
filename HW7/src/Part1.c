@@ -19,77 +19,21 @@
  * The Video games accounting 
  */
 void video_games(char *file_path){
-	int i_games = 0;
 
     char *names[GAME_LINE];
     char *genres[GENRE_OR_PLATFORM_LINE];
 	char *platforms[GENRE_OR_PLATFORM_LINE];
+    float games_data[GAME_LINE][GAME_DATA_ELEMENTS];
 
-	//char *tempc[20];
-	float result, result2;
-
-    char c, *temp_char, *temp_char2;
-    char all_table[FILE_LINE][FILE_LINE_LENGTH];
-    float games_data[FILE_LINE][10];
 
 	build_arrays(file_path, names, genres, platforms, games_data);
-	//result = get_array_index("x", platforms);
-	//printf("%f\n", result);
-
-
-	open_file_read(file_path);
-
-	//removes the first line which is for column titles
-    while (c != '\n') {
-    	c = fgetc(fptr);
-    }
-
-	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
-		//builds games array
-		strtok(all_table[i_games], ",");
-
-		temp_char = strtok(NULL, ",");
-		temp_char2 = strtok(NULL, ",");
-		//result = 0;
-		//printf("%s %s\n", temp_char, temp_char2);
-		//genre
-		//games_data[i_games][0] = get_array_index(temp_char, genres);
-		result = get_array_index(temp_char, genres);
-		//platform
-		//games_data[i_games][1] = get_array_index(temp_char2, platforms);
-		result2 = get_array_index(temp_char2, platforms);
-		//year of release
-		//tempc[0] = strtok(NULL, ",");
-		//if (strcmp(tempc[0], "not_available") == 0);
-		//games_data[i_games][2]
-
-		printf("%s %s \t result = %f and %f\n", temp_char, temp_char2, result, result2);
-
-		strtok(NULL, "\n");
-		++i_games;
-	}
-
-    close_file(fptr);
-
 
 	/*
 	int menu_choice;
-
-    char *games[GAME_LINE][GAME_LENGTH];
-    char *genres[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
-	char *platforms[GENRE_OR_PLATFORM_LINE][GENRE_OR_PLATFORM_LENGTH];
-
-	float *games_data[FILE_LINE][10];
-
-
 	do {
 		menu(&menu_choice);
 		menu_cases(menu_choice);
 	} while (menu_choice != 8);
-
-	build_single_arrays(file_path, games, genres, platforms);
-
-	//build_data_array(file_path, games_data);
 	*/
 
 	return;
@@ -139,9 +83,9 @@ void menu_cases(int menu_choice) {
 	return;
 }
 
-void build_arrays(char *file_path, char **names, char **genres, char **platforms, float game_data[][10]) {
+void build_arrays(char *file_path, char **names, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	int temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
-    char c;
+    char c, *temp_str;
     char all_table[FILE_LINE][FILE_LINE_LENGTH];
 
 	open_file_read(file_path);
@@ -152,71 +96,91 @@ void build_arrays(char *file_path, char **names, char **genres, char **platforms
     }
 
 	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
-		//builds games array
+		//builds names array
 		names[i_games] = strtok(all_table[i_games], ",");
 
-		//builds genres array
-		genres[i_genres] = strtok(NULL, ",");
+		/* builds genres array
+		 * and genres column of game data
+		 */
+		temp_str = strtok(NULL, ",");
 		//checks not to write an already written genre
-		if (i_genres == 0)
+		if (i_genres == 0) {
+			game_data[i_games][0] = (float)i_genres;
+			genres[i_genres] = temp_str;
 			++i_genres;
-		else {
+		} else {
 			same = 0;
 			temp = i_genres - 1;
 			while (temp >= 0) {
-				if (strcmp(genres[i_genres], genres[temp]) == 0) {
+				if (strcmp(temp_str, genres[temp]) == 0) {
 					same = 1;
 					break;
 				}
 				--temp;
 			}
-			if (!same)
+			if (!same) {
+				game_data[i_games][0] = (float)i_genres;
+				genres[i_genres] = temp_str;
 				++i_genres;
+			} else {
+				game_data[i_games][0] = (float)temp;
+			}
 		}
 
-		//builds platforms array
-		platforms[i_platforms] = strtok(NULL, ",");
+		/* builds platforms array
+		 * and platforms column of game data
+		 */
+		temp_str = strtok(NULL, ",");
 		//checks not to write an already written platform
-		if (i_platforms == 0)
+		if (i_platforms == 0) {
+			game_data[i_games][1] = (float)i_platforms;
+			platforms[i_platforms] = temp_str;
 			++i_platforms;
-		else {
+		} else {
 			same = 0;
 			temp = i_platforms - 1;
 			while (temp >= 0) {
-				if (strcmp(platforms[i_platforms], platforms[temp]) == 0) {
+				if (strcmp(temp_str, platforms[temp]) == 0) {
 					same = 1;
 					break;
 				}
 				--temp;
 			}
-			if (!same)
+			if (!same) {
+				game_data[i_games][1] = (float)i_platforms;
+				platforms[i_platforms] = temp_str;
 				++i_platforms;
+			} else {
+				game_data[i_games][1] = (float)temp;
+			}
 		}
 
-		strtok(NULL, "\n");
+		/* builds year_of_release column of game data */
+		temp_str = strtok(NULL, ",");
+		game_data[i_games][2] = string_float_converter(temp_str);
+
+		/* builds na_sales column of game data */
+		temp_str = strtok(NULL, ",");
+		game_data[i_games][3] = string_float_converter(temp_str);
+
+		/* builds eu_sales column of game data */
+		temp_str = strtok(NULL, ",");
+		game_data[i_games][4] = string_float_converter(temp_str);
+
+		/* builds global_sales column of game data */
+		temp_str = strtok(NULL, ",");
+		game_data[i_games][5] = string_float_converter(temp_str);
+
+		/* builds user_score column of game data */
+		temp_str = strtok(NULL, "\n");
+		game_data[i_games][6] = string_float_converter(temp_str);
+
+		printf("i_games: %d: %f %f %f %f %f %f %f\n", i_games, game_data[i_games][0], game_data[i_games][1], game_data[i_games][2],game_data[i_games][3],game_data[i_games][4], game_data[i_games][5], game_data[i_games][6]);
+
 		++i_games;
 	}
 	close_file(fptr);
 
-
-    printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
-    --i_genres;
-    while (i_genres >= 0) {
-    	printf("%d: %s\n", i_genres, genres[i_genres]);
-    	--i_genres;
-    }
-    printf("\n");
-    --i_platforms;
-    while (i_platforms >= 0) {
-    	printf("%d: %s\n", i_platforms, platforms[i_platforms]);
-    	--i_platforms;
-    }
-
-    i_genres = 12;
-    i_platforms = 10;
-
-    sort_char_array(genres, i_genres);
-	sort_char_array(platforms, i_platforms);
 
 
     printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
@@ -241,9 +205,7 @@ void sort_char_array(char *array[], int size) {
 
 	for (i = 0; i < size - 1; ++i) {
 		for (j = i + 1; j < size; ++j) {
-			//printf("for: %s and %s\n", array[i], array[j]);
 			if (strcmp(array[i], array[j]) > 0) {
-				//printf("if: %s and %s\n", array[i], array[j]);
 				temp = array[i];
 				array[i] = array[j];
 				array[j] = temp;
@@ -252,83 +214,6 @@ void sort_char_array(char *array[], int size) {
 	}
 	return;
 }
-/*
-void build_data_array(char *file_path, float games_data[FILE_LINE][FILE_LINE_LENGTH]) {
-	int i, temp, same, i_games = 0, i_genres = 0, i_platforms = 0;
-    char c;
-    char all_table[FILE_LINE][FILE_LINE_LENGTH];
-
-	open_file_read(file_path);
-
-	//removes the first line which is for column titles
-    while (c != '\n') {
-    	c = fgetc(fptr);
-    }
-
-	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
-		//eliminates game name
-		strtok(all_table[i_games], ",");
-
-		//builds genres array
-		games_data[i_genres][0] = strtok(NULL, ",");
-		//checks not to write an already written genre
-		if (i_genres == 0)
-			++i_genres;
-		else {
-			same = 0;
-			temp = i_genres - 1;
-			while (temp >= 0) {
-				if (strcmp(*genres[i_genres], *genres[temp]) == 0) {
-					same = 1;
-					break;
-				}
-				--temp;
-			}
-			if (!same)
-				++i_genres;
-		}
-
-		//builds platforms array
-		platforms[i_platforms][0] = strtok(NULL, ",");
-		//checks not to write an already written platform
-		if (i_platforms == 0)
-			++i_platforms;
-		else {
-			same = 0;
-			temp = i_platforms - 1;
-			while (temp >= 0) {
-				if (strcmp(*platforms[i_platforms], *platforms[temp]) == 0) {
-					same = 1;
-					break;
-				}
-				--temp;
-			}
-			if (!same)
-				++i_platforms;
-		}
-
-		strtok(NULL, "\n");
-		++i_games;
-	}
-	close_file(fptr);
-
-    sort_char_array(genres, i_genres);
-    sort_char_array(platforms, i_platforms);
-
-    printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
-    --i_genres;
-    while (i_genres >= 0) {
-    	printf("%d: %s\n", i_genres, *genres[i_genres]);
-    	--i_genres;
-    }
-    printf("\n");
-    --i_platforms;
-    while (i_platforms >= 0) {
-    	printf("%d: %s\n", i_platforms, *platforms[i_platforms]);
-    	--i_platforms;
-    }
-}
-*/
 
 float get_array_index(char *element, char *array[]) {
 	int i = 0;
@@ -346,7 +231,6 @@ float string_float_converter(char *num_str) {
 
 	if (strcmp(num_str, "not_available") == 0)
 		return (-1);
-
 
 	for (d = 0; d < strlen(num_str); ++d) {
 		if (num_str[d] == '.') {
