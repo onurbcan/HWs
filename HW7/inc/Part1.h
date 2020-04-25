@@ -8,13 +8,19 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
+/*! Number of lines for file and games array */
 #define GAME_LINE 2000
-#define GAME_DATA_ELEMENTS 7
-#define GAME_LENGTH 100
-#define FILE_LINE_LENGTH 200
-
+/*! Number of lines for genres array */
 #define GENRE_LINE 12
+/*! Number of lines for platforms array */
 #define PLATFORM_LINE 10
+/*! Number of columns for game_data array */
+#define GAME_DATA_ELEMENTS 7
+
+/*! Max. length of a file line*/
+#define FILE_LINE_LENGTH 200
+/*! Max. length of a game name */
+#define GAME_LENGTH 100
 
 /*! File pointer to read the file */
 FILE *fptr; //fptr file pointer read
@@ -25,16 +31,21 @@ FILE *fpte; //fptw file pointer edit
 
 /*! 1.0) Video games accounting */
 void video_games(char *file_path);
+
+/*! 2.0) Initialization */
+void build_arrays(char *file_path, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
+void build_single_arrays(int i_games, int *i_array, int game_data_index, char *str, char **array, float game_data[][GAME_DATA_ELEMENTS]);
+
+/*! 3.0) Menu and menu case operations */
 void menu(int *menu_choice);
 void menu_cases(int menu_choice, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
-void build_arrays(char *file_path, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
-void sort_char_array(char *array[], int size);
+
+/*! 4.0) Array and value operations */
 float get_array_index(char *element, char *array[]);
 float string_float_converter(char *num_str);
-void float_string_converter(float num, char *num_str);
-void check_if_valid_float(float num, char *num_str);
+void float_string_converter(float num, char *num_str, int precision);
 
-/*! 6.0) File operations */
+/*! 5.0) File operations */
 void open_file_read(char *file_path);
 void open_file_write(char *file_path);
 void open_file_edit(char *file_path);

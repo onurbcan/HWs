@@ -3,8 +3,8 @@
  Name        : HW7.c
  Author      : Onur
  Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
+ Copyright   :
+ Description : Video games accounting
  ============================================================================
  */
 
@@ -14,6 +14,6 @@
 
 int main(int argc, char **argv) {
 	/*! Video games accounting */
-	video_games(argv[1]);
+	video_games("Video_Games.txt");
 	return EXIT_SUCCESS;
 }
