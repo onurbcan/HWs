@@ -33,15 +33,15 @@ FILE *fpte; //fptw file pointer edit
 void video_games(char *file_path);
 
 /*! 2.0) Initialization */
-void build_arrays(char *file_path, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
+void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_total, int *platforms_total, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
 void build_single_arrays(int i_games, int *i_array, int game_data_index, char *str, char **array, float game_data[][GAME_DATA_ELEMENTS]);
 
 /*! 3.0) Menu and menu case operations */
 void menu(int *menu_choice);
-void menu_cases(int menu_choice, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
+void menu_cases(int menu_choice, int names_total, int genres_total, int platforms_total, char **games, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]);
 
 /*! 4.0) Array and value operations */
-float get_array_index(char *element, char *array[]);
+float get_array_index(int names_total, char *element, char *array[]);
 float string_float_converter(char *num_str);
 void float_string_converter(float num, char *num_str, int precision);
 
