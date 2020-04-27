@@ -40,12 +40,13 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "Part1.h"
 
 /** 1.0) Video games accounting
  * The Video games accounting */
 void hofstadters_q_sequence(){
-	int menu_choice, arr[500];
+	int menu_choice, arr[5] = {0, 3, 4, 1, 2};
 
 	do {
 		menu(&menu_choice);
@@ -76,28 +77,35 @@ void menu(int *menu_choice) {
 }
 
 void menu_cases(int menu_choice, int *arr) {
-	int i;
+	int i, index = 4, n = 5, mean;
+	double stdev;
 
 	//system("clear");
 	switch (menu_choice) {
 	case 1:
-		generate_hofstadters_sequence(arr, 6);
-		for (i = 1; i < 6; ++i)
+		arr[0] = 0;
+		generate_hofstadters_sequence(arr, n);
+		for (i = 1; i <= n; ++i)
 			printf("%d ", arr[i]);
 		break;
 	case 2:
+		printf("%d\n", find_max(arr, index, arr[index]));
 		break;
 	case 3:
+		printf("%d\n", sum_array(arr, n));
 		break;
 	case 4:
+		stdev = std_array(arr, &mean, n, index);
+		printf("%lf and %d", stdev, mean);
 		break;
 	case 5:
 		printf("Good bye!\n");
 		break;
 	default:
-		printf("Please try again.\n\n");
+		printf("Please try again.\n");
 		break;
 	}
+	printf("\n");
 }
 
 void generate_hofstadters_sequence(int *arr, int n) {
@@ -111,4 +119,42 @@ void generate_hofstadters_sequence(int *arr, int n) {
 		arr[n] = arr[n - arr[n - 1]] + arr[n - arr[n - 2]];
 		generate_hofstadters_sequence(arr, n - 1);
 	}
+}
+
+int find_max(int arr[], int index, int max_value) {
+	if (index == 0) {
+		return (max_value);
+	} else {
+		if (arr[index - 1] > max_value)
+			max_value = arr[index - 1];
+		find_max(arr, index - 1, max_value);
+	}
+}
+
+int sum_array(int arr[], int index) {
+	int sum = 0;
+
+	if (index == -1)
+		return (sum);
+	else
+		sum = arr[index] + sum_array(arr, index - 1);
+}
+
+double std_array(int arr[], double *mean, int n, int index) {
+	int sum;
+	double stdev;
+
+	if (index <= 0) {
+		*mean = sum / n;
+		if (index == -n) {
+			stdev = sqrt(stdev);
+			return (stdev);
+		} else {
+			stdev += (arr[-index] - *mean) * (arr[-index] - *mean);
+			sum_array(arr, *mean, n, index - 1);
+		}
+	} else {
+		sum = arr[index] + sum_array(arr, *mean, n, index - 1);
+	}
+	return (0);
 }
