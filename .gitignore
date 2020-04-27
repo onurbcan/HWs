@@ -23,3 +23,9 @@
 /HW7/.*
 /HW7/files/*
 /HW7/html/*
+/HW8/Debug/*
+/HW8/.*
+/HW8/files/*
+/HW8/html/*
+/HW8/HW8_Doxyfile.Doxyfile
+/HW8/HW8_Doxyfile.Doxyfile.bak
