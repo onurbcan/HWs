@@ -8,7 +8,9 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
-void menu();
+void hofstadters_q_sequence();
+void menu(int *menu_choice);
+void menu_cases(int menu_choice, int *arr);
 void generate_hofstadters_sequence(int *arr, int n);
 
 #endif /* INC_PART1_H_ */
