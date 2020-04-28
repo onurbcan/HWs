@@ -18,6 +18,7 @@
  */
 
 int main(void) {
+	/*! 1.1.0) Hofstadter's Q-Sequence */
 	hofstadters_q_sequence();
 	return EXIT_SUCCESS;
 }
