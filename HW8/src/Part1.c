@@ -49,8 +49,8 @@ void hofstadters_q_sequence(){
 	int menu_choice, arr[5] = {0, 3, 4, 1, 2};
 
 	do {
-		menu(&menu_choice);
-		menu_cases(menu_choice, arr);
+		hqs_menu(&menu_choice);
+		hqs_menu_cases(menu_choice, arr);
 	} while (menu_choice != 5);
 	return;
 }
@@ -61,7 +61,7 @@ void hofstadters_q_sequence(){
  * input. The menu appears again and again if an input is invalid or if the
  * previously requested operation is done. If the menu appears because of an
  * invalid input, there is an error message too. */
-void menu(int *menu_choice) {
+void hqs_menu(int *menu_choice) {
 	printf("------------------------MENU-------------------\n");
 	printf("| %d) %-40s |\n", 1, "Fill array");
 	printf("| %d) %-40s |\n", 2, "Find biggest number");
@@ -76,9 +76,9 @@ void menu(int *menu_choice) {
 	return;
 }
 
-void menu_cases(int menu_choice, int *arr) {
-	int i, index = 4, n = 5, mean;
-	double stdev;
+void hqs_menu_cases(int menu_choice, int *arr) {
+	int i, index = 4, n = 5;
+	double mean, stdev;
 
 	//system("clear");
 	switch (menu_choice) {
@@ -96,7 +96,7 @@ void menu_cases(int menu_choice, int *arr) {
 		break;
 	case 4:
 		stdev = std_array(arr, &mean, n, index);
-		printf("%lf and %d", stdev, mean);
+		printf("%lf and %lf", stdev, mean);
 		break;
 	case 5:
 		printf("Good bye!\n");
@@ -141,20 +141,12 @@ int sum_array(int arr[], int index) {
 }
 
 double std_array(int arr[], double *mean, int n, int index) {
-	int sum;
-	double stdev;
-
-	if (index <= 0) {
-		*mean = sum / n;
-		if (index == -n) {
-			stdev = sqrt(stdev);
-			return (stdev);
-		} else {
-			stdev += (arr[-index] - *mean) * (arr[-index] - *mean);
-			sum_array(arr, *mean, n, index - 1);
-		}
-	} else {
-		sum = arr[index] + sum_array(arr, *mean, n, index - 1);
-	}
-	return (0);
+	if (index == n - 1)
+		*mean = sum_array(arr, n - 1) / n;
+	//printf("%lf ", *mean);
+	if (index == 0)
+		return (arr[0] - *mean) * (arr[0] - *mean);
+		//std_array(arr, mean, n, index - 1);
+	else
+		return ((arr[index] - *mean) * (arr[index] - *mean)) + std_array(arr, mean, n, index - 1);
 }
