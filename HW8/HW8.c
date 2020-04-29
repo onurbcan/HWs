@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Part1.h"
+#include "Part2.h"
 
 /*! \mainpage HW8 Documentation
  *
@@ -20,5 +21,7 @@
 int main(void) {
 	/*! 1.1.0) Hofstadter's Q-Sequence */
 	hofstadters_q_sequence();
+	/*! 2.1.0) L-shaped Pipe Orientation */
+	l_shaped_pipe_orientation();
 	return EXIT_SUCCESS;
 }
