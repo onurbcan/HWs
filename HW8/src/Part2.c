@@ -20,11 +20,17 @@
  * corner of the field). Remember that one action covers only one field at a
  * time and the action can’t be done if the target block is already visited
  * before. The function prototype has given below:
- * void install_pipes (int visited[N][N], int x, int y, int orientation)
- * where orientation is the start orientation of the first L-shaped pipe, x and
+ * void install_pipes (int visited[N][N], int x, int y, int orientation, int
+ * count, int amount)
+ * where amount is the number of orientation, count is the number of recursions,
+ * orientation is the start orientation of the first L-shaped pipe, x and
  * y are the coordinates of the start position and visited is the field. An
  * example output should be like the following:
  * O1, O4, O6, O2 ...
+ * Don't print stages, it is just an example for better understanding. You can
+ * stop your recursive solution after 10 proper setups (NOT 10. PIPE, 10 full
+ * setups that allow irrigating all fields) have been found and you can add an
+ * integer parameter to function prototype for using as a counter.
  *
  *  Created on: Apr 29, 2020
  *      Author: onur
@@ -35,41 +41,61 @@
 #include <time.h>
 #include "Part2.h"
 
+/** 2.1.0) L-shaped Pipe Orientation
+ * An N by N field is covered (to irrigate) by connecting L-shaped pipes
+ * (covering 3 blocks in one direction and 2 blocks in the perpendicular
+ * direction) */
 void l_shaped_pipe_orientation() {
-	int i, j, board[N][N];
+	int i, j, amount, board[N][N];
+
 	srand(time(NULL));
+	printf("Please enter the amount of L-shaped pipe orientation on %dx%d board: ", N, N);
+	scanf("%d", &amount);
+
 	for (i = 0; i < N; ++i) {
 		for (j = 0; j < N; ++j) {
-			board[i][i] = 0;
+			board[i][j] = 0;
 		}
 	}
-	install_pipes(board, 0, 0, 1, 0);
+	printf("\nA proper set of %d orientations is:\n{", amount);
+	install_pipes(board, 0, 0, 1, 1, amount);
+	printf("}\n\nTheir locations are numbered respectively on the below board:\n");
 	for (i = 0; i < N; ++i) {
 		for (j = 0; j < N; ++j) {
-			printf("%2d", board[i][i]);
+			printf("%3d", board[i][j]);
 		}
 		printf("\n");
 	}
 	return;
 }
 
-void install_pipes(int visited[N][N], int x, int y, int orientation, int count) {
-	if (count == 3)
+/** 2.2.0) Install pipes
+ * Install pipes recursively for the given number of amount */
+void install_pipes(int visited[N][N], int x, int y, int orientation, int count, int amount) {
+	if (count == amount + 1) {
 		return;
-	else {
-		visited[x][y] = count;
-
-		while(1) {
-			orientation = (rand() % 8) + 1;
-			next_l_pipe_orientations(orientation, &x, &y);
-			if (!((-1 < x && x < 8) || (-1 < y && y < 8) || visited[x][y] == 0)) {
+	} else {
+		/* if statement to prevent printing the first orientation double */
+		if (count != 1)
+			printf("O%d", orientation);
+		/* if statement to prevent printing extra commas */
+		if (!(count == 1 || count == amount))
+			printf(", ");
+		visited[y][x] = count;
+		while (1) {
+			/* if statement to prevent random generation for initial turn orientation */
+			if (count != 1)
+				orientation = (rand() % 8) + 1;
+			next_l_shaped_pipe_target(orientation, &x, &y);
+			if (!((-1 < y && y < 8) && (-1 < x && x < 8)) || !(visited[y][x] == 0 || (y != 0 && x != 0))) {
 				/* revert movement;
 				 * if x or y is invalid coordinate,
-				 * if target is already visited before. */
+				 * if target is already visited before.
+				 * if it in not the initial loop turn */
 				if (orientation == 1 || orientation == 2 || orientation == 5 || orientation == 6)
-					next_l_pipe_orientations(orientation + 2, &x, &y);
+					next_l_shaped_pipe_target(orientation + 2, &x, &y);
 				else
-					next_l_pipe_orientations(orientation - 2, &x, &y);
+					next_l_shaped_pipe_target(orientation - 2, &x, &y);
 				continue;
 			} else {
 				/* quit loop;
@@ -77,13 +103,14 @@ void install_pipes(int visited[N][N], int x, int y, int orientation, int count) 
 				break;
 			}
 		}
-		//while(!(-1 < x && x < 8) || !(-1 < y && y < 8));
-		++count;
-		install_pipes(visited, x, y, orientation, count);
+		install_pipes(visited, x, y, orientation, count + 1, amount);
 	}
 }
 
-void next_l_pipe_orientations(int orientation, int *x, int *y) {
+/** 2.3.0) Next L-shaped pipe target
+ * Return by reference next x and y coordinates for the given orientation which
+ * is 8 different L distance neighbor target */
+void next_l_shaped_pipe_target(int orientation, int *x, int *y) {
 	switch(orientation) {
 	case 1:
 		*x += 1;
