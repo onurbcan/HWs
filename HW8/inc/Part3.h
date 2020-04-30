@@ -14,4 +14,6 @@ void text_duplicate_letter_cleaner();
 /*! 3.2.0) Remove Duplicates */
 char* remove_duplicates(char* str);
 
+char* remove_duplicated_letter(char* str, int index);
+
 #endif /* INC_PART3_H_ */

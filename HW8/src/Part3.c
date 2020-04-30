@@ -24,8 +24,28 @@ void text_duplicate_letter_cleaner() {
 }
 
 char* remove_duplicates(char* str) {
+	/*
 	if (str[0] == '\0')
 		return "+";
 	else
 		remove_duplicates(str);
+	*/
+
+	return remove_duplicated_letter(str, 0);
+}
+
+char* remove_duplicated_letter(char* str, int index) {
+	int i;
+	if (str[index + 1] == '\0') {
+		return str;
+	} else {
+		if(str[index] == str[index + 1]) {
+			i = index;
+			while (str[i] != '\0') {
+				str[i] = str[i + 1];
+				++i;
+			}
+		}
+		remove_duplicated_letter(str, index + 1);
+	}
 }
