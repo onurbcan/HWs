@@ -14,6 +14,6 @@
 
 int main(int argc, char **argv) {
 	/*! Video games accounting */
-	video_games("Video_Games.txt");
+	video_games(argv[1]);
 	return EXIT_SUCCESS;
 }

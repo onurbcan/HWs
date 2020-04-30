@@ -93,7 +93,7 @@
  * The Video games accounting */
 void video_games(char *file_path){
 	int if_error = 0, menu_choice, names_total, genres_total, platforms_total;
-    char *names[GAME_LINE];
+    char names[GAME_LINE][GAME_LENGTH];
     char *genres[GENRE_LINE];
 	char *platforms[PLATFORM_LINE];
     float games_data[GAME_LINE][GAME_DATA_ELEMENTS];
@@ -134,7 +134,7 @@ void video_games(char *file_path){
  * 	float array wisely as (-1) because this information is used later on.
  * 		The float array does not include any information about the name of the
  * games since they are stored in a string array with the same indices. */
-void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_total, int *platforms_total, char **names, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
+void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_total, int *platforms_total, char names[GAME_LINE][GAME_LENGTH], char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	int i_games = 0, i_genres = 0, i_platforms = 0;
     char c, *temp_str;
     char all_table[GAME_LINE][FILE_LINE_LENGTH];
@@ -156,7 +156,8 @@ void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_
 	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
 		/* builds names array
 		 * checks if the token data is valid */
-		names[i_games] = strtok(all_table[i_games], ",");
+
+		strcpy(names[i_games], strtok(all_table[i_games], ","));
 		if (names[i_games] == NULL) {
 			*if_error = 1;
 			return;
@@ -227,31 +228,12 @@ void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_
 		}
 		game_data[i_games][6] = string_float_converter(temp_str);
 
-		//Debug
-		//printf("%d: %f %f %f %f %f %f %f\n", i_games, game_data[i_games][0], game_data[i_games][1], game_data[i_games][2],game_data[i_games][3],game_data[i_games][4], game_data[i_games][5], game_data[i_games][6]);
-		//printf("%d: %s\n", i_games, names[i_games]);
-
 		++i_games;
 	}
 	close_file(fptr);
 	*names_total = i_games;
 	*genres_total = i_genres;
 	*platforms_total = i_platforms;
-
-	/* Debug
-    printf("i_games: %d, i_genres: %d, i_platforms: %d\n", i_games, i_genres, i_platforms);
-    --i_genres;
-    while (i_genres >= 0) {
-    	printf("%d: %s\n", i_genres, genres[i_genres]);
-    	--i_genres;
-    }
-    printf("\n");
-    --i_platforms;
-    while (i_platforms >= 0) {
-    	printf("%d: %s\n", i_platforms, platforms[i_platforms]);
-    	--i_platforms;
-    }
-	*/
 	return;
 }
 
@@ -339,9 +321,9 @@ void menu(int *menu_choice) {
  * asks for another name.
  * 		6th and 7th operations are printing the frequences of every genre/
  * platform. I.e. they prints the number of games for every genre/ platform. */
-void menu_cases(int menu_choice, int names_total, int genres_total, int platforms_total, char **names, char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
+void menu_cases(int menu_choice, int names_total, int genres_total, int platforms_total, char names[GAME_LINE][100], char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	int i, index, year, choice, temp;
-	float temp_f;
+	float temp_f = 0.0;
 	char game_name[GAME_LENGTH], temp_c[15];
 
 	system("clear");
@@ -527,7 +509,7 @@ void menu_cases(int menu_choice, int names_total, int genres_total, int platform
 /** 4.1) Get array index
  * Returns the index value (in float type) of the element in the relevant
  * array */
-float get_array_index(int names_total, char *element, char *array[]) {
+float get_array_index(int names_total, char *element, char array[][GAME_LENGTH]) {
 	int i = 0;
 
 	for (i = 0; i < names_total; ++i) {
