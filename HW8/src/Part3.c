@@ -8,6 +8,9 @@
  * input string. The function prototype is given as:
  * char* remove_duplicates (char* str)
  *
+ * You can use the ONLY 1 loop or auxiliary function in the recursion solution
+ * of part-3 and this function or loop must be related to shifting the text.
+ *
  *  Created on: Apr 29, 2020
  *      Author: onur
  */
@@ -17,35 +20,38 @@
 #include "Part3.h"
 
 void text_duplicate_letter_cleaner() {
-	char *str = {"Thiis is not completely misspelled butt we wannnnt to fix it"};
-	printf("%s", remove_duplicates(str));
-
+	int i;
+	char str[TEXT_LENGTH + 1];
+	do {
+		printf("Please enter the text (up to 500 characters) to be removed its duplicated characters:\n");
+		printf("(for e.g: Thiis is not completely misspelled butt we wannnnt to fix it)\n");
+		scanf("%[^\n]", str);
+		for (i = TEXT_LENGTH; i >= 0; --i) {
+			if (str[i] == '\0')
+				break;
+		}
+		if (i == 0)
+			printf("Error occured!");
+	} while (i == 0);
+	remove_duplicates(str);
+	printf("%s", str);
 	return;
 }
 
 char* remove_duplicates(char* str) {
-	/*
-	if (str[0] == '\0')
-		return "+";
-	else
-		remove_duplicates(str);
-	*/
-
-	return remove_duplicated_letter(str, 0);
-}
-
-char* remove_duplicated_letter(char* str, int index) {
 	int i;
-	if (str[index + 1] == '\0') {
-		return str;
-	} else {
-		if(str[index] == str[index + 1]) {
-			i = index;
-			while (str[i] != '\0') {
-				str[i] = str[i + 1];
+
+	if (*str != '\0') {
+		if (*str == *(str + 1)) {
+			i = 0;
+			while (*(str + i) != '\0') {
+				*(str + i) = *(str + i + 1);
 				++i;
 			}
+			remove_duplicates(str);
+		} else {
+			remove_duplicates(str + 1);
 		}
-		remove_duplicated_letter(str, index + 1);
 	}
+	return str;
 }
