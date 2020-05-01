@@ -19,6 +19,10 @@
 #include <stdlib.h>
 #include "Part3.h"
 
+/** 3.1.0) Text Duplicate Letter Cleaner
+ * The string with duplicated characters is obtained from user with a length
+ * limit of 500 characters. If the user exceeds this limit, error message is
+ * displayed and the program waits for a new text. */
 void text_duplicate_letter_cleaner() {
 	int i;
 	char str[TEXT_LENGTH + 1];
@@ -26,28 +30,38 @@ void text_duplicate_letter_cleaner() {
 		printf("Please enter the text (up to 500 characters) to be removed its duplicated characters:\n");
 		printf("(for e.g: Thiis is not completely misspelled butt we wannnnt to fix it)\n");
 		scanf("%[^\n]", str);
-		for (i = TEXT_LENGTH; i >= 0; --i) {
+		for (i = TEXT_LENGTH; i > 0; --i) {
 			if (str[i] == '\0')
 				break;
 		}
-		if (i == 0)
-			printf("Error occured!");
+		if (i == 0) {
+			system("clear");
+			printf("Error occurred! Text should be no more than 500 characters.\n");
+		}
+		while(getchar() != '\n');
+		printf("\n");
 	} while (i == 0);
 	remove_duplicates(str);
-	printf("%s", str);
+	printf("Output:\n%s\n", str);
 	return;
 }
 
+/** 3.2.0) Remove Duplicates
+ * A recursive function is developed to remove duplicated characters in a given
+ * string. When a duplicated character is found, rest of the string is shifted
+ * until the end of it using for-loop. This process is repeated all over the
+ * string recursively. Let the given string is “Thiis is not completely
+ * misspelled butt we wannnnt to fix it”. Then the output string is “This is not
+ * completely mispeled but we want to fix it” after the function was performed
+ * on it.*/
 char* remove_duplicates(char* str) {
 	int i;
 
 	if (*str != '\0') {
 		if (*str == *(str + 1)) {
 			i = 0;
-			while (*(str + i) != '\0') {
+			for (i = 0; *(str + i) != '\0'; ++i)
 				*(str + i) = *(str + i + 1);
-				++i;
-			}
 			remove_duplicates(str);
 		} else {
 			remove_duplicates(str + 1);

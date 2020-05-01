@@ -8,6 +8,7 @@
 #ifndef INC_PART3_H_
 #define INC_PART3_H_
 
+/*! maximum length for the input text */
 #define TEXT_LENGTH 500
 
 /*! 3.1.0) Text Duplicate Letter Cleaner */
