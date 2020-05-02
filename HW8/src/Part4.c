@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 #include "Part2.h"
-//#include "Part3.h"
+#include "Part3.h"
 #include "Part4.h"
 
 /*! 4.1.0) Menu Screen
@@ -51,17 +51,17 @@ void menu_cases(int menu_choice, int *if_break) {
 		l_shaped_pipe_orientation();
 		break;
 	case 3:
-		//text_duplicate_letter_cleaner();
+		text_duplicate_letter_cleaner();
 		break;
 	case 4:
 		*if_break = 1;
-		printf("Good bye!\n\n");
+		printf("Good bye!\n");
 		break;
 	default:
-		printf("Error occurred! %d is an invalid choice, please try again.\n\n", menu_choice);
+		printf("Error occurred! %d is an invalid choice, please try again.\n", menu_choice);
 		break;
 	}
 	while(getchar() != '\n');
-	//printf("\n");
+	printf("\n");
 	return;
 }
