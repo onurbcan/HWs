@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 #include "Part2.h"
+#include "Part3.h"
 
 /*! \mainpage HW8 Documentation
  *
@@ -23,5 +24,7 @@ int main(void) {
 	hofstadters_q_sequence();
 	/*! 2.1.0) L-shaped Pipe Orientation */
 	l_shaped_pipe_orientation();
+	/*! 3.1.0) Text Duplicate Letter Cleaner */
+	text_duplicate_letter_cleaner();
 	return EXIT_SUCCESS;
 }
