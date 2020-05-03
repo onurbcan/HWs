@@ -21,6 +21,7 @@
  * works until user wants to exit.*/
 void menu() {
 	int menu_choice, if_break = 0;
+
 	while (1) {
 		printf("----------------Welcome to Homework 8---------------\n");
 		printf("|                                                  |\n");
@@ -43,6 +44,7 @@ void menu() {
  * program termination, related messages are also printed here. */
 void menu_cases(int menu_choice, int *if_break) {
 	system("clear");
+	while(getchar() != '\n');
 	switch(menu_choice) {
 	case 1:
 		hofstadters_q_sequence();
@@ -61,7 +63,6 @@ void menu_cases(int menu_choice, int *if_break) {
 		printf("Error occurred! %d is an invalid choice, please try again.\n", menu_choice);
 		break;
 	}
-	while(getchar() != '\n');
 	printf("\n");
 	return;
 }

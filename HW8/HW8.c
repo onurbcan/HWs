@@ -22,7 +22,7 @@
 
 int main(void) {
 	/*! 1.1.0) Hofstadter's Q-Sequence */
-	//hofstadters_q_sequence();
+	hofstadters_q_sequence();
 	/*! 2.1.0) L-shaped Pipe Orientation */
 	l_shaped_pipe_orientation();
 	/*! 3.1.0) Text Duplicate Letter Cleaner */
