@@ -49,20 +49,33 @@ void l_shaped_pipe_orientation() {
 	int i, j, amount, board[N][N];
 
 	srand(time(NULL));
-	printf("Please enter the amount of L-shaped pipe orientation on %dx%d board: ", N, N);
-	scanf("%d", &amount);
-
-	for (i = 0; i < N; ++i) {
-		for (j = 0; j < N; ++j) {
-			board[i][j] = 0;
-		}
-	}
-	printf("\nA proper set of %d orientations is:\n{", amount);
-	install_pipes(board, 0, 0, 1, 1, amount);
-	printf("}\n\nTheir locations are numbered respectively on the below board:\n");
-	for (i = 0; i < N; ++i) {
-		for (j = 0; j < N; ++j) {
-			printf("%3d", board[i][j]);
+	while (1) {
+		printf("Please enter the amount of L-shaped pipe orientation on %dx%d board (or enter 0 to exit): ", N, N);
+		scanf("%d", &amount);
+		system("clear");
+		/* 0 to exit */
+		if (amount == 0) {
+			printf("Good bye!\n");
+			break;
+		/* negative values are invalid */
+		} else if (amount < 0) {
+			printf("Error occurred! %d is invalid, amount value has to be a positive integer.\n", amount);
+		/* operation for the positive values */
+		} else {
+			for (i = 0; i < N; ++i) {
+				for (j = 0; j < N; ++j) {
+					board[i][j] = 0;
+				}
+			}
+			printf("A proper set of %d orientations is:\n{", amount);
+			install_pipes(board, 0, 0, 1, 1, amount);
+			printf("}\n\nTheir locations are numbered respectively on the below board:\n");
+			for (i = 0; i < N; ++i) {
+				for (j = 0; j < N; ++j) {
+					printf("%3d", board[i][j]);
+				}
+				printf("\n");
+			}
 		}
 		printf("\n");
 	}
