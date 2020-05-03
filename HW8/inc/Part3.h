@@ -14,7 +14,10 @@
 /*! 3.1.0) Text Duplicate Letter Cleaner */
 void text_duplicate_letter_cleaner();
 
-/*! 3.2.0) Remove Duplicates */
+/*! 3.2.0) Check if a valid text */
+int if_valid_text(char* str);
+
+/*! 3.3.0) Remove duplicates */
 char* remove_duplicates(char* str);
 
 #endif /* INC_PART3_H_ */
