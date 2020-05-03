@@ -76,8 +76,10 @@ void hqs_menu(int *menu_choice, int *first_turn) {
 		printf("\nPlease select an operation: ");
 		scanf("%d", menu_choice);
 		printf("\n");
-		if (*first_turn == 1 && (!(*menu_choice == 1 || *menu_choice == 5)))
+		if (*first_turn == 1 && (!(*menu_choice == 1 || *menu_choice == 5))) {
+			system("clear");
 			printf("First operation has to be fill array (no. 1) or exit (no. 5).\nPlease try again accordingly.\n\n");
+		}
 	} while (*first_turn == 1 && (!(*menu_choice == 1 || *menu_choice == 5)));
 	*first_turn = 0;
 	return;
@@ -96,32 +98,30 @@ void hqs_menu_cases(int menu_choice, int *arr, int *n) {
 			scanf("%d", n);
 			if (!(0 < *n && *n < ARRAY_TOTAL_LENGTH + 1))
 				printf("%d is an invalid array length. Please try again.\n", *n);
-			printf("\n");
 		} while (!(0 < *n && *n < ARRAY_TOTAL_LENGTH + 1));
 		generate_hofstadters_sequence(arr, *n);
 		print_sequence(arr, *n);
 		break;
 	case 2:
 		print_sequence(arr, *n);
-		printf("Max = %d\n", find_max(arr, *n, arr[*n]));
+		printf("Max = %d\n\n", find_max(arr, *n, arr[*n]));
 		break;
 	case 3:
 		print_sequence(arr, *n);
-		printf("Sum = %d\n", sum_array(arr, *n));
+		printf("Sum = %d\n\n", sum_array(arr, *n));
 		break;
 	case 4:
 		print_sequence(arr, *n);
 		stdev = std_array(arr, &mean, *n, *n + 1);
-		printf("%-9s = %8.2lf\n%-9s = %8.2lf\n", "Mean", mean, "Std. dev.", stdev);
+		printf("%-9s = %8.2lf\n%-9s = %8.2lf\n\n", "Mean", mean, "Std. dev.", stdev);
 		break;
 	case 5:
 		printf("Good bye!\n");
 		break;
 	default:
-		printf("Please try again.\n");
+		printf("Please try again.\n\n");
 		break;
 	}
-	printf("\n");
 	return;
 }
 
