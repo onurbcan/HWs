@@ -24,29 +24,48 @@
  * limit of 500 characters. If the user exceeds this limit, error message is
  * displayed and the program waits for a new text. */
 void text_duplicate_letter_cleaner() {
-	int i;
 	char str[TEXT_LENGTH + 1];
-	do {
-		printf("Please enter the text (up to 500 characters) to be removed its duplicated characters:\n");
+
+	while (1) {
+		printf("Please enter the text (up to 500 characters) to be removed its duplicated characters, or 0 to exit:\n");
 		printf("(for e.g: Thiis is not completely misspelled butt we wannnnt to fix it)\n");
 		scanf("%[^\n]", str);
-		for (i = TEXT_LENGTH; i > 0; --i) {
-			if (str[i] == '\0')
-				break;
+		system("clear");
+		if (str[0] == '0') {
+			printf("Good bye!\n");
+			break;
+		} else if (if_valid_text(str)) {
+			printf("Error occurred! Text should be no more than 500 characters.\n\n");
+			while(getchar() != '\n');
+			continue;
+		} else {
+			printf("Input:\n%s\n\n", str);
+			remove_duplicates(str);
+			printf("Output:\n%s\n\n", str);
+			while(getchar() != '\n');
 		}
-		if (i == 0) {
-			system("clear");
-			printf("Error occurred! Text should be no more than 500 characters.\n");
-		}
-		while(getchar() != '\n');
-		printf("\n");
-	} while (i == 0);
-	remove_duplicates(str);
-	printf("Output:\n%s\n", str);
+	}
 	return;
 }
 
-/** 3.2.0) Remove Duplicates
+/** 3.2.0) Check if a valid text
+ * The text is checked if it has less than 500 characters. If so, if_valid_text
+ * function returns 1, otherwise 0. */
+int if_valid_text(char* str) {
+	int i;
+
+	for (i = TEXT_LENGTH; i > 0; --i) {
+		if (str[i] == '\0')
+			break;
+	}
+	if (i == 0) {
+		return (1);
+	} else {
+		return (0);
+	}
+}
+
+/** 3.3.0) Remove duplicates
  * A recursive function is developed to remove duplicated characters in a given
  * string. When a duplicated character is found, rest of the string is shifted
  * until the end of it using for-loop. This process is repeated all over the
