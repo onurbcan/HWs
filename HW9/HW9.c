@@ -14,7 +14,7 @@
 #include "Part2.h"
 
 int main(void) {
-	number_of_route_alternatives();
+	//number_of_route_alternatives();
 	hospital_coverage_calculator();
 	return EXIT_SUCCESS;
 }
