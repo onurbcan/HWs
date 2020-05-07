@@ -11,22 +11,58 @@
 #include "Part3.h"
 
 void playing_cards_deck() {
-	int i, j, k = 0;
-	char suits[N_SUITS][10] = {"Hearts", "Diamonds", "Clubs", "Spades"};
-	char faces[N_FACES][10] = {"Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+	int i, j, k, menu_choice;
+	char suits[N_SUITS][L_SUITS] = {"Hearts", "Diamonds", "Clubs", "Spades"};
+	char faces[N_FACES][L_FACES] = {"Ace", "Deuce", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
 	struct card cards[N_CARDS];
 
 	srand(time(NULL));
-	for (i = 0; i < N_SUITS; ++i) {
-		for (j = 0; j < N_FACES; ++j){
-			cards[k].suit = suits[i];
-			cards[k].face = faces[j];
-			++k;
+	do {
+		k = 0;
+		for (i = 0; i < N_SUITS; ++i) {
+			for (j = 0; j < N_FACES; ++j){
+				cards[k].suit = suits[i];
+				cards[k].face = faces[j];
+				++k;
+			}
 		}
-	}
+		printf("A brand new playing cards deck is obtained.\n\n");
+		do {
+			printf("What would you like to do? Please enter the number of your choice.\n");
+			printf("1) See the cards.\n");
+			printf("2) Mix the cards.\n");
+			printf("3) Get brand new cards deck.\n");
+			printf("4) Exit\n");
+			scanf("%d", &menu_choice);
+			system("clear");
+			menu_cases(cards, menu_choice);
+			while(getchar() != '\n');
+		} while (!(menu_choice == 3 || menu_choice == 4));
+	} while (menu_choice != 4);
+	return;
+}
 
-	mix_cards(cards);
-	print_cards(cards);
+void menu_cases(struct card cards[N_CARDS], int menu_choice) {
+	switch (menu_choice) {
+	case (1):
+		printf("Here are the cards:\n\n");
+		print_cards(cards);
+		printf("\n");
+		break;
+	case (2):
+		printf("Playing cards deck has just been mixed.\n\n");
+		mix_cards(cards);
+		break;
+	case (3):
+		break;
+	case (4):
+		printf("Good bye!\n");
+		break;
+	default:
+		printf("Error occurred! %d is an invalid choice. Please try again.\n\n",
+				menu_choice);
+		break;
+	}
 	return;
 }
 
@@ -52,11 +88,9 @@ void mix_cards(struct card cards[N_CARDS]) {
 
 void print_cards(struct card cards[N_CARDS]) {
 	int k;
-	char temp_print[20];
 
 	for (k = 0; k < 52; ++k) {
-		sprintf(temp_print, "%s of %s", cards[k].face, cards[k].suit);
-		printf("%-20s", temp_print);
+		printf("%5s%s%-8s", cards[k].face, " of ", cards[k].suit);
 		if ((k + 1) % 2)
 			printf("\t");
 		else

@@ -14,7 +14,7 @@
 #include "Part3.h"
 
 int main(void) {
-	//number_of_route_alternatives();
+	number_of_route_alternatives();
 	playing_cards_deck();
 	return EXIT_SUCCESS;
 }
