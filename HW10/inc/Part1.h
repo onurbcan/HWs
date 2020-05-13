@@ -44,7 +44,7 @@ struct geometry {
 	struct geo_polygon polygon[20];
 	//struct geo_points_polygon points_polygon[20];
 	//struct geo_lines_polygon lines_polygon[20];
-	char *name;
+	char name[5];
 };
 
 void geometrical_shapes();

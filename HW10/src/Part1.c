@@ -29,7 +29,7 @@ void build_data() {
     int i_geometry;
 	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
     char *p_temp_str = temp_str;
-    char temp_y[10], temp_x[10], *temp_polygon, *action;
+    char temp_y[10], temp_x[10], *temp_polygon, *action, *act_elem_1, *act_elem_2;
     struct geometry geometry[100];
     //char all_table[GAME_LINE][FILE_LINE_LENGTH];
 
@@ -104,8 +104,8 @@ void build_data() {
 			length_object_name = index_last - index_first + 1;
 			object_name[length_object_name] = '\0';
 
-			geometry[i].name = object_name;
-			printf("%s\n", geometry[i].name);
+			strcpy(geometry[i].name, object_name);
+			printf("%d: %s\n", i, geometry[i].name);
 
 			/* if-statement for points */
 			if (object_name[0] == 'P' && object_name[1] != 'G') {
@@ -114,7 +114,6 @@ void build_data() {
 				geometry[i].point.coor_x = string_float_converter(temp_x);
 				printf("%f\n", geometry[i].point.coor_y);
 				printf("%f\n", geometry[i].point.coor_x);
-				++i;
 			/* if-statement for lines */
 			} else if (object_name[0] == 'L') {
 				sscanf(temp_str, "%s %s %*s", temp_y, temp_x);
@@ -152,15 +151,14 @@ void build_data() {
 				}
 			}
 			printf("str: %s\n", temp_str);
+			++i;
 			break;
 		/* (1): actions operation */
 		case (1):
 			printf("%s\n", temp_str);
 
 			action = strtok(temp_str, " ");
-			while (1) {
-				//add here a break condition for the end of line
-			}
+
 			if (strcmp(action, "Distance") == 0) {
 				flag_act = 1;
 			} else if (strcmp(action, "Angle") == 0) {
@@ -170,27 +168,42 @@ void build_data() {
 			} else if (strcmp(action, "Area") == 0) {
 				flag_act = 4;
 			}
-			/*
-			for (i_geometry = 0; i_geometry < 100; ++i_geometry) {
-				if (strcmp(geometry[i_geometry].name, "L12") == 0) {
-					printf("i_geometry: %d\n", i_geometry);
-					break;
-				}
-			}
-			*/
+
+
+
 			switch (flag_act) {
 			/* Distance action */
 			case (1):
+				act_elem_1 = strtok(NULL, " ");
+				act_elem_2 = strtok(NULL, " ");
+				printf("elem: %s\n", act_elem_1);
+				printf("elem: %s\n", act_elem_2);
+
+				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
+					//printf("%s\n", geometry[i_geometry].name);
+					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
+						printf("i_geometry: %d\n", i_geometry);
+						break;
+					}
+				}
 
 				break;
 			/* Angle action */
 			case (2):
+				act_elem_1 = strtok(NULL, " ");
+				act_elem_2 = strtok(NULL, " ");
+				printf("elem: %s\n", act_elem_1);
+				printf("elem: %s\n", act_elem_2);
 				break;
 			/* Length action */
 			case (3):
+				act_elem_1 = strtok(NULL, " ");
+				printf("elem: %s\n", act_elem_1);
 				break;
 			/* Area action */
 			case (4):
+				act_elem_1 = strtok(NULL, " ");
+				printf("elem: %s\n", act_elem_1);
 				break;
 			default:
 				break;
