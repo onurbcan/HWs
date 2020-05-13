@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "Part1.h"
 
 void geometrical_shapes() {
@@ -24,9 +25,11 @@ void build_data() {
 //void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_total, int *platforms_total, char names[GAME_LINE][GAME_LENGTH], char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	//int i_games = 0, i_genres = 0, i_platforms = 0;
 	//int if_error;
-	int flag_op = 0, i = 0;
-    char temp_str[150], file_out_path[15], num_data[5], num_actions[5];
-    char temp_y[10], temp_x[10], temp_name[10];
+	int flag_op = 0, i = 0, i_polygon, length_temp_str, index_first, index_last, length_object_name, flag_act = 0;
+    int i_geometry;
+	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
+    char *p_temp_str = temp_str;
+    char temp_y[10], temp_x[10], *temp_polygon, *action;
     struct geometry geometry[100];
     //char all_table[GAME_LINE][FILE_LINE_LENGTH];
 
@@ -73,27 +76,125 @@ void build_data() {
 		}
 //		else if (strcmp(temp_str, "\4") == 0)
 //			break;
-		printf("%ld\n", strlen(temp_str));
+
+
+
+
+
+
+
+
 		switch (flag_op) {
 		/* (0): data operation */
 		case (0):
-			if (!(64 < temp_str[0] && temp_str[0] < 123)) {
-				sscanf(temp_str, "%s %s %s", temp_y, temp_x, temp_name);
+			printf("%ld\n", strlen(temp_str));
+			length_temp_str = strlen(temp_str);
+			index_last = 0;
+			while (1) {
+				if ((47 < temp_str[length_temp_str] && temp_str[length_temp_str] < 123) && index_last == 0)
+					index_last = length_temp_str;
+				else if (temp_str[length_temp_str] == 32 && index_last > 0) {
+					index_first = length_temp_str + 1;
+					break;
+				}
+				--length_temp_str;
+			}
+
+			strncpy(object_name, p_temp_str + index_first, index_last - index_first + 1);
+			length_object_name = index_last - index_first + 1;
+			object_name[length_object_name] = '\0';
+
+			geometry[i].name = object_name;
+			printf("%s\n", geometry[i].name);
+
+			/* if-statement for points */
+			if (object_name[0] == 'P' && object_name[1] != 'G') {
+				sscanf(temp_str, "%s %s %*s", temp_y, temp_x);
 				geometry[i].point.coor_y = string_float_converter(temp_y);
 				geometry[i].point.coor_x = string_float_converter(temp_x);
-				geometry[i].name = temp_name;
 				printf("%f\n", geometry[i].point.coor_y);
 				printf("%f\n", geometry[i].point.coor_x);
-				printf("%s\n", geometry[i].name);
 				++i;
-			} else {
-
+			/* if-statement for lines */
+			} else if (object_name[0] == 'L') {
+				sscanf(temp_str, "%s %s %*s", temp_y, temp_x);
+				strcpy(geometry[i].line[0].point, temp_y);
+				strcpy(geometry[i].line[1].point, temp_x);
+				printf("%s\n", geometry[i].line[0].point);
+				printf("%s\n", geometry[i].line[1].point);
+			/* if-statement for polygons */
+			} else if (object_name[0] == 'P' && object_name[1] == 'G') {
+				i_polygon = 0;
+				/* if-statement for polygon with vertices */
+				if (temp_str[0] == 'P') {
+					strcpy(geometry[i].polygon[i_polygon].point, strtok(temp_str, " "));
+					printf("%s\n", geometry[i].polygon[i_polygon].point);
+					while (1) {
+						temp_polygon = strtok(NULL, " ");
+						if (strcmp(temp_polygon, object_name) == 0)
+							break;
+						++i_polygon;
+						strcpy(geometry[i].polygon[i_polygon].point, temp_polygon);
+						printf("%s\n", geometry[i].polygon[i_polygon].point);
+					}
+				/* if-statement for polygon with edges */
+				} else if (temp_str[0] == 'L') {
+					strcpy(geometry[i].polygon[i_polygon].line, strtok(temp_str, " "));
+					printf("%s\n", geometry[i].polygon[i_polygon].line);
+					while (1) {
+						temp_polygon = strtok(NULL, " ");
+						if (strcmp(temp_polygon, object_name) == 0)
+							break;
+						++i_polygon;
+						strcpy(geometry[i].polygon[i_polygon].line, temp_polygon);
+						printf("%s\n", geometry[i].polygon[i_polygon].line);
+					}
+				}
 			}
-			printf("%s\n", temp_str);
+			printf("str: %s\n", temp_str);
 			break;
 		/* (1): actions operation */
 		case (1):
 			printf("%s\n", temp_str);
+
+			action = strtok(temp_str, " ");
+			while (1) {
+				//add here a break condition for the end of line
+			}
+			if (strcmp(action, "Distance") == 0) {
+				flag_act = 1;
+			} else if (strcmp(action, "Angle") == 0) {
+				flag_act = 2;
+			} else if (strcmp(action, "Length") == 0) {
+				flag_act = 3;
+			} else if (strcmp(action, "Area") == 0) {
+				flag_act = 4;
+			}
+			/*
+			for (i_geometry = 0; i_geometry < 100; ++i_geometry) {
+				if (strcmp(geometry[i_geometry].name, "L12") == 0) {
+					printf("i_geometry: %d\n", i_geometry);
+					break;
+				}
+			}
+			*/
+			switch (flag_act) {
+			/* Distance action */
+			case (1):
+
+				break;
+			/* Angle action */
+			case (2):
+				break;
+			/* Length action */
+			case (3):
+				break;
+			/* Area action */
+			case (4):
+				break;
+			default:
+				break;
+			}
 			break;
 		/* (2): empty line operation */
 		case (2):
