@@ -26,7 +26,7 @@ void build_data() {
 	//int i_games = 0, i_genres = 0, i_platforms = 0;
 	//int if_error;
 	int flag_op = 0, i = 0, i_polygon, length_temp_str, index_first, index_last, length_object_name, flag_act = 0;
-    int i_geometry, i_geometry_2;
+    int i_geometry, i_geometry_2, i_temp, i_temp_2;
 	int i_point, i_point_2, i_point_3, i_point_4;
 	float res;
 	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
@@ -271,7 +271,7 @@ void build_data() {
 			case (3):
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
-
+				res = 0;
 				/* act_elem_1 */
 				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
 					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
@@ -279,14 +279,68 @@ void build_data() {
 						break;
 					}
 				}
+				for (i_temp = 0; i_temp < geometry[i_geometry].n_elements; ++i_temp) {
+					printf("%d: %s\n", i_temp, geometry[i_geometry].polygon[i_temp].point);
+					i_temp_2 = (i_temp + 1) % geometry[i_geometry].n_elements;
+					/* geometry[i_geometry].polygon[i_temp].point */
+					for (i_point = 0; i_point < 20; ++i_point) {
+						if (strcmp(geometry[i_geometry].polygon[i_temp].point, geometry[i_point].name) == 0) {
+							printf("i_point: %d\n", i_point);
+							break;
+						}
+					}
+					/* geometry[i_geometry].polygon[i_temp + 1].point */
+					for (i_point_2 = 0; i_point_2 < 20; ++i_point_2) {
+						if (strcmp(geometry[i_geometry].polygon[i_temp_2].point, geometry[i_point_2].name) == 0) {
+							printf("i_point_2: %d\n", i_point_2);
+							break;
+						}
+					}
+					res += sqrt(pow((geometry[i_point].point.coor_x -
+							geometry[i_point_2].point.coor_x),2) +
+								pow((geometry[i_point].point.coor_y -
+							geometry[i_point_2].point.coor_y),2));
 
-				//geometry[i_geometry].polygon
+				}
+				printf("res: %f\n", res);
 
 				break;
 			/* Area action */
 			case (4):
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
+				res = 1;
+				/* act_elem_1 */
+				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
+					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
+						printf("i_geometry: %d\n", i_geometry);
+						break;
+					}
+				}
+				for (i_temp = 0; i_temp < geometry[i_geometry].n_elements; ++i_temp) {
+					printf("%d: %s\n", i_temp, geometry[i_geometry].polygon[i_temp].point);
+					i_temp_2 = (i_temp + 1) % geometry[i_geometry].n_elements;
+					/* geometry[i_geometry].polygon[i_temp].point */
+					for (i_point = 0; i_point < 20; ++i_point) {
+						if (strcmp(geometry[i_geometry].polygon[i_temp].point, geometry[i_point].name) == 0) {
+							printf("i_point: %d\n", i_point);
+							break;
+						}
+					}
+					/* geometry[i_geometry].polygon[i_temp + 1].point */
+					for (i_point_2 = 0; i_point_2 < 20; ++i_point_2) {
+						if (strcmp(geometry[i_geometry].polygon[i_temp_2].point, geometry[i_point_2].name) == 0) {
+							printf("i_point_2: %d\n", i_point_2);
+							break;
+						}
+					}
+					res *= sqrt(pow((geometry[i_point].point.coor_x -
+							geometry[i_point_2].point.coor_x),2) +
+								pow((geometry[i_point].point.coor_y -
+							geometry[i_point_2].point.coor_y),2));
+
+				}
+				printf("res: %f\n", sqrt(res));
 				break;
 			default:
 				break;
@@ -294,8 +348,10 @@ void build_data() {
 			break;
 		/* (2): empty line operation */
 		case (2):
+			/*
 			for (i = 0; i < 20; ++i)
 				printf("n_elem: %d\n", geometry[i].n_elements);
+			*/
 			break;
 		default:
 			break;
