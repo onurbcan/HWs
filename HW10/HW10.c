@@ -4,7 +4,7 @@
  Author      : Onur
  Version     :
  Copyright   : 
- Description : HW10
+ Description : Measurements with geometrical objects
  ============================================================================
  */
 
@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 
-int main(void) {
-	geometrical_shapes();
+int main(int argc, char **argv) {
+	geometrical_objects(argv[1]);
 	return EXIT_SUCCESS;
 }

@@ -9,6 +9,7 @@
 #define INC_PART1_H_
 
 #define PI 3.14159265
+#define N_OBJECTS 100
 #define FILE_LINE_LENGTH 150
 
 FILE *fptr; //fptr file pointer read
@@ -49,10 +50,11 @@ struct geometry {
 	int n_elements;
 };
 
-void geometrical_shapes();
-void build_data();
+void geometrical_objects(char *file_path);
+void build_data(char *file_path);
+void remove_line_extras(char *temp_str);
+void get_struct_index(char *cmp_str, struct geometry geometry[N_OBJECTS], int *index);
 float string_float_converter(char *num_str);
-void menu();
 
 void open_file_read(char *file_path);
 void open_file_write(char *file_path);

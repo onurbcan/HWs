@@ -1,5 +1,113 @@
 /*
  * Part1.c
+ * Description: In this assignment, you are going to use structures to describe
+ * and perform computations on simple 2D geometric objects placed on Euclidean
+ * space (coordinate system). You will be using points, lines, and polygons. You
+ * will read the definitions of a given set of geometric structures and actions
+ * to be performed on them from an input file. The results of the actions will
+ * be printed into an ouput file.
+ *
+ * Input File:
+ * The input file has two parts: data and actions.
+ * • Data:
+ * ◦ Data part starts with keyword “data” (a single line).
+ * ◦ It is followed by a number indicating the number of 2D objects to be read.
+ * ◦ Following each line will have a 2D object definition. See below for
+ * definition of 2D objects.
+ * ◦ You can assume that there will be at least 1 and at most 100 2D objects.
+ * ◦ You can assume that the object names are unique (no replications).
+ * • Actions:
+ * ◦ Action part starts with keyword “actions” (a single line).
+ * ◦ It is followed by a file name indicating where the results of the actions
+ * will be output.
+ * ◦ This is followed by a number indicating the number of actions.
+ * ◦ Following each line will have an action. See below for definition of 2D
+ * actions and what they should generate.
+ * • Comments:
+ * ◦ Any part of the input file can include a comment which should be discarded
+ * during reading. The comments starts with “\\” and ends at the end of the
+ * line.
+ * Example input and output files are provided as attachments.
+ *
+ * 2D Objects: There are three kinds of geometric objects.
+ * • Point: A point is defined by its two coordinates and a name. I.e.,
+ * ◦ 100.0 100.0 P1 // A point at location (100,100) with name “P1”.
+ * ◦ 200.0 200.0 P2 // A point at location (100,100) with name “P2”.
+ * • Line: A line is defined by two points and a name. I.e.,
+ * ◦ P1 P2 L12 // The line named “L12” defined by two end points “P1” and “P2P).
+ * • Polygons: A circularly connected set of lines with at most 20 components.
+ * It can be defined either by connecting a set of points or a set of lines.
+ * I.e.,
+ * ◦ P1 P2 P3 P4 PG4 // The polygon “PG4” defined by four lines connecting first
+ * “P1” and “P2”, second “P2” and “P3”, third “P3” and “P4” and finaly “P4” and
+ * “P1”.
+ * ◦ L12 L23 L31 P4 PG3 // The polygon “PG3” defined by three lines “L12”, “P23”
+ * and “L31” in the given order.
+ *
+ * Actions: The following actions can be defined over the 2D objects provided in
+ * the data part of the file.
+ * • Distance: Print the distance between two points. For example, the following
+ * action should result in the given output.
+ * ◦ Distance P1 P2 // Print out the distance between points “P1” and “P2”.
+ * Distance(P1,P2) = 12.0
+ * • Distance: Print the distance between a point and a line. For example, the
+ * following action should result in the given output.
+ * ◦ Distance P1 L12 // Print out the distance between point “P1” and line
+ * “L12”.
+ * Distance(P1,L12) = 1.1
+ * • Angle: Print the angle (in degrees) between two lines. For example, the
+ * following action should result in the given output.
+ * ◦ Angle L1 L2 // Print out the angle between lines “L1” and “L2”.
+ * Angle(L1,L2) = 81.0
+ * • Length: Print the length of a given line. For example, the following
+ * actions should result in the given output.
+ * ◦ Length L1 // Print out the length of line “L1”.
+ * Length(L1) = 5.8
+ * • Length: Print the length (circumference) of a given polygon. For example,
+ * the following actions should result in the given output.
+ * ◦ Length PG1 // Print out the circumference of the polygon “PG1”.
+ * Length(PG1) = 15.2
+ * • Area: Print the area of a given polygon. For example, the following actions
+ * should result in the given output.
+ * ◦ Area PG1 // Print out the area of the polygon “PG1”
+ * Area(PG1) = 144.4
+ * We strongly encourage you to use structures and nested structures and arrays.
+ * While grading we will also look for the use of pass by reference (using as
+ * default parameter passing strategy. Your grade will also be affected by your
+ * choice of design. Finally,  if you can not implement a given functionality,
+ * print NOT_IMPLEMENTED in the output file.
+ *
+ * commands.txt:
+ * data
+ * 10
+ * 0.0   0.0 P1	// A point at location (0,0) with name “P1”.
+ * 100.0   0.0 P2	// A point at location (100,0).
+ * 100.0 100.0 P3
+ * 0.0 100.0 P4
+ * P1 P2 L12 // A line from P1 to P2.
+ * P2 P3 L23
+ * P3 P4 L34
+ * P4 P1 L41
+ * P1 P2 P3 P4 PG1     // A polygon with vertices P1, P2, P3 and P4.
+ * L12 L23 L34 L41 PG2 // A polygon with edges L12, L23, L34 and L41.
+ *
+ * actions
+ * outputs.txt
+ * 3
+ * Distance P1 P2 // Prints the distance between P1 and P2.
+ * Distance P1 P3
+ * Angle L12 L23
+ * Angle L12 L34
+ * Length PG1
+ * Area PG1
+ *
+ * outputs.txt:
+ * Distance(P1,P2) = 100.0
+ * Distance(P1,P3) = 141.4
+ * Angle(L12,L23) = 90.0
+ * Angle(L12,L34) = 0.0
+ * Length(PG1) = 400.0
+ * Area(PG1) = 10000.0
  *
  *  Created on: May 11, 2020
  *      Author: onur
@@ -11,17 +119,12 @@
 #include <math.h>
 #include "Part1.h"
 
-void geometrical_shapes() {
-	//menu();
-
-	//printf("Please enter the parameters\n");
-//	scanf("%d %d %s", &geometry.geo_point.coor_y, &geometry.geo_point.coor_x, geometry.name);
-//	printf("%d %d %s\n", geometry.geo_point.coor_y, geometry.geo_point.coor_x, geometry.name);
-	build_data();
+void geometrical_objects(char *file_path) {
+	build_data(file_path);
 	return;
 }
 
-void build_data() {
+void build_data(char *file_path) {
 //void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_total, int *platforms_total, char names[GAME_LINE][GAME_LENGTH], char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
 	//int i_games = 0, i_genres = 0, i_platforms = 0;
 	//int if_error;
@@ -32,10 +135,9 @@ void build_data() {
 	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
     char *p_temp_str = temp_str;
     char temp_y[10], temp_x[10], *temp_polygon, *action, *act_elem_1, *act_elem_2;
-    struct geometry geometry[100];
-    //char all_table[GAME_LINE][FILE_LINE_LENGTH];
+    struct geometry geometry[N_OBJECTS];
 
-	open_file_read("files/commands.txt");
+	open_file_read(file_path);
 
 	/* checks if file is empty
 	c = fgetc(fptr);
@@ -47,48 +149,32 @@ void build_data() {
 	*/
 
 	while (fgets(temp_str, FILE_LINE_LENGTH, fptr) != NULL) {
-		strtok(temp_str, "\r");
-		strtok(temp_str, "\n");
-		strtok(temp_str, "/"); // remove comments at the end of lines
+		remove_line_extras(temp_str);
 		if (strcmp(temp_str, "data") == 0) {
 			fgets(num_data, FILE_LINE_LENGTH, fptr);
+			remove_line_extras(num_data);
+
 			fgets(temp_str, FILE_LINE_LENGTH, fptr);
-			strtok(temp_str, "\r");
-			strtok(temp_str, "\n");
-			strtok(temp_str, "/"); // remove comments at the end of lines
-			flag_op = 0;
+			remove_line_extras(temp_str);
+			flag_op = 1;
 		} else if (strcmp(temp_str, "actions") == 0) {
 			fgets(file_out_path, FILE_LINE_LENGTH, fptr);
-			strtok(file_out_path, "\r");
-			strtok(file_out_path, "\n");
-			strtok(temp_str, "/"); // remove comments at the end of lines
+			remove_line_extras(file_out_path);
 
 			fgets(num_actions, FILE_LINE_LENGTH, fptr);
-			strtok(num_actions, "\r");
-			strtok(num_actions, "\n");
-			strtok(temp_str, "/"); // remove comments at the end of lines
+			remove_line_extras(num_actions);
 
 			fgets(temp_str, FILE_LINE_LENGTH, fptr);
-			strtok(temp_str, "\r");
-			strtok(temp_str, "\n");
-			strtok(temp_str, "/"); // remove comments at the end of lines
-			flag_op = 1;
-		} else if (strcmp(temp_str, "\r") == 0) {
+			remove_line_extras(temp_str);
 			flag_op = 2;
+		} else if (strcmp(temp_str, "\r") == 0) {
+			flag_op = 0;
 		}
-//		else if (strcmp(temp_str, "\4") == 0)
-//			break;
-
-
-
-
-
-
 
 
 		switch (flag_op) {
-		/* (0): data operation */
-		case (0):
+		/* (1): data operation */
+		case (1):
 			printf("%ld\n", strlen(temp_str));
 			length_temp_str = strlen(temp_str);
 			index_last = 0;
@@ -159,12 +245,14 @@ void build_data() {
 			printf("str: %s\n", temp_str);
 			++i;
 			break;
-		/* (1): actions operation */
-		case (1):
+
+		/* (2): actions operation */
+		case (2):
 			printf("%s\n", temp_str);
 
 			action = strtok(temp_str, " ");
 
+			/* case distributor for actions */
 			if (strcmp(action, "Distance") == 0) {
 				flag_act = 1;
 			} else if (strcmp(action, "Angle") == 0) {
@@ -173,10 +261,11 @@ void build_data() {
 				flag_act = 3;
 			} else if (strcmp(action, "Area") == 0) {
 				flag_act = 4;
+			} else {
+				flag_act = 0;
 			}
 
-
-
+			/* switch case for actions */
 			switch (flag_act) {
 			/* Distance action */
 			case (1):
@@ -185,19 +274,8 @@ void build_data() {
 				printf("elem: %s\n", act_elem_1);
 				printf("elem: %s\n", act_elem_2);
 
-				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
-					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
-						printf("i_geometry: %d\n", i_geometry);
-						break;
-					}
-				}
-
-				for (i_geometry_2 = 0; i_geometry_2 < 20; ++i_geometry_2) {
-					if (strcmp(act_elem_2, geometry[i_geometry_2].name) == 0) {
-						printf("i_geometry_2: %d\n", i_geometry_2);
-						break;
-					}
-				}
+				get_struct_index(act_elem_1, geometry, &i_geometry);
+				get_struct_index(act_elem_2, geometry, &i_geometry_2);
 
 				printf("res: %f\n", sqrt(pow((geometry[i_geometry_2].point.coor_x -
 						geometry[i_geometry].point.coor_x),2) +
@@ -212,54 +290,13 @@ void build_data() {
 				printf("elem: %s\n", act_elem_1);
 				printf("elem: %s\n", act_elem_2);
 
-				/* act_elem_1 */
-				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
-					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
-						printf("i_geometry: %d\n", i_geometry);
-						break;
-					}
-				}
-				/* act_elem_2 */
-				for (i_geometry_2 = 0; i_geometry_2 < 20; ++i_geometry_2) {
-					if (strcmp(act_elem_2, geometry[i_geometry_2].name) == 0) {
-						printf("i_geometry_2: %d\n", i_geometry_2);
-						break;
-					}
-				}
-				/* geometry[i_geometry].line[0].point */
-				for (i_point = 0; i_point < 20; ++i_point) {
-					if (strcmp(geometry[i_geometry].line[0].point, geometry[i_point].name) == 0) {
-						printf("i_point: %d\n", i_point);
-						break;
-					}
-				}
-				/* geometry[i_geometry].line[1].point */
-				for (i_point_2 = 0; i_point_2 < 20; ++i_point_2) {
-					if (strcmp(geometry[i_geometry].line[1].point, geometry[i_point_2].name) == 0) {
-						printf("i_point_2: %d\n", i_point_2);
-						break;
-					}
-				}
-				/* geometry[i_geometry_2].line[0].point */
-				for (i_point_3 = 0; i_point_3 < 20; ++i_point_3) {
-					if (strcmp(geometry[i_geometry_2].line[0].point, geometry[i_point_3].name) == 0) {
-						printf("i_point_3: %d\n", i_point_3);
-						break;
-					}
-				}
-				/* geometry[i_geometry_2].line[1].point */
-				for (i_point_4 = 0; i_point_4 < 20; ++i_point_4) {
-					if (strcmp(geometry[i_geometry_2].line[1].point, geometry[i_point_4].name) == 0) {
-						printf("i_point_4: %d\n", i_point_4);
-						break;
-					}
-				}
-				/*
-				geometry[i_geometry].line[0].point
-				geometry[i_geometry].line[1].point
-				geometry[i_geometry_2].line[0].point
-				geometry[i_geometry_2].line[1].point
-				*/
+				get_struct_index(act_elem_1, geometry, &i_geometry);
+				get_struct_index(act_elem_2, geometry, &i_geometry_2);
+
+				get_struct_index(geometry[i_geometry].line[0].point, geometry, &i_point);
+				get_struct_index(geometry[i_geometry].line[1].point, geometry, &i_point_2);
+				get_struct_index(geometry[i_geometry_2].line[0].point, geometry, &i_point_3);
+				get_struct_index(geometry[i_geometry_2].line[1].point, geometry, &i_point_4);
 
 				res = remainder(((atan2(geometry[i_point_4].point.coor_y - geometry[i_point_3].point.coor_y, geometry[i_point_4].point.coor_x - geometry[i_point_3].point.coor_x) * 180.0 / PI) -
 						(atan2(geometry[i_point_2].point.coor_y - geometry[i_point].point.coor_y, geometry[i_point_2].point.coor_x - geometry[i_point].point.coor_x) * 180.0 / PI)),180);
@@ -272,30 +309,16 @@ void build_data() {
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
 				res = 0;
-				/* act_elem_1 */
-				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
-					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
-						printf("i_geometry: %d\n", i_geometry);
-						break;
-					}
-				}
+
+				get_struct_index(act_elem_1, geometry, &i_geometry);
+
 				for (i_temp = 0; i_temp < geometry[i_geometry].n_elements; ++i_temp) {
 					printf("%d: %s\n", i_temp, geometry[i_geometry].polygon[i_temp].point);
 					i_temp_2 = (i_temp + 1) % geometry[i_geometry].n_elements;
-					/* geometry[i_geometry].polygon[i_temp].point */
-					for (i_point = 0; i_point < 20; ++i_point) {
-						if (strcmp(geometry[i_geometry].polygon[i_temp].point, geometry[i_point].name) == 0) {
-							printf("i_point: %d\n", i_point);
-							break;
-						}
-					}
-					/* geometry[i_geometry].polygon[i_temp + 1].point */
-					for (i_point_2 = 0; i_point_2 < 20; ++i_point_2) {
-						if (strcmp(geometry[i_geometry].polygon[i_temp_2].point, geometry[i_point_2].name) == 0) {
-							printf("i_point_2: %d\n", i_point_2);
-							break;
-						}
-					}
+
+					get_struct_index(geometry[i_geometry].polygon[i_temp].point, geometry, &i_point);
+					get_struct_index(geometry[i_geometry].polygon[i_temp_2].point, geometry, &i_point_2);
+
 					res += sqrt(pow((geometry[i_point].point.coor_x -
 							geometry[i_point_2].point.coor_x),2) +
 								pow((geometry[i_point].point.coor_y -
@@ -303,37 +326,22 @@ void build_data() {
 
 				}
 				printf("res: %f\n", res);
-
 				break;
 			/* Area action */
 			case (4):
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
 				res = 1;
-				/* act_elem_1 */
-				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
-					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
-						printf("i_geometry: %d\n", i_geometry);
-						break;
-					}
-				}
+
+				get_struct_index(act_elem_1, geometry, &i_geometry);
+
 				for (i_temp = 0; i_temp < geometry[i_geometry].n_elements; ++i_temp) {
 					printf("%d: %s\n", i_temp, geometry[i_geometry].polygon[i_temp].point);
 					i_temp_2 = (i_temp + 1) % geometry[i_geometry].n_elements;
-					/* geometry[i_geometry].polygon[i_temp].point */
-					for (i_point = 0; i_point < 20; ++i_point) {
-						if (strcmp(geometry[i_geometry].polygon[i_temp].point, geometry[i_point].name) == 0) {
-							printf("i_point: %d\n", i_point);
-							break;
-						}
-					}
-					/* geometry[i_geometry].polygon[i_temp + 1].point */
-					for (i_point_2 = 0; i_point_2 < 20; ++i_point_2) {
-						if (strcmp(geometry[i_geometry].polygon[i_temp_2].point, geometry[i_point_2].name) == 0) {
-							printf("i_point_2: %d\n", i_point_2);
-							break;
-						}
-					}
+
+					get_struct_index(geometry[i_geometry].polygon[i_temp].point, geometry, &i_point);
+					get_struct_index(geometry[i_geometry].polygon[i_temp_2].point, geometry, &i_point_2);
+
 					res *= sqrt(pow((geometry[i_point].point.coor_x -
 							geometry[i_point_2].point.coor_x),2) +
 								pow((geometry[i_point].point.coor_y -
@@ -343,54 +351,35 @@ void build_data() {
 				printf("res: %f\n", sqrt(res));
 				break;
 			default:
+				printf("Error occurred! Please correct the action named %s\n", action);
 				break;
 			}
-			break;
-		/* (2): empty line operation */
-		case (2):
-			/*
-			for (i = 0; i < 20; ++i)
-				printf("n_elem: %d\n", geometry[i].n_elements);
-			*/
 			break;
 		default:
 			break;
 		}
-
-//		if (strcmp(flag_str, "data") == 0) {
-//			printf("correct\n");
-//			printf("%s\n", temp_str);
-//		} else if (strcmp(flag_str, "actions") == 0) {
-//			printf("correct2\n");
-//			printf("%s\n", temp_str);
-//		} else if (strcmp(flag_str, "new_line") == 0) {
-//			printf("correct3\n");
-//			printf("%s\n", temp_str);
-//		} else {
-//			printf("%s\n", temp_str);
-//		}
 	}
 	close_file(fptr);
 	return;
-//	while (fgets(all_table[i_games], FILE_LINE_LENGTH, fptr) != NULL) {
-//		/* builds names array
-//		 * checks if the token data is valid */
-//
-//		strcpy(names[i_games], strtok(all_table[i_games], ","));
-//		if (names[i_games] == NULL) {
-//			*if_error = 1;
-//			return;
-//		}
-//
-//		/* checks if the token data is valid
-//		 * builds genres array and genres column of game data
-//		 */
-//		temp_str = strtok(NULL, ",");
-//		if (temp_str == NULL) {
-//			*if_error = 1;
-//			return;
-//		}
-//	}
+}
+
+/* Removes new line and comment characters from the line */
+void remove_line_extras(char *temp_str) {
+	strtok(temp_str, "\r");
+	strtok(temp_str, "\n");
+	strtok(temp_str, "/"); // remove comments at the end of lines
+	return;
+}
+
+/* Gets index in the given struct using the submitted compare string */
+void get_struct_index(char *cmp_str, struct geometry geometry[N_OBJECTS], int *index) {
+	for (*index = 0; *index < N_OBJECTS; ++*index) {
+		if (strcmp(cmp_str, geometry[*index].name) == 0) {
+			printf("i_geometry: %d\n", *index);
+			break;
+		}
+	}
+	return;
 }
 
 /* Converts string value to float and returns also in this type */
@@ -435,15 +424,6 @@ float string_float_converter(char *num_str) {
 	}
 	return (num);
 }
-
-
-void menu() {
-
-
-
-	return;
-}
-
 
 /* Opens the file to be read using the address and file name (together with
  * file type) in the parameter path.*/
