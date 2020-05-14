@@ -8,6 +8,7 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
+#define PI 3.14159265
 #define FILE_LINE_LENGTH 150
 
 FILE *fptr; //fptr file pointer read
@@ -45,6 +46,7 @@ struct geometry {
 	//struct geo_points_polygon points_polygon[20];
 	//struct geo_lines_polygon lines_polygon[20];
 	char name[5];
+	int n_elements;
 };
 
 void geometrical_shapes();

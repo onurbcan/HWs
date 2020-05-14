@@ -26,7 +26,9 @@ void build_data() {
 	//int i_games = 0, i_genres = 0, i_platforms = 0;
 	//int if_error;
 	int flag_op = 0, i = 0, i_polygon, length_temp_str, index_first, index_last, length_object_name, flag_act = 0;
-    int i_geometry;
+    int i_geometry, i_geometry_2;
+	int i_point, i_point_2, i_point_3, i_point_4;
+	float res;
 	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
     char *p_temp_str = temp_str;
     char temp_y[10], temp_x[10], *temp_polygon, *action, *act_elem_1, *act_elem_2;
@@ -109,16 +111,18 @@ void build_data() {
 
 			/* if-statement for points */
 			if (object_name[0] == 'P' && object_name[1] != 'G') {
-				sscanf(temp_str, "%s %s %*s", temp_y, temp_x);
-				geometry[i].point.coor_y = string_float_converter(temp_y);
+				sscanf(temp_str, "%s %s %*s", temp_x, temp_y);
 				geometry[i].point.coor_x = string_float_converter(temp_x);
-				printf("%f\n", geometry[i].point.coor_y);
+				geometry[i].point.coor_y = string_float_converter(temp_y);
+				geometry[i].n_elements = 2;
 				printf("%f\n", geometry[i].point.coor_x);
+				printf("%f\n", geometry[i].point.coor_y);
 			/* if-statement for lines */
 			} else if (object_name[0] == 'L') {
-				sscanf(temp_str, "%s %s %*s", temp_y, temp_x);
-				strcpy(geometry[i].line[0].point, temp_y);
-				strcpy(geometry[i].line[1].point, temp_x);
+				sscanf(temp_str, "%s %s %*s", temp_x, temp_y);
+				strcpy(geometry[i].line[0].point, temp_x);
+				strcpy(geometry[i].line[1].point, temp_y);
+				geometry[i].n_elements = 2;
 				printf("%s\n", geometry[i].line[0].point);
 				printf("%s\n", geometry[i].line[1].point);
 			/* if-statement for polygons */
@@ -134,7 +138,7 @@ void build_data() {
 							break;
 						++i_polygon;
 						strcpy(geometry[i].polygon[i_polygon].point, temp_polygon);
-						printf("%s\n", geometry[i].polygon[i_polygon].point);
+						printf("(i_pol)%d: %s\n", i_polygon, geometry[i].polygon[i_polygon].point);
 					}
 				/* if-statement for polygon with edges */
 				} else if (temp_str[0] == 'L') {
@@ -146,9 +150,11 @@ void build_data() {
 							break;
 						++i_polygon;
 						strcpy(geometry[i].polygon[i_polygon].line, temp_polygon);
-						printf("%s\n", geometry[i].polygon[i_polygon].line);
+						printf("(i_pol)%d: %s\n", i_polygon, geometry[i].polygon[i_polygon].line);
 					}
 				}
+				geometry[i].n_elements = ++i_polygon;
+				printf("n_elem: %d\n", geometry[i].n_elements);
 			}
 			printf("str: %s\n", temp_str);
 			++i;
@@ -180,12 +186,23 @@ void build_data() {
 				printf("elem: %s\n", act_elem_2);
 
 				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
-					//printf("%s\n", geometry[i_geometry].name);
 					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
 						printf("i_geometry: %d\n", i_geometry);
 						break;
 					}
 				}
+
+				for (i_geometry_2 = 0; i_geometry_2 < 20; ++i_geometry_2) {
+					if (strcmp(act_elem_2, geometry[i_geometry_2].name) == 0) {
+						printf("i_geometry_2: %d\n", i_geometry_2);
+						break;
+					}
+				}
+
+				printf("res: %f\n", sqrt(pow((geometry[i_geometry_2].point.coor_x -
+						geometry[i_geometry].point.coor_x),2) +
+						pow((geometry[i_geometry_2].point.coor_y -
+								geometry[i_geometry].point.coor_y),2)));
 
 				break;
 			/* Angle action */
@@ -194,11 +211,77 @@ void build_data() {
 				act_elem_2 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
 				printf("elem: %s\n", act_elem_2);
+
+				/* act_elem_1 */
+				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
+					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
+						printf("i_geometry: %d\n", i_geometry);
+						break;
+					}
+				}
+				/* act_elem_2 */
+				for (i_geometry_2 = 0; i_geometry_2 < 20; ++i_geometry_2) {
+					if (strcmp(act_elem_2, geometry[i_geometry_2].name) == 0) {
+						printf("i_geometry_2: %d\n", i_geometry_2);
+						break;
+					}
+				}
+				/* geometry[i_geometry].line[0].point */
+				for (i_point = 0; i_point < 20; ++i_point) {
+					if (strcmp(geometry[i_geometry].line[0].point, geometry[i_point].name) == 0) {
+						printf("i_point: %d\n", i_point);
+						break;
+					}
+				}
+				/* geometry[i_geometry].line[1].point */
+				for (i_point_2 = 0; i_point_2 < 20; ++i_point_2) {
+					if (strcmp(geometry[i_geometry].line[1].point, geometry[i_point_2].name) == 0) {
+						printf("i_point_2: %d\n", i_point_2);
+						break;
+					}
+				}
+				/* geometry[i_geometry_2].line[0].point */
+				for (i_point_3 = 0; i_point_3 < 20; ++i_point_3) {
+					if (strcmp(geometry[i_geometry_2].line[0].point, geometry[i_point_3].name) == 0) {
+						printf("i_point_3: %d\n", i_point_3);
+						break;
+					}
+				}
+				/* geometry[i_geometry_2].line[1].point */
+				for (i_point_4 = 0; i_point_4 < 20; ++i_point_4) {
+					if (strcmp(geometry[i_geometry_2].line[1].point, geometry[i_point_4].name) == 0) {
+						printf("i_point_4: %d\n", i_point_4);
+						break;
+					}
+				}
+				/*
+				geometry[i_geometry].line[0].point
+				geometry[i_geometry].line[1].point
+				geometry[i_geometry_2].line[0].point
+				geometry[i_geometry_2].line[1].point
+				*/
+
+				res = remainder(((atan2(geometry[i_point_4].point.coor_y - geometry[i_point_3].point.coor_y, geometry[i_point_4].point.coor_x - geometry[i_point_3].point.coor_x) * 180.0 / PI) -
+						(atan2(geometry[i_point_2].point.coor_y - geometry[i_point].point.coor_y, geometry[i_point_2].point.coor_x - geometry[i_point].point.coor_x) * 180.0 / PI)),180);
+				if (res < 0)
+					res *= -1;
+				printf("atan: %f\n", res);
 				break;
 			/* Length action */
 			case (3):
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
+
+				/* act_elem_1 */
+				for (i_geometry = 0; i_geometry < 20; ++i_geometry) {
+					if (strcmp(act_elem_1, geometry[i_geometry].name) == 0) {
+						printf("i_geometry: %d\n", i_geometry);
+						break;
+					}
+				}
+
+				//geometry[i_geometry].polygon
+
 				break;
 			/* Area action */
 			case (4):
@@ -211,6 +294,8 @@ void build_data() {
 			break;
 		/* (2): empty line operation */
 		case (2):
+			for (i = 0; i < 20; ++i)
+				printf("n_elem: %d\n", geometry[i].n_elements);
 			break;
 		default:
 			break;
