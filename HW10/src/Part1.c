@@ -125,13 +125,7 @@ void geometrical_objects(char *file_path) {
 }
 
 void build_data(char *file_path) {
-//void build_arrays(char *file_path, int *if_error, int *names_total, int *genres_total, int *platforms_total, char names[GAME_LINE][GAME_LENGTH], char **genres, char **platforms, float game_data[][GAME_DATA_ELEMENTS]) {
-	//int i_games = 0, i_genres = 0, i_platforms = 0;
-	//int if_error;
 	int flag_op = 0, i = 0, i_polygon, length_temp_str, index_first, index_last, length_object_name, flag_act = 0;
-    int i_geometry, i_geometry_2, i_temp, i_temp_2;
-	int i_point, i_point_2, i_point_3, i_point_4;
-	float res;
 	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
     char *p_temp_str = temp_str;
     char temp_y[10], temp_x[10], *temp_polygon, *action, *act_elem_1, *act_elem_2;
@@ -274,14 +268,7 @@ void build_data(char *file_path) {
 				printf("elem: %s\n", act_elem_1);
 				printf("elem: %s\n", act_elem_2);
 
-				get_struct_index(act_elem_1, geometry, &i_geometry);
-				get_struct_index(act_elem_2, geometry, &i_geometry_2);
-
-				printf("res: %f\n", sqrt(pow((geometry[i_geometry_2].point.coor_x -
-						geometry[i_geometry].point.coor_x),2) +
-						pow((geometry[i_geometry_2].point.coor_y -
-								geometry[i_geometry].point.coor_y),2)));
-
+				calculate_distance(act_elem_1, act_elem_2, geometry);
 				break;
 			/* Angle action */
 			case (2):
@@ -290,65 +277,21 @@ void build_data(char *file_path) {
 				printf("elem: %s\n", act_elem_1);
 				printf("elem: %s\n", act_elem_2);
 
-				get_struct_index(act_elem_1, geometry, &i_geometry);
-				get_struct_index(act_elem_2, geometry, &i_geometry_2);
-
-				get_struct_index(geometry[i_geometry].line[0].point, geometry, &i_point);
-				get_struct_index(geometry[i_geometry].line[1].point, geometry, &i_point_2);
-				get_struct_index(geometry[i_geometry_2].line[0].point, geometry, &i_point_3);
-				get_struct_index(geometry[i_geometry_2].line[1].point, geometry, &i_point_4);
-
-				res = remainder(((atan2(geometry[i_point_4].point.coor_y - geometry[i_point_3].point.coor_y, geometry[i_point_4].point.coor_x - geometry[i_point_3].point.coor_x) * 180.0 / PI) -
-						(atan2(geometry[i_point_2].point.coor_y - geometry[i_point].point.coor_y, geometry[i_point_2].point.coor_x - geometry[i_point].point.coor_x) * 180.0 / PI)),180);
-				if (res < 0)
-					res *= -1;
-				printf("atan: %f\n", res);
+				calculate_angle(act_elem_1, act_elem_2, geometry);
 				break;
 			/* Length action */
 			case (3):
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
-				res = 0;
 
-				get_struct_index(act_elem_1, geometry, &i_geometry);
-
-				for (i_temp = 0; i_temp < geometry[i_geometry].n_elements; ++i_temp) {
-					printf("%d: %s\n", i_temp, geometry[i_geometry].polygon[i_temp].point);
-					i_temp_2 = (i_temp + 1) % geometry[i_geometry].n_elements;
-
-					get_struct_index(geometry[i_geometry].polygon[i_temp].point, geometry, &i_point);
-					get_struct_index(geometry[i_geometry].polygon[i_temp_2].point, geometry, &i_point_2);
-
-					res += sqrt(pow((geometry[i_point].point.coor_x -
-							geometry[i_point_2].point.coor_x),2) +
-								pow((geometry[i_point].point.coor_y -
-							geometry[i_point_2].point.coor_y),2));
-
-				}
-				printf("res: %f\n", res);
+				calculate_length(act_elem_1, geometry);
 				break;
 			/* Area action */
 			case (4):
 				act_elem_1 = strtok(NULL, " ");
 				printf("elem: %s\n", act_elem_1);
-				res = 1;
 
-				get_struct_index(act_elem_1, geometry, &i_geometry);
-
-				for (i_temp = 0; i_temp < geometry[i_geometry].n_elements; ++i_temp) {
-					printf("%d: %s\n", i_temp, geometry[i_geometry].polygon[i_temp].point);
-					i_temp_2 = (i_temp + 1) % geometry[i_geometry].n_elements;
-
-					get_struct_index(geometry[i_geometry].polygon[i_temp].point, geometry, &i_point);
-					get_struct_index(geometry[i_geometry].polygon[i_temp_2].point, geometry, &i_point_2);
-
-					res *= sqrt(pow((geometry[i_point].point.coor_x -
-							geometry[i_point_2].point.coor_x),2) +
-								pow((geometry[i_point].point.coor_y -
-							geometry[i_point_2].point.coor_y),2));
-
-				}
-				printf("res: %f\n", sqrt(res));
+				calculate_area(act_elem_1, geometry);
 				break;
 			default:
 				printf("Error occurred! Please correct the action named %s\n", action);
@@ -423,6 +366,93 @@ float string_float_converter(char *num_str) {
 		}
 	}
 	return (num);
+}
+
+void calculate_distance(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]) {
+	int i_geometry, i_geometry_2;
+	get_struct_index(str_1, geometry, &i_geometry);
+	get_struct_index(str_2, geometry, &i_geometry_2);
+
+	printf("res: %f\n", sqrt(pow((geometry[i_geometry_2].point.coor_x -
+			geometry[i_geometry].point.coor_x),2) +
+			pow((geometry[i_geometry_2].point.coor_y -
+					geometry[i_geometry].point.coor_y),2)));
+
+	return;
+}
+
+void calculate_angle(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]) {
+	int i_geometry_1, i_geometry_2;
+	int i_point_1, i_point_2, i_point_3, i_point_4;
+	float res;
+
+	get_struct_index(str_1, geometry, &i_geometry_1);
+	get_struct_index(str_2, geometry, &i_geometry_2);
+
+	get_struct_index(geometry[i_geometry_1].line[0].point, geometry, &i_point_1);
+	get_struct_index(geometry[i_geometry_1].line[1].point, geometry, &i_point_2);
+	get_struct_index(geometry[i_geometry_2].line[0].point, geometry, &i_point_3);
+	get_struct_index(geometry[i_geometry_2].line[1].point, geometry, &i_point_4);
+
+	res = remainder(((atan2(geometry[i_point_4].point.coor_y - geometry[i_point_3].point.coor_y, geometry[i_point_4].point.coor_x - geometry[i_point_3].point.coor_x) * 180.0 / PI) -
+				(atan2(geometry[i_point_2].point.coor_y - geometry[i_point_1].point.coor_y, geometry[i_point_2].point.coor_x - geometry[i_point_1].point.coor_x) * 180.0 / PI)),180);
+	if (res < 0)
+		res *= -1;
+	printf("atan: %f\n", res);
+	return;
+}
+
+void calculate_length(char *str, struct geometry geometry[N_OBJECTS]) {
+	int i_geometry, i_point_1, i_point_2, i, i_next;
+	float res = 0.0;
+	get_struct_index(str, geometry, &i_geometry);
+
+	for (i = 0; i < geometry[i_geometry].n_elements; ++i) {
+		printf("%d: %s\n", i, geometry[i_geometry].polygon[i].point);
+		i_next = (i + 1) % geometry[i_geometry].n_elements;
+
+		get_struct_index(geometry[i_geometry].polygon[i].point, geometry, &i_point_1);
+		get_struct_index(geometry[i_geometry].polygon[i_next].point, geometry, &i_point_2);
+
+		res += sqrt(pow((geometry[i_point_1].point.coor_x -
+				geometry[i_point_2].point.coor_x),2) +
+					pow((geometry[i_point_1].point.coor_y -
+				geometry[i_point_2].point.coor_y),2));
+
+	}
+	printf("res: %f\n", res);
+	return;
+}
+
+void calculate_area(char *str, struct geometry geometry[N_OBJECTS]) {
+	int i_geometry, i_point_1, i_point_2, i, i_next;
+	float res = 1.0;
+
+	get_struct_index(str, geometry, &i_geometry);
+
+	if (geometry[i_geometry].polygon[0].point[0] > 0) {
+		printf("check: %d\n", geometry[i_geometry].polygon[0].point[0]);
+		printf("check: %d\n", geometry[i_geometry].polygon[0].line[0]);
+		for (i = 0; i < geometry[i_geometry].n_elements; ++i) {
+			printf("%d: %s\n", i, geometry[i_geometry].polygon[i].point);
+			i_next = (i + 1) % geometry[i_geometry].n_elements;
+
+			get_struct_index(geometry[i_geometry].polygon[i].point, geometry, &i_point_1);
+			get_struct_index(geometry[i_geometry].polygon[i_next].point, geometry, &i_point_2);
+
+			res *= sqrt(pow((geometry[i_point_1].point.coor_x -
+				geometry[i_point_2].point.coor_x),2) +
+				pow((geometry[i_point_1].point.coor_y -
+				geometry[i_point_2].point.coor_y),2));
+
+		}
+	} else if (geometry[i_geometry].polygon[0].line[0] > 0) {
+
+	//} else {
+
+	}
+	printf("res: %f\n", sqrt(res));
+	return;
 }
 
 /* Opens the file to be read using the address and file name (together with

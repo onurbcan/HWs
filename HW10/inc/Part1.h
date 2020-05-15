@@ -56,6 +56,11 @@ void remove_line_extras(char *temp_str);
 void get_struct_index(char *cmp_str, struct geometry geometry[N_OBJECTS], int *index);
 float string_float_converter(char *num_str);
 
+void calculate_distance(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]);
+void calculate_angle(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]);
+void calculate_length(char *str, struct geometry geometry[N_OBJECTS]);
+void calculate_area(char *str, struct geometry geometry[N_OBJECTS]);
+
 void open_file_read(char *file_path);
 void open_file_write(char *file_path);
 void open_file_edit(char *file_path);
