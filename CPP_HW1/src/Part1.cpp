@@ -1,5 +1,24 @@
 /*
  * Part1.cpp
+ * Description: You will write a C++ program that helps the user to solve the
+ * N-Puzzle problem. See descriptions from the web to understand the problem and
+ * the rules.
+ * When your program starts, it will first ask the user the size of the game
+ * (3x3, 4x4, 5x5, ..., 9x9). Then it will show a solvable random initial board
+ * configuration. There are some random configurations that can’t be solved, be
+ * careful! Then, you will ask the user to input one of the following and take
+ * action.
+ * Input 	Action
+ * L		moves the empty cell left if there is room
+ * R		moves the empty cell right if there is room
+ * U		moves the empty cell up if there is room
+ * D		moves the empty cell down if there is room
+ * I		makes an “intelligent” move for you. Intelligent move moves the
+ * blank tile in a way that after the move, the tiles are closer to their final
+ * positions. You may add extra intelligence if you like!
+ * S 		Shuffle- takes the board to the final solution, and makes size*size
+ * random moves to shuffle the board.
+ * Q		Quits the game
  *
  *  Created on: May 16, 2020
  *      Author: onur
@@ -12,7 +31,7 @@
 using namespace std;
 
 void n_puzzle_game() {
-	int n, oper;
+	int n, oper, if_done;
 	char c;
 
 	/* initial menu screen */
@@ -36,8 +55,26 @@ void n_puzzle_game() {
 			get_intelligent_movement(num, n, &oper);
 		system("clear");
 		swap_elements(num, oper, n);
+		check_if_done(num, n, &if_done);
+		if (if_done) {
+			cout << "Problem solved!" << endl;
+			break;
+		}
 	}
 	cout << "Good bye!" << endl;
+	return;
+}
+
+void check_if_done(int *num, int n, int *if_done) {
+	int i;
+	*if_done = 1;
+	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
+	for (i = 0; i < (n * n) - 2; ++i) {
+		if (num[i] > num[i + 1]) {
+			*if_done = 0;
+			break;
+		}
+	}
 	return;
 }
 
@@ -125,7 +162,7 @@ void get_intelligent_movement(int *num, int n, int *oper) {
 
 	get_empty_index(num, n, &i_empty);
 	if ((i_empty - n) >= 0) {
-		least = num[i_empty - 3];
+		least = num[i_empty - n];
 		*oper = 1;
 	}
 	if (((i_empty + 1) % n) != 0) {
@@ -135,8 +172,8 @@ void get_intelligent_movement(int *num, int n, int *oper) {
 		}
 	}
 	if ((i_empty + n) < (n * n)) {
-		if (num[i_empty + 3] < least) {
-			least = num[i_empty + 3];
+		if (num[i_empty + n] < least) {
+			least = num[i_empty + n];
 			*oper = 3;
 		}
 	}
@@ -195,8 +232,8 @@ void swap_elements(int *num, int oper, int n) {
 			cout << "Error occurred! Target index is invalid." << endl;
 			break;
 		}
-		num[i_empty] = num[i_empty + 3];
-		num[i_empty + 3] = 0;
+		num[i_empty] = num[i_empty + n];
+		num[i_empty + n] = 0;
 		break;
 	case (4):
 		if ((i_empty % n) == 0) {
