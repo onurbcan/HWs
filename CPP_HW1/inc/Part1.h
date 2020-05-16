@@ -12,6 +12,7 @@ void n_puzzle_game();
 void generate_table(int *num, int n);
 void print_table(int *num, int n);
 void convert_command(char c, int *oper);
+void get_empty_index(int *num, int n, int *i_empty);
 void get_intelligent_movement(int *num, int n, int *oper);
 void swap_elements(int *num, int oper, int n);
 
