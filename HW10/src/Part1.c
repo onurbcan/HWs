@@ -77,7 +77,7 @@
  * choice of design. Finally,  if you can not implement a given functionality,
  * print NOT_IMPLEMENTED in the output file.
  *
- * commands.txt:
+ * <- commands.txt:
  * data
  * 10
  * 0.0   0.0 P1	// A point at location (0,0) with name “P1”.
@@ -93,21 +93,23 @@
  *
  * actions
  * outputs.txt
- * 3
+ * 7
  * Distance P1 P2 // Prints the distance between P1 and P2.
  * Distance P1 P3
  * Angle L12 L23
  * Angle L12 L34
  * Length PG1
  * Area PG1
+ * Area PG2
  *
- * outputs.txt:
+ * -> files/outputs.txt:
  * Distance(P1,P2) = 100.0
  * Distance(P1,P3) = 141.4
  * Angle(L12,L23) = 90.0
  * Angle(L12,L34) = 0.0
  * Length(PG1) = 400.0
  * Area(PG1) = 10000.0
+ * Area(PG2) = 10000.0
  *
  *  Created on: May 11, 2020
  *      Author: onur
@@ -119,180 +121,157 @@
 #include <math.h>
 #include "Part1.h"
 
-void geometrical_objects(char *file_path) {
-	build_data(file_path);
-	return;
-}
-
-void build_data(char *file_path) {
-	int flag_op = 0, i = 0, i_polygon, length_temp_str, index_first, index_last, length_object_name, flag_act = 0;
-	char temp_str[150], object_name[5], file_out_path[15], num_data[5], num_actions[5];
-    char *p_temp_str = temp_str;
-    char temp_y[10], temp_x[10], *temp_polygon, *action, *act_elem_1, *act_elem_2;
+void geometrical_objects(char *input_file_path) {
+	int n_oper = 0, n_act = 0, i = 0, i_polygon;
+	int length_temp_str, object_index_first, object_index_last, length_object_name;
+	float result;
+	char c, temp_str[FILE_LINE_LENGTH], object_name[5];
+	char output_file_path[25] = "files/", output_file_name[15], num_data[5], num_actions[5];
+	char temp_x[10], temp_y[10], *temp_polygon;
+	char *action, *act_obj_1, *act_obj_2;
     struct geometry geometry[N_OBJECTS];
 
-	open_file_read(file_path);
+	open_file_read(input_file_path);
 
-	/* checks if file is empty
+	/* checks if file is empty */
 	c = fgetc(fptr);
 	if (c == EOF) {
-		if_error = 1;
-		printf("%d\n", if_error);
+		printf("Error occurred! File is empty. Please check the file.\n");
 		return;
 	}
-	*/
 
 	while (fgets(temp_str, FILE_LINE_LENGTH, fptr) != NULL) {
 		remove_line_extras(temp_str);
-		if (strcmp(temp_str, "data") == 0) {
+		/* decides if the file section is for data */
+		if (strcmp(temp_str, "ata") == 0) {
 			fgets(num_data, FILE_LINE_LENGTH, fptr);
 			remove_line_extras(num_data);
 
 			fgets(temp_str, FILE_LINE_LENGTH, fptr);
 			remove_line_extras(temp_str);
-			flag_op = 1;
+			n_oper = 1;
+		/* decides if the file section is for actions */
 		} else if (strcmp(temp_str, "actions") == 0) {
-			fgets(file_out_path, FILE_LINE_LENGTH, fptr);
-			remove_line_extras(file_out_path);
+			fgets(output_file_name, FILE_LINE_LENGTH, fptr);
+			remove_line_extras(output_file_name);
+			strcat(output_file_path, output_file_name);
+			open_file_write(output_file_path);
 
 			fgets(num_actions, FILE_LINE_LENGTH, fptr);
 			remove_line_extras(num_actions);
 
 			fgets(temp_str, FILE_LINE_LENGTH, fptr);
 			remove_line_extras(temp_str);
-			flag_op = 2;
+			n_oper = 2;
+		/* decides if the file section is for empty line */
 		} else if (strcmp(temp_str, "\r") == 0) {
-			flag_op = 0;
+			n_oper = 0;
 		}
 
-
-		switch (flag_op) {
+		switch (n_oper) {
 		/* (1): data operation */
 		case (1):
-			printf("%ld\n", strlen(temp_str));
 			length_temp_str = strlen(temp_str);
-			index_last = 0;
+			object_index_last = 0;
+			/* gets the name of the object at the end of the line before comment section */
 			while (1) {
-				if ((47 < temp_str[length_temp_str] && temp_str[length_temp_str] < 123) && index_last == 0)
-					index_last = length_temp_str;
-				else if (temp_str[length_temp_str] == 32 && index_last > 0) {
-					index_first = length_temp_str + 1;
+				if ((47 < temp_str[length_temp_str] && temp_str[length_temp_str] < 123) && object_index_last == 0)
+					object_index_last = length_temp_str;
+				else if (temp_str[length_temp_str] == 32 && object_index_last > 0) {
+					object_index_first = length_temp_str + 1;
 					break;
 				}
 				--length_temp_str;
 			}
-
-			strncpy(object_name, p_temp_str + index_first, index_last - index_first + 1);
-			length_object_name = index_last - index_first + 1;
+			length_object_name = object_index_last - object_index_first + 1;
+			strncpy(object_name, temp_str + object_index_first, length_object_name);
 			object_name[length_object_name] = '\0';
-
 			strcpy(geometry[i].name, object_name);
-			printf("%d: %s\n", i, geometry[i].name);
 
-			/* if-statement for points */
+			/* if point */
 			if (object_name[0] == 'P' && object_name[1] != 'G') {
 				sscanf(temp_str, "%s %s %*s", temp_x, temp_y);
 				geometry[i].point.coor_x = string_float_converter(temp_x);
 				geometry[i].point.coor_y = string_float_converter(temp_y);
-				geometry[i].n_elements = 2;
-				printf("%f\n", geometry[i].point.coor_x);
-				printf("%f\n", geometry[i].point.coor_y);
-			/* if-statement for lines */
+				geometry[i].n_objects = 2;
+			/* if line */
 			} else if (object_name[0] == 'L') {
 				sscanf(temp_str, "%s %s %*s", temp_x, temp_y);
 				strcpy(geometry[i].line[0].point, temp_x);
 				strcpy(geometry[i].line[1].point, temp_y);
-				geometry[i].n_elements = 2;
-				printf("%s\n", geometry[i].line[0].point);
-				printf("%s\n", geometry[i].line[1].point);
-			/* if-statement for polygons */
+				geometry[i].n_objects = 2;
+			/* if polygon */
 			} else if (object_name[0] == 'P' && object_name[1] == 'G') {
 				i_polygon = 0;
-				/* if-statement for polygon with vertices */
+				/* if polygon with vertices */
 				if (temp_str[0] == 'P') {
 					strcpy(geometry[i].polygon[i_polygon].point, strtok(temp_str, " "));
-					printf("%s\n", geometry[i].polygon[i_polygon].point);
 					while (1) {
 						temp_polygon = strtok(NULL, " ");
 						if (strcmp(temp_polygon, object_name) == 0)
 							break;
 						++i_polygon;
 						strcpy(geometry[i].polygon[i_polygon].point, temp_polygon);
-						printf("(i_pol)%d: %s\n", i_polygon, geometry[i].polygon[i_polygon].point);
 					}
-				/* if-statement for polygon with edges */
+				/* if polygon with edges */
 				} else if (temp_str[0] == 'L') {
 					strcpy(geometry[i].polygon[i_polygon].line, strtok(temp_str, " "));
-					printf("%s\n", geometry[i].polygon[i_polygon].line);
 					while (1) {
 						temp_polygon = strtok(NULL, " ");
 						if (strcmp(temp_polygon, object_name) == 0)
 							break;
 						++i_polygon;
 						strcpy(geometry[i].polygon[i_polygon].line, temp_polygon);
-						printf("(i_pol)%d: %s\n", i_polygon, geometry[i].polygon[i_polygon].line);
 					}
 				}
-				geometry[i].n_elements = ++i_polygon;
-				printf("n_elem: %d\n", geometry[i].n_elements);
+				geometry[i].n_objects = ++i_polygon;
 			}
-			printf("str: %s\n", temp_str);
 			++i;
 			break;
-
 		/* (2): actions operation */
 		case (2):
-			printf("%s\n", temp_str);
-
 			action = strtok(temp_str, " ");
-
 			/* case distributor for actions */
 			if (strcmp(action, "Distance") == 0) {
-				flag_act = 1;
+				n_act = 1;
 			} else if (strcmp(action, "Angle") == 0) {
-				flag_act = 2;
+				n_act = 2;
 			} else if (strcmp(action, "Length") == 0) {
-				flag_act = 3;
+				n_act = 3;
 			} else if (strcmp(action, "Area") == 0) {
-				flag_act = 4;
+				n_act = 4;
 			} else {
-				flag_act = 0;
+				n_act = 0;
 			}
-
 			/* switch case for actions */
-			switch (flag_act) {
-			/* Distance action */
+			switch (n_act) {
+			/* (1): Distance action */
 			case (1):
-				act_elem_1 = strtok(NULL, " ");
-				act_elem_2 = strtok(NULL, " ");
-				printf("elem: %s\n", act_elem_1);
-				printf("elem: %s\n", act_elem_2);
-
-				calculate_distance(act_elem_1, act_elem_2, geometry);
+				act_obj_1 = strtok(NULL, " ");
+				act_obj_2 = strtok(NULL, " ");
+				result = calculate_distance(act_obj_1, act_obj_2, geometry);
+				fprintf(fptw, "%s(%s,%s) = %.1f\n", action, act_obj_1, act_obj_2, result);
 				break;
-			/* Angle action */
+			/* (2): Angle action */
 			case (2):
-				act_elem_1 = strtok(NULL, " ");
-				act_elem_2 = strtok(NULL, " ");
-				printf("elem: %s\n", act_elem_1);
-				printf("elem: %s\n", act_elem_2);
-
-				calculate_angle(act_elem_1, act_elem_2, geometry);
+				act_obj_1 = strtok(NULL, " ");
+				act_obj_2 = strtok(NULL, " ");
+				result = calculate_angle(act_obj_1, act_obj_2, geometry);
+				fprintf(fptw, "%s(%s,%s) = %.1f\n", action, act_obj_1, act_obj_2, result);
 				break;
-			/* Length action */
+			/* (3): Length action */
 			case (3):
-				act_elem_1 = strtok(NULL, " ");
-				printf("elem: %s\n", act_elem_1);
-
-				calculate_length(act_elem_1, geometry);
+				act_obj_1 = strtok(NULL, " ");
+				result = calculate_length(act_obj_1, geometry);
+				fprintf(fptw, "%s(%s) = %.1f\n", action, act_obj_1, result);
 				break;
-			/* Area action */
+			/* (4): Area action */
 			case (4):
-				act_elem_1 = strtok(NULL, " ");
-				printf("elem: %s\n", act_elem_1);
-
-				calculate_area(act_elem_1, geometry);
+				act_obj_1 = strtok(NULL, " ");
+				result = calculate_area(act_obj_1, geometry);
+				fprintf(fptw, "%s(%s) = %.1f\n", action, act_obj_1, result);
 				break;
+			/* (0): Error action */
 			default:
 				printf("Error occurred! Please correct the action named %s\n", action);
 				break;
@@ -303,6 +282,7 @@ void build_data(char *file_path) {
 		}
 	}
 	close_file(fptr);
+	close_file(fptw);
 	return;
 }
 
@@ -310,17 +290,15 @@ void build_data(char *file_path) {
 void remove_line_extras(char *temp_str) {
 	strtok(temp_str, "\r");
 	strtok(temp_str, "\n");
-	strtok(temp_str, "/"); // remove comments at the end of lines
+	strtok(temp_str, "/"); // removes comments at the end of lines
 	return;
 }
 
 /* Gets index in the given struct using the submitted compare string */
 void get_struct_index(char *cmp_str, struct geometry geometry[N_OBJECTS], int *index) {
 	for (*index = 0; *index < N_OBJECTS; ++*index) {
-		if (strcmp(cmp_str, geometry[*index].name) == 0) {
-			printf("i_geometry: %d\n", *index);
+		if (strcmp(cmp_str, geometry[*index].name) == 0)
 			break;
-		}
 	}
 	return;
 }
@@ -329,9 +307,6 @@ void get_struct_index(char *cmp_str, struct geometry geometry[N_OBJECTS], int *i
 float string_float_converter(char *num_str) {
 	int i, d, p, if_dec = 0, to_power = 0;
 	float num = 0, multiplier;
-
-	if (strcmp(num_str, "not_available") == 0)
-		return (-1);
 
 	/* checks if there is decimal part */
 	for (d = 0; d < strlen(num_str); ++d) {
@@ -368,91 +343,91 @@ float string_float_converter(char *num_str) {
 	return (num);
 }
 
-void calculate_distance(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]) {
-	int i_geometry, i_geometry_2;
-	get_struct_index(str_1, geometry, &i_geometry);
+/* Calculates distance between two points */
+float calculate_distance(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]) {
+	int i_geometry_1, i_geometry_2;
+	float result;
+
+	/* get the index for the point 1 */
+	get_struct_index(str_1, geometry, &i_geometry_1);
+	/* get the index for the point 2 */
 	get_struct_index(str_2, geometry, &i_geometry_2);
 
-	printf("res: %f\n", sqrt(pow((geometry[i_geometry_2].point.coor_x -
-			geometry[i_geometry].point.coor_x),2) +
-			pow((geometry[i_geometry_2].point.coor_y -
-					geometry[i_geometry].point.coor_y),2)));
-
-	return;
+	result = sqrt(pow((geometry[i_geometry_2].point.coor_x - geometry[i_geometry_1].point.coor_x),2) +
+				pow((geometry[i_geometry_2].point.coor_y - geometry[i_geometry_1].point.coor_y),2));
+	return (result);
 }
 
-void calculate_angle(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]) {
+/* Calculates angle between two lines */
+float calculate_angle(char *str_1, char *str_2, struct geometry geometry[N_OBJECTS]) {
 	int i_geometry_1, i_geometry_2;
 	int i_point_1, i_point_2, i_point_3, i_point_4;
-	float res;
+	float result;
 
+	/* get the index for the line 1 */
 	get_struct_index(str_1, geometry, &i_geometry_1);
+	/* get the index for the line 2 */
 	get_struct_index(str_2, geometry, &i_geometry_2);
-
+	/* get the index for the point 1.1 */
 	get_struct_index(geometry[i_geometry_1].line[0].point, geometry, &i_point_1);
+	/* get the index for the point 1.2 */
 	get_struct_index(geometry[i_geometry_1].line[1].point, geometry, &i_point_2);
+	/* get the index for the point 2.1 */
 	get_struct_index(geometry[i_geometry_2].line[0].point, geometry, &i_point_3);
+	/* get the index for the point 2.2 */
 	get_struct_index(geometry[i_geometry_2].line[1].point, geometry, &i_point_4);
 
-	res = remainder(((atan2(geometry[i_point_4].point.coor_y - geometry[i_point_3].point.coor_y, geometry[i_point_4].point.coor_x - geometry[i_point_3].point.coor_x) * 180.0 / PI) -
-				(atan2(geometry[i_point_2].point.coor_y - geometry[i_point_1].point.coor_y, geometry[i_point_2].point.coor_x - geometry[i_point_1].point.coor_x) * 180.0 / PI)),180);
-	if (res < 0)
-		res *= -1;
-	printf("atan: %f\n", res);
-	return;
+	result = remainder(((atan2(geometry[i_point_4].point.coor_y - geometry[i_point_3].point.coor_y,
+			geometry[i_point_4].point.coor_x - geometry[i_point_3].point.coor_x) * 180.0 / PI) -
+				(atan2(geometry[i_point_2].point.coor_y - geometry[i_point_1].point.coor_y,
+			geometry[i_point_2].point.coor_x - geometry[i_point_1].point.coor_x) * 180.0 / PI)),180);
+	if (result < 0)
+		result *= -1;
+	return (result);
 }
 
-void calculate_length(char *str, struct geometry geometry[N_OBJECTS]) {
-	int i_geometry, i_point_1, i_point_2, i, i_next;
-	float res = 0.0;
+/* Calculates length of a polygon */
+float calculate_length(char *str, struct geometry geometry[N_OBJECTS]) {
+	int i, i_next, i_geometry;
+	float result = 0.0;
+
+	/* get the index for the polygon */
 	get_struct_index(str, geometry, &i_geometry);
+	for (i = 0; i < geometry[i_geometry].n_objects; ++i) {
+		i_next = (i + 1) % geometry[i_geometry].n_objects;
 
-	for (i = 0; i < geometry[i_geometry].n_elements; ++i) {
-		printf("%d: %s\n", i, geometry[i_geometry].polygon[i].point);
-		i_next = (i + 1) % geometry[i_geometry].n_elements;
-
-		get_struct_index(geometry[i_geometry].polygon[i].point, geometry, &i_point_1);
-		get_struct_index(geometry[i_geometry].polygon[i_next].point, geometry, &i_point_2);
-
-		res += sqrt(pow((geometry[i_point_1].point.coor_x -
-				geometry[i_point_2].point.coor_x),2) +
-					pow((geometry[i_point_1].point.coor_y -
-				geometry[i_point_2].point.coor_y),2));
-
+		result += calculate_distance(geometry[i_geometry].polygon[i].point,
+				geometry[i_geometry].polygon[i_next].point, geometry);
 	}
-	printf("res: %f\n", res);
-	return;
+	return (result);
 }
 
-void calculate_area(char *str, struct geometry geometry[N_OBJECTS]) {
-	int i_geometry, i_point_1, i_point_2, i, i_next;
-	float res = 1.0;
+/* Calculates area of a polygon formed with points or lines */
+float calculate_area(char *str, struct geometry geometry[N_OBJECTS]) {
+	int i, i_next, i_geometry, i_line;
+	float result = 1.0;
 
+	/* get the index for the polygon */
 	get_struct_index(str, geometry, &i_geometry);
-
+	/* if polygon formed with points */
 	if (geometry[i_geometry].polygon[0].point[0] > 0) {
-		printf("check: %d\n", geometry[i_geometry].polygon[0].point[0]);
-		printf("check: %d\n", geometry[i_geometry].polygon[0].line[0]);
-		for (i = 0; i < geometry[i_geometry].n_elements; ++i) {
-			printf("%d: %s\n", i, geometry[i_geometry].polygon[i].point);
-			i_next = (i + 1) % geometry[i_geometry].n_elements;
+		for (i = 0; i < geometry[i_geometry].n_objects; ++i) {
+			i_next = (i + 1) % geometry[i_geometry].n_objects;
 
-			get_struct_index(geometry[i_geometry].polygon[i].point, geometry, &i_point_1);
-			get_struct_index(geometry[i_geometry].polygon[i_next].point, geometry, &i_point_2);
-
-			res *= sqrt(pow((geometry[i_point_1].point.coor_x -
-				geometry[i_point_2].point.coor_x),2) +
-				pow((geometry[i_point_1].point.coor_y -
-				geometry[i_point_2].point.coor_y),2));
-
+			result *= calculate_distance(geometry[i_geometry].polygon[i].point,
+					geometry[i_geometry].polygon[i_next].point, geometry);
 		}
+	/* if polygon formed with lines */
 	} else if (geometry[i_geometry].polygon[0].line[0] > 0) {
+		for (i = 0; i < geometry[i_geometry].n_objects; ++i) {
+			/* get the index for the line */
+			get_struct_index(geometry[i_geometry].polygon[i].line, geometry, &i_line);
 
-	//} else {
-
+			result *= calculate_distance(geometry[i_line].line[0].point,
+					geometry[i_line].line[1].point, geometry);
+		}
 	}
-	printf("res: %f\n", sqrt(res));
-	return;
+	return (sqrt(result));
 }
 
 /* Opens the file to be read using the address and file name (together with
