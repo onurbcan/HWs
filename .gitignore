@@ -45,5 +45,11 @@
 /CPP_HW1/.*
 /CPP_HW1/files/*
 /CPP_HW1/html/*
-/CPP_HW1/HW10_Doxyfile.Doxyfile
-/CPP_HW1/HW10_Doxyfile.Doxyfile.bak
+/CPP_HW1/CPP_HW1_Doxyfile.Doxyfile
+/CPP_HW1/CPP_HW1_Doxyfile.Doxyfile.bak
+/CPP_HW2/Debug/*
+/CPP_HW2/.*
+/CPP_HW2/files/*
+/CPP_HW2/html/*
+/CPP_HW2/CPP_HW2_Doxyfile.Doxyfile
+/CPP_HW2/CPP_HW2_Doxyfile.Doxyfile.bak
