@@ -13,6 +13,7 @@
 #include "Part1.h"
 #include "Part2.h"
 #include "Part3.h"
+#include "Part4.h"
 
 /*! \mainpage HW8 Documentation
  *
@@ -26,5 +27,7 @@ int main(void) {
 	l_shaped_pipe_orientation();
 	/*! 3.1.0) Text Duplicate Letter Cleaner */
 	text_duplicate_letter_cleaner();
+	/*! 4.1.0) Menu Screen */
+	menu();
 	return EXIT_SUCCESS;
 }
