@@ -120,30 +120,47 @@ void print_table(int *num, int n) {
 }
 
 void convert_command(char c, int *oper) {
+	switch (c) {
 	/* Quit */
-	if (c == 'Q' || c == 'q')
+	case 'Q':
+	case 'q':
 		*oper = -1;
+		break;
 	/* Shuffle */
-	else if (c == 'S' || c == 's')
+	case 'S':
+	case 's':
 		*oper = 0;
+		break;
 	/* Up */
-	else if (c == 'U' || c == 'u')
+	case 'U':
+	case 'u':
 		*oper = 1;
+		break;
 	/* Right */
-	else if (c == 'R' || c == 'r')
+	case 'R':
+	case 'r':
 		*oper = 2;
+		break;
 	/* Down */
-	else if (c == 'D' || c == 'd')
+	case 'D':
+	case 'd':
 		*oper = 3;
+		break;
 	/* Left */
-	else if (c == 'L' || c == 'l')
+	case 'L':
+	case 'l':
 		*oper = 4;
+		break;
 	/* Intelligent */
-	else if (c == 'I' || c == 'i')
+	case 'I':
+	case 'i':
 		*oper = 5;
+		break;
 	/* Invalid input */
-	else
+	default:
 		*oper = 99;
+		break;
+	}
 	return;
 }
 
