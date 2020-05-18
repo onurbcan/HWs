@@ -12,9 +12,11 @@
 #include <stdlib.h>
 #include "Part1.h"
 #include "Part2.h"
+#include "Part3.h"
 
 int main(void) {
-	//number_of_route_alternatives();
+	number_of_route_alternatives();
 	hospital_coverage_calculator();
+	playing_cards_deck();
 	return EXIT_SUCCESS;
 }
