@@ -53,3 +53,9 @@
 /CPP_HW2/html/*
 /CPP_HW2/CPP_HW2_Doxyfile.Doxyfile
 /CPP_HW2/CPP_HW2_Doxyfile.Doxyfile.bak
+/HW11/Debug/*
+/HW11/.*
+/HW11/files/*
+/HW11/html/*
+/HW11/HW11_Doxyfile.Doxyfile
+/HW11/HW11_Doxyfile.Doxyfile.bak
