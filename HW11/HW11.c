@@ -4,7 +4,7 @@
  Author      : Onur
  Version     :
  Copyright   :
- Description :
+ Description : Array vs Linked List performance measurement
  ============================================================================
  */
 

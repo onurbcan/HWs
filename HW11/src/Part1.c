@@ -82,41 +82,42 @@
 void array_vs_linkedlist(char *file_path) {
 	clock_t start, end;
 	double time_spent;
-	float *results;
+	float results_arr[4], *results;
 	int *num, menu_choice;
 	n *root = (n*)malloc(sizeof(n));
 
 	printf("Welcome to the Array vs Linked List performance competition.\n");
 	do {
+		results_arr[0] = 999999, results_arr[1] = 0, results_arr[2] = 0, results_arr[3] = 0;
 		printf("Please choose the method Array (1) or Linked List (2) for performance measurement. ");
 		printf("You can quit entering 0 here.\n");
 		scanf("%d", &menu_choice);
-		//system("clear");
+		system("clear");
 		switch (menu_choice) {
 		case (0):
 			break;
 		case (1):
-			// starts performance measurement
+			/* starts performance measurement */
 			start = clock();
 			// performs Array method
 			num = (int*)malloc(sizeof(int));
 			num = read_array(file_path, num);
-			results = stats_array(num);
-			printf("%f\n", results[0]);
+			results = stats_array(num, results_arr);
 			free(num);
-			// ends performance measurement
+			printf("Min: %f, Max: %f, Mean: %f, Stdev: %f\n", results[0], results[1], results[2], results[3]);
+			/* ends performance measurement */
 			end = clock();
 			time_spent = (double)(end - start) / CLOCKS_PER_SEC;
 			printf("Time spent during Array method: %lf\n", time_spent);
 			break;
 		case (2):
-			// starts performance measurement
+			/* starts performance measurement */
 			start = clock();
-			// performs Linked List method
+			/* performs Linked List method */
 			root = read_linkedlist(file_path, root);
-			results = stats_linkedlist(root);
-			printf("%f\n", results[0]);
-			// ends performance measurement
+			results = stats_linkedlist(root, results_arr);
+			printf("Min: %f, Max: %f, Mean: %f, Stdev: %f\n", results[0], results[1], results[2], results[3]);
+			/* ends performance measurement */
 			end = clock();
 			time_spent = (double)(end - start) / CLOCKS_PER_SEC;
 			printf("Time spent during Linked List method: %lf\n", time_spent);
@@ -189,55 +190,54 @@ n* read_linkedlist(char *file_path, n *root) {
 	return (root);
 }
 
-float* stats_array(int *num) {
-	int sum = 0, count = 0;
-	float min = 999999, max = 0, mean, stdev = 0, results[4];
+float* stats_array(int *num, float *results) {
+	int count = 0;
 
+	/* min (0), max (1) and mean (2) calculation */
 	while (num[count] != -1) {
-		if (num[count] > max)
-			max = (float)num[count];
-		if (num[count] < min)
-			min = (float)num[count];
-		sum += num[count];
+		if (num[count] < results[0])
+			results[0] = (float)num[count];
+		if (num[count] > results[1])
+			results[1] = (float)num[count];
+		results[2] += (float)num[count];
 		++count;
 	}
-	results[0] = min;
-	mean = (float)sum/(float)count;
+	results[2] /= (float)count;
+	/* stdev (3) calculation */
 	count = 0;
 	while (num[count] != -1) {
-		stdev += (float)((num[count] - mean) * (num[count] - mean));
+		results[3] += (((float)num[count] - results[2]) * ((float)num[count] - results[2]));
 		++count;
 	}
-	stdev = (float)sqrt(stdev)/(float)count;
-	printf("max: %f, min: %f, mean: %f, stdev: %f\n", max, min, mean, stdev);
+	results[3] /= (float)count;
+	results[3] = sqrt(results[3]);
 	return (results);
 }
 
-float* stats_linkedlist(n *root) {
-	float min = 999999, max = 0, mean, stdev = 0, results[4];
-	int sum = 0, count = 0;
-	//prints linked list, except root which is NULL
-	n *iter = root->next;
+float* stats_linkedlist(n *root, float *results) {
+	int count = 0;
 
+	/* since root is 0, iter starts right after */
+	n *iter = root->next;
+	/* min (0), max (1) and mean (2) calculation */
 	while (iter != NULL) {
-		if (iter->num > max)
-			max = (float)iter->num;
-		if (iter->num < min)
-			min = (float)iter->num;
-		sum += iter->num;
+		if (iter->num < results[0])
+			results[0] = (float)iter->num;
+		if (iter->num > results[1])
+			results[1] = (float)iter->num;
+		results[2] += (float)iter->num;
 		++count;
 		iter = iter->next;
 	}
-	results[0] = min;
-	mean = (float)sum/(float)count;
-
+	results[2] /= (float)count;
+	/* stdev (3) calculation */
 	iter = root->next;
 	while (iter != NULL) {
-		stdev += (float)((iter->num - mean) * (iter->num - mean));
+		results[3] += (((float)iter->num - results[2]) * ((float)iter->num - results[2]));
 		iter = iter->next;
 	}
-	stdev = (float)sqrt(stdev)/(float)count;
-	printf("max: %f, min: %f, mean: %f, stdev: %f\n", max, min, mean, stdev);
+	results[3] /= (float)count;
+	results[3] = sqrt(results[3]);
 	return (results);
 }
 
