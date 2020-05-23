@@ -11,14 +11,17 @@
 void n_puzzle_game_v2();
 void convert_command(char c, int *oper);
 
-void generate_table(int *num, int n);
+int* generate_table(int n);
 void print_table(int *num, int n);
+void print_report();
+void swap_elements(int *num, int oper, int n);
+void get_intelligent_movement(int *num, int n, int *oper);
+void get_intelligent_v2_movement(int *num, int n, int *oper);
+void get_empty_index(int *num, int *i_empty);
+void check_if_done(int *num, int *if_done);
 
 int* get_from_file(std::string file_path);
 void save_to_file(int *num, std::string file_path);
-
-void cpp_open_file_edit(char *file_path);
-void cpp_close_file_edit(std::fstream fio);
 
 #endif /* INC_PART1_H_ */
 
