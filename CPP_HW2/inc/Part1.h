@@ -10,15 +10,15 @@
 
 void n_puzzle_game_v2();
 void convert_command(char c, int *oper);
-
 int* generate_table(int n, int m);
 void print_table(int *num, int n, int m);
 void print_report(int count, int if_done);
 
 int* resume_screen(int *n, int *m, int *count);
 int* new_game_screen(int *n, int *m);
-void play_n_puzzle_game(int *num, int n, int m, int *count);
-void swap_elements(int oper, int *num, int n, int m, int count);
+void play_n_puzzle_game(int *num, int *n, int *m, int *count);
+void swap_elements(int oper, int *num, int *n, int *m, int *count);
+
 void get_intelligent_movement(int *num, int n, int m, int *oper);
 void get_intelligent_movement_v2(int *num, int n, int m, int *oper);
 void get_empty_index(int *num, int *i_empty);

@@ -85,22 +85,29 @@ void n_puzzle_game_v2() {
 		switch (menu_choice) {
 		case (0):
 			do {
-				cout << "Would you like to save what you played so far to be loaded next time? (Y/N)" << endl;
+				cout << "Would you like to save what you played so far to be ";
+				cout << "loaded next time? (Y/N)" << endl;
 				cin >> save_choice;
-				if (!(save_choice == 'Y' || save_choice == 'y' || save_choice == 'N' || save_choice == 'n'))
-					cout << save_choice << "is an invalid choice. Please enter Y for Yes or N for No" << endl;
-			} while (!(save_choice == 'Y' || save_choice == 'y' || save_choice == 'N' || save_choice == 'n'));
-			if (save_choice == 'Y' || save_choice == 'y')
-				swap_elements(8, num, n, m, count);
+				if (!(save_choice == 'Y' || save_choice == 'y' ||
+						save_choice == 'N' || save_choice == 'n')) {
+					cout << save_choice << "is an invalid choice. ";
+					cout << "Please enter Y for Yes or N for No" << endl;
+				}
+			} while (!(save_choice == 'Y' || save_choice == 'y' ||
+					save_choice == 'N' || save_choice == 'n'));
+			if (save_choice == 'Y' || save_choice == 'y') {
+				swap_elements(8, num, &n, &m, &count);
+				cout << "Game configurations saved successfully. ";
+			}
 			cout << "Good bye!" << endl;
 			break;
 		case (1):
 			num = resume_screen(&n, &m, &count);
-			play_n_puzzle_game(num, n, m, &count);
+			play_n_puzzle_game(num, &n, &m, &count);
 			break;
 		case (2):
 			num = new_game_screen(&n, &m);
-			play_n_puzzle_game(num, n, m, &count);
+			play_n_puzzle_game(num, &n, &m, &count);
 			break;
 		default:
 			break;
@@ -110,16 +117,6 @@ void n_puzzle_game_v2() {
 	}
 	return;
 }
-//	int *num;
-//	num = get_from_file("files/sample2.txt");
-//	for (int i = 0; num[i] != -1; ++i) {
-//		cout << i << ": " << num[i] << endl;
-//	}
-
-//	int n = 5, *num = (int*)malloc(sizeof(int));
-//	generate_table(num, n);
-//	print_table(num, n);
-//	save_to_file(num, "files/sample2.txt");
 
 void convert_command(char c, int *oper) {
 	switch (c) {
@@ -289,44 +286,45 @@ int* new_game_screen(int *n, int *m) {
 	return (num);
 }
 
-void play_n_puzzle_game(int *num, int n, int m, int *count) {
+void play_n_puzzle_game(int *num, int *n, int *m, int *count) {
 	int oper, if_done = 0;
 	char c;
 
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
-		print_table(num, n, m);
+		print_table(num, *n, *m);
 		cin >> c;
 		convert_command(c, &oper);
 		if (oper == -1)
 			break;
 		else if (oper == 0) {
 			*count = 0;
-			num = generate_table(n, m);
+			num = generate_table(*n, *m);
 		} else if (oper == 5)
-			get_intelligent_movement(num, n, m, &oper);
+			get_intelligent_movement(num, *n, *m, &oper);
 		else if (oper == 6)
-			get_intelligent_movement_v2(num, n, m, &oper);
+			get_intelligent_movement_v2(num, *n, *m, &oper);
 		else if (oper == 7)
 			print_report(*count, if_done);
 		/* integrate save/load file functions */
 		system("clear");
-		swap_elements(oper, num, n, m, *count);
+		swap_elements(oper, num, n, m, count);
 		check_if_done(num, &if_done);
 		if (if_done) {
 			cout << "Problem solved!" << endl;
 			break;
 		}
-		cout << "oper: "<< oper << endl;
+		/* if any of up (1), right (2), down(3) or left (4) operated, increase the number of  moves */
 		if (oper == 1 || oper == 2 || oper == 3 || oper == 4)
 			++*count;
 	}
 	return;
 }
 
-void swap_elements(int oper, int *num, int n, int m, int count) {
+void swap_elements(int oper, int *num, int *n, int *m, int *count) {
 	int i_empty, if_error, sizes[2];
+	int i_new, new_n, new_m, new_count, *new_num;
 	string file_path;
 
 	get_empty_index(num, &i_empty);
@@ -335,15 +333,15 @@ void swap_elements(int oper, int *num, int n, int m, int count) {
 		cout << "Table is shuffled. Good luck!" << endl;
 		break;
 	case (1):
-		if ((i_empty - m) < 0) {
+		if ((i_empty - *m) < 0) {
 			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
-		num[i_empty] = num[i_empty - m];
-		num[i_empty - m] = 0;
+		num[i_empty] = num[i_empty - *m];
+		num[i_empty - *m] = 0;
 		break;
 	case (2):
-		if (((i_empty + 1) % m) == 0) {
+		if (((i_empty + 1) % *m) == 0) {
 			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
@@ -351,15 +349,15 @@ void swap_elements(int oper, int *num, int n, int m, int count) {
 		num[i_empty + 1] = 0;
 		break;
 	case (3):
-		if ((i_empty + m) >= (n * m)) {
+		if ((i_empty + *m) >= (*n * *m)) {
 			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
-		num[i_empty] = num[i_empty + m];
-		num[i_empty + m] = 0;
+		num[i_empty] = num[i_empty + *m];
+		num[i_empty + *m] = 0;
 		break;
 	case (4):
-		if ((i_empty % m) == 0) {
+		if ((i_empty % *m) == 0) {
 			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
@@ -371,18 +369,40 @@ void swap_elements(int oper, int *num, int n, int m, int count) {
 			cout << "Please enter the name of file that has the data of saved game." << endl;
 			cout << "For e.g: n_puzzle_game.txt" << endl;
 			cin >> file_path;
-			sizes[0] = n;
-			sizes[1] = m;
-			save_to_file(file_path, &if_error, num, sizes, count);
+			sizes[0] = *n;
+			sizes[1] = *m;
+			save_to_file(file_path, &if_error, num, sizes, *count);
 			if (if_error)
 				cout << "File path is invalid. Please try again." << endl;
 			else {
+				cout << "Game configurations saved successfully." << endl;
 				break;
 			}
 		}
 		break;
 	case (9):
-		//num = get_from_file(string file_path);
+		new_num = resume_screen(&new_n, &new_m, &new_count);
+		*n = new_n;
+		*m = new_m;
+		*count = new_count;
+		for (i_new = 0; new_num[i_new] != -1; ++i_new) {
+			num[i_new] = new_num[i_new];
+		}
+		num[i_new] = -1;
+		free(new_num);
+		cout << "New game configurations loaded. Have fun!" << endl;
+		break;
+	case (10):
+		new_num = new_game_screen(&new_n, &new_m);
+		*n = new_n;
+		*m = new_m;
+		*count = 0;
+		for (i_new = 0; new_num[i_new] != -1; ++i_new) {
+			num[i_new] = new_num[i_new];
+		}
+		num[i_new] = -1;
+		free(new_num);
+		cout << "i_new and num[i_new]: " << i_new << " and " << num[i_new] << endl;
 		break;
 	default:
 		cout << "Error occurred! You entered an invalid input. Please try again." << endl;
