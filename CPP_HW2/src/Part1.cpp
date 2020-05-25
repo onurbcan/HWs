@@ -63,7 +63,7 @@
 using namespace std;
 
 void n_puzzle_game_v2() {
-	int menu_choice, *num, n, m, count = 0;
+	int menu_choice, *num, n, m, n_num, count = 0;
 	char save_choice;
 	string file_path;
 
@@ -103,11 +103,11 @@ void n_puzzle_game_v2() {
 			break;
 		case (1):
 			num = resume_screen(&n, &m, &count);
-			play_n_puzzle_game(num, &n, &m, &count);
+			play_n_puzzle_game(num, &n, &m, &n_num, &count);
 			break;
 		case (2):
-			num = new_game_screen(&n, &m);
-			play_n_puzzle_game(num, &n, &m, &count);
+			num = new_game_screen(&n, &m, &n_num);
+			play_n_puzzle_game(num, &n, &m, &n_num, &count);
 			break;
 		default:
 			break;
@@ -188,24 +188,29 @@ void convert_command(char c, int *oper) {
 	return;
 }
 
-int* generate_table(int n, int m) {
+int* generate_table(int n, int m, int n_num) {
 	int i_num = 0, if_same, temp_num, temp_i_num;
 	int *num = (int*)malloc(((n * m) + 1) * sizeof(int));
 
 	while (i_num < (n * m)) {
-		if_same = 0;
-		temp_num = (rand() % (n * m));
-		temp_i_num = i_num - 1;
-		while (temp_i_num >= 0) {
-			if (temp_num == num[temp_i_num]) {
-				if_same = 1;
-				break;
+		if (i_num < n_num) {
+			if_same = 0;
+			temp_num = (rand() % ((n * m) - n_num));
+			temp_i_num = i_num - 1;
+			while (temp_i_num >= 0) {
+				if (temp_num == num[temp_i_num]) {
+					if_same = 1;
+					break;
+				}
+				--temp_i_num;
 			}
-			--temp_i_num;
+			if (if_same)
+				continue;
+			num[i_num] = temp_num;
+		} else {
+			/* -2 will represent zeros on the table */
+			num[i_num] = -2;
 		}
-		if (if_same)
-			continue;
-		num[i_num] = temp_num;
 		++i_num;
 	}
 	num[i_num] = -1;
@@ -220,8 +225,14 @@ void print_table(int *num, int n, int m) {
 			if (num[i_num] == 0) {
 				cout.width(2);
 				cout << "bb" << " ";
-			} else {
+			} else if (num[i_num] == -2) {
 				cout.width(2);
+				cout << "00" << " ";
+			} else {
+				if (num[i_num] < 10)
+					cout << "0";
+				else
+					cout.width(2);
 				cout << num[i_num] << " ";
 			}
 			++i_num;
@@ -261,7 +272,7 @@ int* resume_screen(int *n, int *m, int *count) {
 	return (num);
 }
 
-int* new_game_screen(int *n, int *m) {
+int* new_game_screen(int *n, int *m, int *n_num) {
 	int *num;
 
 	while (1) {
@@ -278,15 +289,26 @@ int* new_game_screen(int *n, int *m) {
 		if (*m < 2)
 			cout << "Table sizes have to be greater than 1. Please try again." << endl;
 		else {
-			num = generate_table(*n, *m);
-			cout << *n << "-by-" << *m << " table is generated below. ";
+			break;
+		}
+	}
+	while (1) {
+		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
+		cin >> *n_num;
+		if (*n_num > (*n * *m) || *n_num <= 0) {
+			cout << "Number of numbers has to be from 1 to " << (*n * *m);
+			cout << ".Please try again accordingly." << endl;
+		} else {
+			num = generate_table(*n, *m, *n_num);
+			cout << *n << "-by-" << *m << " table with " << ((*n * *m) - *n_num);
+			cout << " zeros is generated below. ";
 			break;
 		}
 	}
 	return (num);
 }
 
-void play_n_puzzle_game(int *num, int *n, int *m, int *count) {
+void play_n_puzzle_game(int *num, int *n, int *m, int *n_num, int *count) {
 	int oper, if_done = 0;
 	char c;
 
@@ -300,7 +322,7 @@ void play_n_puzzle_game(int *num, int *n, int *m, int *count) {
 			break;
 		else if (oper == 0) {
 			*count = 0;
-			num = generate_table(*n, *m);
+			num = generate_table(*n, *m, *n_num);
 		} else if (oper == 5)
 			get_intelligent_movement(num, *n, *m, &oper);
 		else if (oper == 6)
@@ -324,7 +346,7 @@ void play_n_puzzle_game(int *num, int *n, int *m, int *count) {
 
 void swap_elements(int oper, int *num, int *n, int *m, int *count) {
 	int i_empty, if_error, sizes[2];
-	int i_new, new_n, new_m, new_count, *new_num;
+	int i_new, new_n, new_m, new_n_num, new_count, *new_num;
 	string file_path;
 
 	get_empty_index(num, &i_empty);
@@ -393,9 +415,10 @@ void swap_elements(int oper, int *num, int *n, int *m, int *count) {
 		cout << "New game configurations loaded. Have fun!" << endl;
 		break;
 	case (10):
-		new_num = new_game_screen(&new_n, &new_m);
+		new_num = new_game_screen(&new_n, &new_m, &new_n_num);
 		*n = new_n;
 		*m = new_m;
+		//*n_num = new_n_num;
 		*count = 0;
 		for (i_new = 0; new_num[i_new] != -1; ++i_new) {
 			num[i_new] = new_num[i_new];
