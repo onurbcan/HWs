@@ -84,7 +84,7 @@ void array_vs_linkedlist(char *file_path) {
 	double time_spent;
 	float results_arr[4], *results;
 	int *num, menu_choice;
-	n *root = (n*)malloc(sizeof(n));
+	node *root = (node*)malloc(sizeof(node));
 
 	printf("Welcome to the Array vs Linked List performance competition.\n");
 	do {
@@ -160,10 +160,10 @@ int* read_array(char *file_path, int *num) {
 	return (num);
 }
 
-n* read_linkedlist(char *file_path, n *root) {
+node* read_linkedlist(char *file_path, node *root) {
 	int i;
 	char c, temp_str[10];
-	n *iter = root;
+	node *iter = root;
 	iter->num = 0;
 
 	open_file_read(file_path);
@@ -180,7 +180,7 @@ n* read_linkedlist(char *file_path, n *root) {
 			++i;
 		}
 		temp_str[i] = '\0';
-		iter->next = (n*)malloc(sizeof(n));
+		iter->next = (node*)malloc(sizeof(node));
 		iter = iter->next;
 		iter->num = string_int_converter(temp_str);
 		c = fgetc(fptr);
@@ -214,11 +214,11 @@ float* stats_array(int *num, float *results) {
 	return (results);
 }
 
-float* stats_linkedlist(n *root, float *results) {
+float* stats_linkedlist(node *root, float *results) {
 	int count = 0;
 
 	/* since root is 0, iter starts right after */
-	n *iter = root->next;
+	node *iter = root->next;
 	/* min (0), max (1) and mean (2) calculation */
 	while (iter != NULL) {
 		if (iter->num < results[0])

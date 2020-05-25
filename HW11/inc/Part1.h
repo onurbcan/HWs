@@ -13,13 +13,13 @@ FILE *fptr;
 typedef struct node{
 	int num;
 	struct node *next;
-}n;
+}node;
 
 void array_vs_linkedlist(char *file_path);
 int* read_array(char *file_path, int *num);
-n* read_linkedlist(char *file_path, n *root);
+node* read_linkedlist(char *file_path, node *root);
 float* stats_array(int *num, float *results);
-float* stats_linkedlist(n *root, float *results);
+float* stats_linkedlist(node *root, float *results);
 int string_int_converter(char *num_str);
 void open_file_read(char *file_path);
 void close_file(FILE *file_pointer);
