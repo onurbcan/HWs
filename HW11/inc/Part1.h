@@ -10,9 +10,9 @@
 
 FILE *fptr;
 
-typedef struct node{
+typedef struct num_node {
 	int num;
-	struct node *next;
+	struct num_node *next;
 }node;
 
 void array_vs_linkedlist(char *file_path);
