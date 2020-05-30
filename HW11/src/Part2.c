@@ -22,46 +22,39 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "Part1.h"
 #include "Part2.h"
 
-void compare_two_arguments() {
-	int i;
-	int num[5] = {1, 3, 3, 5, 5};
-	n *root;
-	root = (n*)malloc(sizeof(n));
-	n *iter = root;
-	iter->num = 0;
-
-	diff *d_root;
-	d_root = (diff*)malloc(sizeof(diff));
+void compare_two_arguments(char *file_path, char *file_path_2) {
+	int i = 0;
+	int *num = (int*)malloc(sizeof(int));
+	node *n_root = (node*)malloc(sizeof(node));
+	node *n_iter = n_root;
+	diff *d_root = (diff*)malloc(sizeof(diff));
 	diff *d_iter = d_root;
 
-	for (i = 0; i < 5; ++i) {
-		iter->next = (n*)malloc(sizeof(n));
-		iter = iter->next;
-		iter->num = (i + 1);
-		printf("%d\n", num[i]);
-	}
-	iter->next = NULL;
-	iter = root->next;
-	while (iter != NULL) {
-		printf("%d\n", iter->num);
-		iter = iter->next;
-	}
-	iter = root->next;
-	for (i = 0; i < 5; ++i) {
-		if (num[i] != iter->num) {
+	// performs Array method
+	num = read_array(file_path, num);
+
+	/* performs Linked List method */
+	n_root = read_linkedlist(file_path_2, n_root);
+
+	n_iter = n_iter->next;
+	while (n_iter != NULL) {
+		if (num[i] != n_iter->num) {
 			d_iter->next = (diff*)malloc(sizeof(diff));
 			d_iter = d_iter->next;
 			d_iter->n1 = num[i];
-			d_iter->n2 = iter->num;
+			d_iter->n2 = n_iter->num;
 			d_iter->next = NULL;
 		}
-		iter = iter->next;
+		++i;
+		n_iter = n_iter->next;
 	}
+	printf("Here are the differences between Array and Linked List elements:\n");
 	d_iter = d_root->next;
 	while (d_iter != NULL) {
-		printf("n1: %d, n2: %d\n", d_iter->n1, d_iter->n2);
+		printf("Array: %d,\tLinked List: %d\n", d_iter->n1, d_iter->n2);
 		d_iter = d_iter->next;
 	}
 	return;

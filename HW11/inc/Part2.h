@@ -8,16 +8,11 @@
 #ifndef INC_PART2_H_
 #define INC_PART2_H_
 
-typedef struct node{
-	int num;
-	struct node *next;
-}n;
-
-typedef struct differences{
+typedef struct differences {
 	int n1, n2;
 	struct differences *next;
-}diff;
+} diff;
 
-void compare_two_arguments();
+void compare_two_arguments(char *file_path, char *file_path_2);
 
 #endif /* INC_PART2_H_ */
