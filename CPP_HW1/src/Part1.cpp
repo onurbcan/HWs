@@ -35,8 +35,15 @@ void n_puzzle_game() {
 	char c;
 
 	/* initial menu screen */
-	cout << "Please enter the N size of the game to be built N-by-N table\n";
-	cin >> n;
+	while (1) {
+		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
+		cin >> n;
+		if (n < 2) {
+			system("clear");
+			cout << "Table sizes have to be greater than 1. Please try again." << endl;
+		} else
+			break;
+	}
 	cout << n << "-by-" << n << " table is generated below. Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 	cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
 	/* N-by-N table declared */
@@ -175,12 +182,14 @@ void get_empty_index(int *num, int n, int *i_empty) {
 }
 
 void get_intelligent_movement(int *num, int n, int *oper) {
-	int i_empty, least = 9;
+	int i_empty, least = n * n;
 
 	get_empty_index(num, n, &i_empty);
 	if ((i_empty - n) >= 0) {
-		least = num[i_empty - n];
-		*oper = 1;
+		if (num[i_empty - n] < least) {
+			least = num[i_empty - n];
+			*oper = 1;
+		}
 	}
 	if (((i_empty + 1) % n) != 0) {
 		if (num[i_empty + 1] < least) {
@@ -230,7 +239,7 @@ void swap_elements(int *num, int oper, int n) {
 		break;
 	case (1):
 		if ((i_empty - n) < 0) {
-			cout << "Error occurred! Target index is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
 		num[i_empty] = num[i_empty - n];
@@ -238,7 +247,7 @@ void swap_elements(int *num, int oper, int n) {
 		break;
 	case (2):
 		if (((i_empty + 1) % n) == 0) {
-			cout << "Error occurred! Target index is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
 		num[i_empty] = num[i_empty + 1];
@@ -246,7 +255,7 @@ void swap_elements(int *num, int oper, int n) {
 		break;
 	case (3):
 		if ((i_empty + n) >= (n * n)) {
-			cout << "Error occurred! Target index is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
 		num[i_empty] = num[i_empty + n];
@@ -254,7 +263,7 @@ void swap_elements(int *num, int oper, int n) {
 		break;
 	case (4):
 		if ((i_empty % n) == 0) {
-			cout << "Error occurred! Target index is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl;
 			break;
 		}
 		num[i_empty] = num[i_empty - 1];
