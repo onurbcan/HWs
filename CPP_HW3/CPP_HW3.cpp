@@ -10,5 +10,6 @@
 using namespace std;
 
 int main() {
+	n_puzzle_game_oop();
 	return 0;
 }
