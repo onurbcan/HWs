@@ -85,7 +85,9 @@
  */
 
 #include <iostream>
+#include <cstdlib>
 #include <fstream>
+#include <ctime>
 #include <string>
 #include "Part1.h"
 using namespace std;
@@ -93,32 +95,37 @@ using namespace std;
 class n_puzzle {
 public:
 	void print();
+	void printReport(); //
 	void readFromFile();
 	void writeToFile();
+	void shuffle(); //
+	int** generate_table(int n, int m, int n_num);
 	void reset();
-	void setSize();
+	void setsize();
+	void moveRandom(); //
+	void moveIntelligent(); //
 	void move();
-	void isSolved();
+	void solvePuzzle(); //
+
+
 
 	class board {
 	public:
-		void print();
-		void printReport(); //
-		void readFromFile();
-		void writeToFile();
-		void shuffle(); //
-		void reset();
-		void setsize();
-		void moveRandom(); //
-		void moveIntelligent(); //
+		void print(); //ok
+		void readFromFile(); //ok
+		int** get_from_file(std::string file_path, int *if_error, int *sizes, int *count); //ok
+		void writeToFile(); //ok
+		void save_to_file(string file_path, int *if_error, int **num, int *sizes, int count); //ok
+		int string_int_converter(string num_str); //ok
+		void reset(); //ok
+		void setSize();
 		void move();
-		void solvePuzzle(); //
-
+		void isSolved(); //ok
 	private:
 		//int num[9] = {1, 2, 3, 0, 5, 6, 4, 8, 7};
 		int **num;
 		int n, m;
-		int n_num = 0;
+		int n_num;
 		int if_error = 0;
 		int sizes[2];
 		string file_path;
@@ -131,6 +138,7 @@ private:
 };
 
 void n_puzzle_game_oop() {
+	srand(time(nullptr));
 	n_puzzle::board new_board;
 	//new_board.printReport();
 	new_board.readFromFile();
@@ -138,33 +146,27 @@ void n_puzzle_game_oop() {
 
 	//new_board.writeToFile();
 	//new_board.shuffle();
-	//new_board.reset();
-	//new_board.print();
+	new_board.reset();
+	new_board.isSolved();
+	new_board.print();
 }
 
 void n_puzzle::board::print() {
-	//int i_num = 0;
-
 	for (int i = 0; i < n; ++i) {
 		for (int j = 0; j < m; ++j) {
 			if (num[i][j] == 0) {
-				cout.width(2);
 				cout << "bb" << " ";
 			} else if (num[i][j] == -2) {
-				cout.width(2);
 				cout << "00" << " ";
 			} else {
 				if (num[i][j] < 10)
 					cout << "0";
-				else
-					cout.width(2);
 				cout << num[i][j] << " ";
 			}
-			//++i_num;
 		}
 		cout << endl;
 	}
-	cout << endl << n_num << endl;
+	cout << if_done << endl;
 	return;
 }
 
@@ -186,7 +188,7 @@ void n_puzzle::board::readFromFile() {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
 		cin >> file_path;
-		num = get_from_file(file_path, &if_error, sizes, &count, &n_num);
+		num = get_from_file(file_path, &if_error, sizes, &count);
 		if (if_error)
 			cout << "File path is invalid. Please try again." << endl;
 		else {
@@ -202,11 +204,11 @@ void n_puzzle::board::readFromFile() {
 /* Get from file
  * Gets numbers that are separated with spaces from the input file and writes
  * them in a dynamically allocated array. */
-int** get_from_file(std::string file_path, int *if_error, int *sizes, int *count, int *n_num) {
+int** n_puzzle::board::get_from_file(std::string file_path, int *if_error, int *sizes, int *count) {
 	int i, i_row = 0, i_col = 0, i_sizes = 0, i_line = 0;
-	//int *num = (int*)malloc(sizeof(int));
-	int **num;
+	int **num = 0;
 	char c, temp_str[5];
+	n_num = 0;
 	fstream fio;
 	fio.open(file_path, ios::in);
 	if (!fio.is_open()) {
@@ -229,17 +231,14 @@ int** get_from_file(std::string file_path, int *if_error, int *sizes, int *count
 			temp_str[i] = '\0';
 			string str(temp_str);
 			num[i_row][i_col] = string_int_converter(temp_str);
-			//cout << i_num << ": " << num[i_num] << endl;
 			if (num[i_row][i_col] != -2)
-				++*n_num;
+				++n_num;
 			if (i_col == (sizes[1] - 1)) {
 				++i_row;
 				i_col = 0;
 			} else {
 				++i_col;
 			}
-
-			//num = (int*)realloc(num, (i_col + 1) * sizeof(int));
 		} else if (c != ' ' && i_line == 0) {
 			while (c != ' ') {
 				temp_str[i] = c;
@@ -256,7 +255,6 @@ int** get_from_file(std::string file_path, int *if_error, int *sizes, int *count
 					num[j] = (int*)malloc(sizes[1] * sizeof(int));
 				}
 			}
-			//cout << sizes[i_sizes] << endl;
 			++i_sizes;
 		} else if (c != ' ' && i_line == 1) {
 			while (c != ' ') {
@@ -267,7 +265,6 @@ int** get_from_file(std::string file_path, int *if_error, int *sizes, int *count
 			temp_str[i] = '\0';
 			string str(temp_str);
 			*count = string_int_converter(temp_str);
-			//cout << *count << endl;
 		}
 	}
 	*if_error = 0;
@@ -285,7 +282,7 @@ void n_puzzle::board::writeToFile() {
 		cin >> file_path;
 		sizes[0] = n;
 		sizes[1] = m;
-		//save_to_file(file_path, &if_error, num, sizes, count);
+		save_to_file(file_path, &if_error, num, sizes, count);
 		if (if_error)
 			cout << "File path is invalid. Please try again." << endl;
 		else {
@@ -296,7 +293,7 @@ void n_puzzle::board::writeToFile() {
 	return;
 }
 
-void save_to_file(string file_path, int *if_error, int *num, int *sizes, int count) {
+void n_puzzle::board::save_to_file(string file_path, int *if_error, int **num, int *sizes, int count) {
 	fstream fio;
 	fio.open(file_path, ios::trunc | ios::out);
 	if (!fio.is_open()) {
@@ -304,20 +301,22 @@ void save_to_file(string file_path, int *if_error, int *num, int *sizes, int cou
 		*if_error = 1;
 		return;
 	}
-	/* num data */
-	for (int i = 0; *(num + i) != -1; ++i) {
-		fio << *(num + i) << " ";
-	}
 	/* n and m sizes */
-	fio << endl << sizes[0] << " " << sizes[1] << " ";
+	fio << sizes[0] << " " << sizes[1] << " ";
 	/* number of moves */
-	fio << endl << count << " ";
+	fio << endl << count << " " << endl;
+	/* num data */
+	for (int i = 0; i < sizes[0]; ++i) {
+		for (int j = 0; j < sizes[1]; ++j) {
+			fio << num[i][j] << " ";
+		}
+	}
 	fio.close();
 	*if_error = 0;
 	return;
 }
 
-int string_int_converter(string num_str) {
+int n_puzzle::board::string_int_converter(string num_str) {
 	int num = 0, multiplier = 1;
 
 	for (int i = num_str.length() - 1; i >= 0; --i) {
@@ -337,19 +336,22 @@ void n_puzzle::shuffle() {
 	num = generate_table(n, m, n_num);
 	return;
 }
-*/
 
-int* generate_table(int n, int m, int n_num) {
-	int i_num = 0, if_same, temp_num, temp_i_num;
-	int *num = (int*)malloc(((n * m) + 1) * sizeof(int));
+int** n_puzzle::generate_table(int n, int m, int n_num) {
+	int i_num = 0, if_same, rand_num, temp_i_num;
+	int temp_arr[n_num];
+	int **num = (int**)malloc(n * sizeof(*num));
+	for (int j = 0; j < n; ++j) {
+		num[j] = (int*)malloc(m * sizeof(int));
+	}
 
 	while (i_num < (n * m)) {
 		if (i_num < n_num) {
 			if_same = 0;
-			temp_num = rand() % n_num;
+			rand_num = rand() % n_num;
 			temp_i_num = i_num - 1;
 			while (temp_i_num >= 0) {
-				if (temp_num == num[temp_i_num]) {
+				if (rand_num == temp_arr[temp_i_num]) {
 					if_same = 1;
 					break;
 				}
@@ -357,34 +359,45 @@ int* generate_table(int n, int m, int n_num) {
 			}
 			if (if_same)
 				continue;
-			num[i_num] = temp_num;
+			temp_arr[i_num] = rand_num;
+			num[i_num / m][i_num % m] = rand_num;
 		} else {
-			/* -2 will represent zeros on the table */
-			num[i_num] = -2;
+			// -2 will represent zeros on the table
+			num[i_num / m][i_num % m] = -2;
 		}
 		++i_num;
 	}
-	num[i_num] = -1;
 	return (num);
 }
+*/
 
-/*
 void n_puzzle::board::reset() {
 	int i_num = 0;
 
 	cout << "Table is reseted to the solution." << endl;
-	while (i_num < (n * m)) {
-		if (i_num < n_num) {
-			num[i_num] = i_num + 1;
-		} else {
-			// -2 will represent zeros on the table
-			num[i_num] = -2;
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < m; ++j) {
+			if (i_num < n_num - 1)
+				num[i][j] = i_num + 1;
+			else if (i_num == n_num - 1)
+				num[i][j] = 0;
+			else
+				num[i][j] = -2;
+			++i_num;
 		}
-		++i_num;
 	}
-	num[n_num - 1] = 0;
-	num[i_num] = -1;
 	return;
 }
-*/
+
+void n_puzzle::board::isSolved() {
+	if_done = 1;
+	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
+	for (int i = 1; i < n_num - 1; ++i) {
+		if (num[(i - 1) / m][(i - 1) % m] > num[i / m][i % m]) {
+			if_done = 0;
+			break;
+		}
+	}
+	return;
+}
 
