@@ -92,63 +92,34 @@
 #include "Part1.h"
 using namespace std;
 
-class n_puzzle {
-public:
-	void print();
-	void printReport(); //
-	void readFromFile();
-	void writeToFile();
-	void shuffle(); //
-	int** generate_table(int n, int m, int n_num);
-	void reset();
-	void setsize();
-	void moveRandom(); //
-	void moveIntelligent(); //
-	void move();
-	void solvePuzzle(); //
 
-
-
-	class board {
-	public:
-		void print(); //ok
-		void readFromFile(); //ok
-		int** get_from_file(std::string file_path, int *if_error, int *sizes, int *count); //ok
-		void writeToFile(); //ok
-		void save_to_file(string file_path, int *if_error, int **num, int *sizes, int count); //ok
-		int string_int_converter(string num_str); //ok
-		void reset(); //ok
-		void setSize();
-		void move();
-		void isSolved(); //ok
-	private:
-		//int num[9] = {1, 2, 3, 0, 5, 6, 4, 8, 7};
-		int **num;
-		int n, m;
-		int n_num;
-		int if_error = 0;
-		int sizes[2];
-		string file_path;
-		int count = 0;
-		int if_done = 0;
-	};
-private:
-
-
-};
 
 void n_puzzle_game_oop() {
 	srand(time(nullptr));
-	n_puzzle::board new_board;
+	//n_puzzle::board new_board;
+	n_puzzle new_puzzle;
+	new_puzzle.print();
+	cout << new_puzzle.new_board.count << endl;
+
+
 	//new_board.printReport();
-	new_board.readFromFile();
-	new_board.print();
+//	new_board.readFromFile();
+//	new_board.print();
+//	new_board.move('r');
+//	new_board.print();
 
 	//new_board.writeToFile();
 	//new_board.shuffle();
-	new_board.reset();
-	new_board.isSolved();
+	//new_board.reset();
+	//new_board.isSolved();
+	//new_board.setSize();
+	//new_board.print();
+}
+
+void n_puzzle::print() {
+	new_board.readFromFile();
 	new_board.print();
+	return;
 }
 
 void n_puzzle::board::print() {
@@ -166,7 +137,6 @@ void n_puzzle::board::print() {
 		}
 		cout << endl;
 	}
-	cout << if_done << endl;
 	return;
 }
 
@@ -336,8 +306,37 @@ void n_puzzle::shuffle() {
 	num = generate_table(n, m, n_num);
 	return;
 }
+*/
 
-int** n_puzzle::generate_table(int n, int m, int n_num) {
+void n_puzzle::board::reset() {
+	int i_num = 0;
+
+	cout << "Table is reseted to the solution." << endl;
+	for (int i = 0; i < n; ++i) {
+		for (int j = 0; j < m; ++j) {
+			if (i_num < n_num - 1)
+				num[i][j] = i_num + 1;
+			else if (i_num == n_num - 1)
+				num[i][j] = 0;
+			else
+				num[i][j] = -2;
+			++i_num;
+		}
+	}
+	return;
+}
+
+void n_puzzle::board::setSize(){
+	if (n > 9 || m > 9) {
+		cout << "Error occurred! Board axis cannot be greater 9. ";
+		cout << "Please correct them accordingly and try again." << endl;
+	} else {
+		num = generate_table(n, m, n_num);
+	}
+	return;
+}
+
+int** n_puzzle::board::generate_table(int n, int m, int n_num) {
 	int i_num = 0, if_same, rand_num, temp_i_num;
 	int temp_arr[n_num];
 	int **num = (int**)malloc(n * sizeof(*num));
@@ -369,22 +368,78 @@ int** n_puzzle::generate_table(int n, int m, int n_num) {
 	}
 	return (num);
 }
-*/
 
-void n_puzzle::board::reset() {
-	int i_num = 0;
+void n_puzzle::board::move(char c) {
+	int oper, i_empty;
 
-	cout << "Table is reseted to the solution." << endl;
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < m; ++j) {
-			if (i_num < n_num - 1)
-				num[i][j] = i_num + 1;
-			else if (i_num == n_num - 1)
-				num[i][j] = 0;
-			else
-				num[i][j] = -2;
-			++i_num;
+	switch (c) {
+	/* Up */
+	case 'U':
+	case 'u':
+		oper = 1;
+		break;
+	/* Right */
+	case 'R':
+	case 'r':
+		oper = 2;
+		break;
+	/* Down */
+	case 'D':
+	case 'd':
+		oper = 3;
+		break;
+	/* Left */
+	case 'L':
+	case 'l':
+		oper = 4;
+		break;
+	}
+
+	get_empty_index(num, &i_empty);
+	switch (oper) {
+	case (1):
+		if ((i_empty - m) < 0) {
+			cout << "Error occurred! Target direction is invalid." << endl;
+			break;
 		}
+		num[i_empty / m][i_empty % m] = num[(i_empty / m) - 1][i_empty % m];
+		num[(i_empty / m) - 1][i_empty % m] = 0;
+		break;
+	case (2):
+		if (((i_empty + 1) % m) == 0) {
+			cout << "Error occurred! Target direction is invalid." << endl;
+			break;
+		}
+		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) + 1];
+		num[i_empty / m][(i_empty % m) + 1] = 0;
+		break;
+	case (3):
+		if ((i_empty + m) >= (n * m)) {
+			cout << "Error occurred! Target direction is invalid." << endl;
+			break;
+		}
+		num[i_empty / m][i_empty % m] = num[(i_empty / m) + 1][i_empty % m];
+		num[(i_empty / m) + 1][i_empty % m] = 0;
+		break;
+	case (4):
+		if ((i_empty % m) == 0) {
+			cout << "Error occurred! Target direction is invalid." << endl;
+			break;
+		}
+		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) - 1];
+		num[i_empty / m][(i_empty % m) - 1] = 0;
+		break;
+	}
+	return;
+}
+
+void n_puzzle::board::get_empty_index(int **num, int *i_empty) {
+	*i_empty = 0;
+
+	while (*i_empty != (n * m)) {
+		if (num[*i_empty / m][*i_empty % m] == 0)
+			break;
+		++*i_empty;
 	}
 	return;
 }
