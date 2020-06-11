@@ -93,13 +93,11 @@
 using namespace std;
 
 void n_puzzle_game_oop() {
-	srand(time(nullptr));
+	int menu_choice;
+	char save_choice;
 	n_puzzle new_puzzle;
-	new_puzzle.menu();
-	return;
-}
+	srand(time(nullptr));
 
-void n_puzzle::menu() {
 	while (1) {
 		// initial menu screen
 		while (1) {
@@ -127,13 +125,13 @@ void n_puzzle::menu() {
 			} while (!(save_choice == 'Y' || save_choice == 'y' ||
 					save_choice == 'N' || save_choice == 'n'));
 			if (save_choice == 'Y' || save_choice == 'y') {
-				writeToFile();
+				new_puzzle.writeToFile();
 			}
 			cout << "Good bye!" << endl;
 			break;
 		case (1):
-			readFromFile();
-			play_n_puzzle_game();
+			new_puzzle.readFromFile();
+			new_puzzle.play_n_puzzle_game();
 			break;
 		default:
 			break;
@@ -188,37 +186,8 @@ void n_puzzle::play_n_puzzle_game() {
 			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
 			break;
 		}
-
 		if (oper == -1)
 			break;
-		/*
-		if (oper == -1)
-			break;
-		else if (oper == 0) {
-			shuffle();
-		} else if (oper == 1 || oper == 2 || oper == 3 || oper == 4) {
-			move();
-		} else if (oper == 5)
-			moveIntelligent();
-		else if (oper == 6)
-			solvePuzzle();
-		else if (oper == 7)
-			printReport();
-		else if (oper == 8)
-			writeToFile();
-		else if (oper == 9)
-			readFromFile();
-		else if (oper == 11)
-			moveRandom();
-		else {
-			system("clear");
-			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
-		}
-
-		// if any of up (1), right (2), down (3) or left (4) operated, increase the number of  moves
-		if (oper == 1 || oper == 2 || oper == 3 || oper == 4)
-			new_board.setCount(new_board.getCount() + 1);
-		*/
 	}
 	return;
 }
@@ -519,16 +488,6 @@ void n_puzzle::board::isSolved() {
 			break;
 		}
 	}
-	return;
-}
-
-void n_puzzle::board::setCount(int count_value) {
-	count = count_value;
-	return;
-}
-
-void n_puzzle::board::setDone(int done_value) {
-	if_done = done_value;
 	return;
 }
 

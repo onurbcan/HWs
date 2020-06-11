@@ -25,7 +25,6 @@ public:
 	void solvePuzzle();
 
 	//helper functions
-	void menu();
 	void play_n_puzzle_game();
 	void convert_command();
 
@@ -39,11 +38,9 @@ public:
 		void move(char route);
 		void isSolved();
 
-		//getters and setters
-		int getCount() { return count; }
-		void setCount(int count_value);
-		int getDone() { return if_done; }
-		void setDone(int done_value);
+		//getters
+		int getCount() const { return count; }
+		int getDone() const { return if_done; }
 
 		//helper functions
 		void get_from_file();
@@ -65,8 +62,8 @@ public:
 	};
 
 private:
-	int oper, menu_choice;
-	char command, route, save_choice;
+	int oper;
+	char command, route;
 
 	board new_board;
 };
