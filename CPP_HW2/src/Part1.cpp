@@ -65,7 +65,6 @@ using namespace std;
 void n_puzzle_game_v2() {
 	int menu_choice, *num, n, m, n_num, count = 0;
 	char save_choice;
-	string file_path;
 
 	srand(time(nullptr));
 	while (1) {
@@ -171,8 +170,8 @@ void convert_command(char c, int *oper) {
 		*oper = 8;
 		break;
 	/* Load */
-	case 'F': /* new input letter */
-	case 'f': /* new input letter */
+	case 'O': /* new input letter */
+	case 'o': /* new input letter */
 		*oper = 9;
 		break;
 	/* New game */
@@ -191,11 +190,10 @@ void convert_command(char c, int *oper) {
 int* generate_table(int n, int m, int n_num) {
 	int i_num = 0, if_same, temp_num, temp_i_num;
 	int *num = (int*)malloc(((n * m) + 1) * sizeof(int));
-
 	while (i_num < (n * m)) {
 		if (i_num < n_num) {
 			if_same = 0;
-			temp_num = (rand() % ((n * m) - n_num));
+			temp_num = rand() % n_num;
 			temp_i_num = i_num - 1;
 			while (temp_i_num >= 0) {
 				if (temp_num == num[temp_i_num]) {
@@ -329,10 +327,9 @@ void play_n_puzzle_game(int *num, int *n, int *m, int *n_num, int *count) {
 			get_intelligent_movement_v2(num, *n, *m, &oper);
 		else if (oper == 7)
 			print_report(*count, if_done);
-		/* integrate save/load file functions */
 		system("clear");
 		swap_elements(oper, num, n, m, count);
-		check_if_done(num, &if_done);
+		check_if_done(num, *n_num, &if_done);
 		if (if_done) {
 			cout << "Problem solved!" << endl;
 			break;
@@ -418,7 +415,6 @@ void swap_elements(int oper, int *num, int *n, int *m, int *count) {
 		new_num = new_game_screen(&new_n, &new_m, &new_n_num);
 		*n = new_n;
 		*m = new_m;
-		//*n_num = new_n_num;
 		*count = 0;
 		for (i_new = 0; new_num[i_new] != -1; ++i_new) {
 			num[i_new] = new_num[i_new];
@@ -560,11 +556,15 @@ void get_empty_index(int *num, int *i_empty) {
 	return;
 }
 
-void check_if_done(int *num, int *if_done) {
+void check_if_done(int *num, int n_num, int *if_done) {
 	*if_done = 1;
-	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
-	for (int i = 0; num[i + 2] != -1; ++i) {
-		if (num[i] > num[i + 1]) {
+
+	if (num[n_num - 1] != 0) {
+		*if_done = 0;
+		return;
+	}
+	for (int i = n_num - 2; i > 0; --i) {
+		if (num[i] < num[i - 1]) {
 			*if_done = 0;
 			break;
 		}
@@ -639,7 +639,6 @@ int* get_from_file(std::string file_path, int *if_error, int *sizes, int *count)
 			temp_str[i] = '\0';
 			string str(temp_str);
 			num[i_num] = string_int_converter(temp_str);
-			cout << i_num << ": " << num[i_num] << endl;
 			++i_num;
 			num = (int*)realloc(num, (i_num + 1) * sizeof(int));
 		} else if (c != ' ' && i_line == 1) {
@@ -651,7 +650,6 @@ int* get_from_file(std::string file_path, int *if_error, int *sizes, int *count)
 			temp_str[i] = '\0';
 			string str(temp_str);
 			sizes[i_sizes] = string_int_converter(temp_str);
-			cout << sizes[i_sizes] << endl;
 			++i_sizes;
 		} else if (c != ' ' && i_line == 2) {
 			while (c != ' ') {
@@ -662,7 +660,6 @@ int* get_from_file(std::string file_path, int *if_error, int *sizes, int *count)
 			temp_str[i] = '\0';
 			string str(temp_str);
 			*count = string_int_converter(temp_str);
-			cout << *count << endl;
 		}
 	}
 	num[i_num] = -1;

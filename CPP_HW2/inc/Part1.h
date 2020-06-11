@@ -22,7 +22,7 @@ void swap_elements(int oper, int *num, int *n, int *m, int *count);
 void get_intelligent_movement(int *num, int n, int m, int *oper);
 void get_intelligent_movement_v2(int *num, int n, int m, int *oper);
 void get_empty_index(int *num, int *i_empty);
-void check_if_done(int *num, int *if_done);
+void check_if_done(int *num, int n_num, int *if_done);
 int string_int_converter(std::string num_str);
 
 int* get_from_file(std::string file_path, int *if_error, int *sizes, int *count);
