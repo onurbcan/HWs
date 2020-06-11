@@ -92,32 +92,23 @@
 #include "Part1.h"
 using namespace std;
 
-//void n_puzzle_game_oop() {
-//	srand(time(nullptr));
-//	n_puzzle new_puzzle;
-//
-//	new_puzzle.readFromFile();
-//	new_puzzle.print();
-//	new_puzzle.shuffle();
-//	new_puzzle.print();
-//}
-
 void n_puzzle_game_oop() {
-	int menu_choice;//, *num, n, m, n_num, count = 0;
-	char save_choice;
-	n_puzzle new_puzzle;
-
 	srand(time(nullptr));
+	n_puzzle new_puzzle;
+	new_puzzle.menu();
+	return;
+}
+
+void n_puzzle::menu() {
 	while (1) {
 		// initial menu screen
 		while (1) {
 			cout << "Welcome to the N-Puzzle game." << endl;
 			cout << "1) Resume" << endl;
-			cout << "2) New Game" << endl;
 			cout << "0) Quit" << endl;
 			cout << "Please enter your choice." << endl;
 			cin >> menu_choice;
-			if (!(menu_choice == 0 || menu_choice == 1 || menu_choice == 2))
+			if (!(menu_choice == 0 || menu_choice == 1))
 				cout << menu_choice << " is an invalid choice. Please try again." << endl;
 			else
 				break;
@@ -136,18 +127,13 @@ void n_puzzle_game_oop() {
 			} while (!(save_choice == 'Y' || save_choice == 'y' ||
 					save_choice == 'N' || save_choice == 'n'));
 			if (save_choice == 'Y' || save_choice == 'y') {
-				new_puzzle.writeToFile();
-				cout << "Game configurations saved successfully. ";
+				writeToFile();
 			}
 			cout << "Good bye!" << endl;
 			break;
 		case (1):
-			new_puzzle.readFromFile();
-			//play_n_puzzle_game(num, &n, &m, &n_num, &count);
-			break;
-		case (2):
-			//num = new_game_screen(&n, &m, &n_num);
-			//play_n_puzzle_game(num, &n, &m, &n_num, &count);
+			readFromFile();
+			play_n_puzzle_game();
 			break;
 		default:
 			break;
@@ -156,11 +142,89 @@ void n_puzzle_game_oop() {
 			break;
 	}
 	return;
+
 }
 
+void n_puzzle::play_n_puzzle_game() {
+	while (1) {
+		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
+		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
+		print();
+		cin >> command;
+		convert_command();
 
-void convert_command(char c, int &oper) {
-	switch (c) {
+		switch (oper) {
+		case (-1):
+			break;
+		case (0):
+			shuffle();
+			break;
+		case (1):
+		case (2):
+		case (3):
+		case (4):
+			move();
+			break;
+		case (5):
+			moveIntelligent();
+			break;
+		case (6):
+			solvePuzzle();
+			break;
+		case (7):
+			printReport();
+			break;
+		case (8):
+			writeToFile();
+			break;
+		case (9):
+			readFromFile();
+			break;
+		case (11):
+			moveRandom();
+			break;
+		default:
+			system("clear");
+			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
+			break;
+		}
+
+		if (oper == -1)
+			break;
+		/*
+		if (oper == -1)
+			break;
+		else if (oper == 0) {
+			shuffle();
+		} else if (oper == 1 || oper == 2 || oper == 3 || oper == 4) {
+			move();
+		} else if (oper == 5)
+			moveIntelligent();
+		else if (oper == 6)
+			solvePuzzle();
+		else if (oper == 7)
+			printReport();
+		else if (oper == 8)
+			writeToFile();
+		else if (oper == 9)
+			readFromFile();
+		else if (oper == 11)
+			moveRandom();
+		else {
+			system("clear");
+			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
+		}
+
+		// if any of up (1), right (2), down (3) or left (4) operated, increase the number of  moves
+		if (oper == 1 || oper == 2 || oper == 3 || oper == 4)
+			new_board.setCount(new_board.getCount() + 1);
+		*/
+	}
+	return;
+}
+
+void n_puzzle::convert_command() {
+	switch (command) {
 	/* Quit */
 	case 'Q':
 	case 'q':
@@ -216,10 +280,10 @@ void convert_command(char c, int &oper) {
 	case 'o':
 		oper = 9;
 		break;
-	/* New game */
-	case 'N': /* additional input letter */
-	case 'n': /* additional input letter */
-		oper = 10;
+	/* Random */
+	case 'A': /* additional input letter */
+	case 'a': /* additional input letter */
+		oper = 11;
 		break;
 	/* Invalid input */
 	default:
@@ -228,80 +292,6 @@ void convert_command(char c, int &oper) {
 	}
 	return;
 }
-
-/*
-void play_n_puzzle_game(int *num, int *n, int *m, int *n_num, int *count) {
-	int oper, if_done = 0;
-	char c;
-
-	while (1) {
-		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
-		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
-		print_table(num, *n, *m);
-		cin >> c;
-		convert_command(c, &oper);
-		if (oper == -1)
-			break;
-		else if (oper == 0) {
-			*count = 0;
-			num = generate_table(*n, *m, *n_num);
-		} else if (oper == 5)
-			get_intelligent_movement(num, *n, *m, &oper);
-		else if (oper == 6)
-			get_intelligent_movement_v2(num, *n, *m, &oper);
-		else if (oper == 7)
-			print_report(*count, if_done);
-		// integrate save/load file functions
-		system("clear");
-		swap_elements(oper, num, n, m, count);
-		check_if_done(num, &if_done);
-		if (if_done) {
-			cout << "Problem solved!" << endl;
-			break;
-		}
-		// if any of up (1), right (2), down(3) or left (4) operated, increase the number of  moves
-		if (oper == 1 || oper == 2 || oper == 3 || oper == 4)
-			++*count;
-	}
-	return;
-}
-
-int* new_game_screen(int *n, int *m, int *n_num) {
-	int *num;
-
-	while (1) {
-		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
-		cin >> *n;
-		if (*n < 2)
-			cout << "Table sizes have to be greater than 1. Please try again." << endl;
-		else
-			break;
-	}
-	while (1) {
-		cout << "Please enter the M size of the game to be built N-by-M table" << endl;
-		cin >> *m;
-		if (*m < 2)
-			cout << "Table sizes have to be greater than 1. Please try again." << endl;
-		else {
-			break;
-		}
-	}
-	while (1) {
-		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
-		cin >> *n_num;
-		if (*n_num > (*n * *m) || *n_num <= 0) {
-			cout << "Number of numbers has to be from 1 to " << (*n * *m);
-			cout << ".Please try again accordingly." << endl;
-		} else {
-			num = generate_table(*n, *m, *n_num);
-			cout << *n << "-by-" << *m << " table with " << ((*n * *m) - *n_num);
-			cout << " zeros is generated below. ";
-			break;
-		}
-	}
-	return (num);
-}
-*/
 
 void n_puzzle::print() {
 	new_board.print();
@@ -343,26 +333,23 @@ void n_puzzle::setsize() {
 }
 
 void n_puzzle::moveRandom() {
-	char route;
 	new_board.get_random_movement(route);
 	new_board.move(route);
 	return;
 }
 
 void n_puzzle::moveIntelligent() {
-	char route;
 	new_board.get_intelligent_movement(route);
 	new_board.move(route);
 	return;
 }
 
-void n_puzzle::move(char c) {
-	new_board.move(c);
+void n_puzzle::move() {
+	new_board.move(command);
 	return;
 }
 
 void n_puzzle::solvePuzzle() {
-	char route;
 	new_board.get_intelligent_movement_v2(route);
 	new_board.move(route);
 	return;
@@ -388,13 +375,11 @@ void n_puzzle::board::print() {
 }
 
 void n_puzzle::board::readFromFile() {
-	string file_path;
-
 	while (1) {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
 		cin >> file_path;
-		num = get_from_file(file_path, if_error, sizes, count);
+		get_from_file();
 		if (if_error)
 			cout << "File path is invalid. Please try again." << endl;
 		else {
@@ -414,11 +399,11 @@ void n_puzzle::board::writeToFile() {
 		cin >> file_path;
 		sizes[0] = n;
 		sizes[1] = m;
-		save_to_file(file_path, if_error, num, sizes, count);
+		save_to_file();
 		if (if_error)
 			cout << "File path is invalid. Please try again." << endl;
 		else {
-			cout << "Game configurations saved successfully." << endl;
+			cout << "Game configurations saved successfully. ";
 			break;
 		}
 	}
@@ -448,15 +433,15 @@ void n_puzzle::board::setSize(){
 		cout << "Error occurred! Board axis cannot be greater 9. ";
 		cout << "Please correct them accordingly and try again." << endl;
 	} else {
-		num = generate_table(n, m, n_num);
+		generate_table();
 	}
 	return;
 }
 
-void n_puzzle::board::move(char c) {
-	int oper, i_empty;
+void n_puzzle::board::move(char route) {
+	int oper;
 
-	switch (c) {
+	switch (route) {
 	/* Up */
 	case 'U':
 	case 'u':
@@ -479,7 +464,7 @@ void n_puzzle::board::move(char c) {
 		break;
 	}
 
-	get_empty_index(num, &i_empty);
+	get_empty_index();
 	switch (oper) {
 	case (1):
 		if ((i_empty - m) < 0) {
@@ -488,6 +473,7 @@ void n_puzzle::board::move(char c) {
 		}
 		num[i_empty / m][i_empty % m] = num[(i_empty / m) - 1][i_empty % m];
 		num[(i_empty / m) - 1][i_empty % m] = 0;
+		++count;
 		break;
 	case (2):
 		if (((i_empty + 1) % m) == 0) {
@@ -496,6 +482,7 @@ void n_puzzle::board::move(char c) {
 		}
 		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) + 1];
 		num[i_empty / m][(i_empty % m) + 1] = 0;
+		++count;
 		break;
 	case (3):
 		if ((i_empty + m) >= (n * m)) {
@@ -504,6 +491,7 @@ void n_puzzle::board::move(char c) {
 		}
 		num[i_empty / m][i_empty % m] = num[(i_empty / m) + 1][i_empty % m];
 		num[(i_empty / m) + 1][i_empty % m] = 0;
+		++count;
 		break;
 	case (4):
 		if ((i_empty % m) == 0) {
@@ -512,7 +500,12 @@ void n_puzzle::board::move(char c) {
 		}
 		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) - 1];
 		num[i_empty / m][(i_empty % m) - 1] = 0;
+		++count;
 		break;
+	}
+	isSolved();
+	if (if_done) {
+		cout << "Problem solved!" << endl;
 	}
 	return;
 }
@@ -539,9 +532,8 @@ void n_puzzle::board::setDone(int done_value) {
 	return;
 }
 
-int** n_puzzle::board::get_from_file(std::string file_path, int &if_error, int *sizes, int &count) {
+void n_puzzle::board::get_from_file() {
 	int i, i_row = 0, i_col = 0, i_sizes = 0, i_line = 0;
-	int **num = 0;
 	char c, temp_str[5];
 	n_num = 0;
 	fstream fio;
@@ -549,8 +541,6 @@ int** n_puzzle::board::get_from_file(std::string file_path, int &if_error, int *
 	if (!fio.is_open()) {
 		cout << "Error occurred! File not found." << endl;
 		if_error = 1;
-		num[i_row][i_col] = -1;
-		return (num);
 	}
 	while (!fio.eof()) {
 		fio.get(c);
@@ -604,10 +594,9 @@ int** n_puzzle::board::get_from_file(std::string file_path, int &if_error, int *
 	}
 	if_error = 0;
 	fio.close();
-	return (num);
 }
 
-void n_puzzle::board::save_to_file(string file_path, int &if_error, int **num, int *sizes, int count) {
+void n_puzzle::board::save_to_file() {
 	fstream fio;
 	fio.open(file_path, ios::trunc | ios::out);
 	if (!fio.is_open()) {
@@ -644,10 +633,10 @@ int n_puzzle::board::string_int_converter(string num_str) {
 	return (num);
 }
 
-int** n_puzzle::board::generate_table(int n, int m, int n_num) {
+void n_puzzle::board::generate_table() {
 	int i_num = 0, if_same, rand_num, temp_i_num;
 	int temp_arr[n_num];
-	int **num = (int**)malloc(n * sizeof(*num));
+	num = (int**)realloc(num, n * sizeof(*num));
 	for (int j = 0; j < n; ++j) {
 		num[j] = (int*)malloc(m * sizeof(int));
 	}
@@ -674,30 +663,30 @@ int** n_puzzle::board::generate_table(int n, int m, int n_num) {
 		}
 		++i_num;
 	}
-	return (num);
 }
 
-void n_puzzle::board::get_empty_index(int **num, int *i_empty) {
-	*i_empty = 0;
+void n_puzzle::board::get_empty_index() {
+	i_empty = 0;
 
-	while (*i_empty != (n * m)) {
-		if (num[*i_empty / m][*i_empty % m] == 0)
+	while (i_empty != (n * m)) {
+		if (num[i_empty / m][i_empty % m] == 0)
 			break;
-		++*i_empty;
+		++i_empty;
 	}
 	return;
 }
 
 void n_puzzle::board::shuffle_board() {
 	cout << "Table is shuffled. Good luck!" << endl;
-	num = generate_table(n, m, n_num);
+	count = 0;
+	generate_table();
 	return;
 }
 
 void n_puzzle::board::get_intelligent_movement(char &route) {
-	int i_empty, least = n * m, oper;
+	int least = n * m, oper;
 
-	get_empty_index(num, &i_empty);
+	get_empty_index();
 	if ((i_empty - m) >= 0) {
 		if (num[(i_empty / m) - 1][i_empty % m] < least) {
 			least = num[(i_empty / m) - 1][i_empty % m];
@@ -747,9 +736,9 @@ void n_puzzle::board::get_intelligent_movement(char &route) {
 }
 
 void n_puzzle::board::get_intelligent_movement_v2(char &route) {
-	int i_empty, least = n * m, oper;
+	int least = n * m, oper;
 
-	get_empty_index(num, &i_empty);
+	get_empty_index();
 	if ((i_empty - m) >= 0) {
 		if (num[(i_empty / m) - 1][i_empty % m] < least) {
 			least = num[(i_empty / m) - 1][i_empty % m];
@@ -774,7 +763,7 @@ void n_puzzle::board::get_intelligent_movement_v2(char &route) {
 			oper = 4;
 		}
 	}
-	cout << "Intelligent move v2 chooses ";
+	cout << "Solve puzzle move chooses ";
 	switch (oper) {
 	case (1):
 		cout << "U" << endl;
@@ -799,9 +788,9 @@ void n_puzzle::board::get_intelligent_movement_v2(char &route) {
 }
 
 void n_puzzle::board::get_random_movement(char &route) {
-	int i_empty, oper, sides[4] = {0, 0, 0, 0};
+	int oper, sides[4] = {0, 0, 0, 0};
 
-	get_empty_index(num, &i_empty);
+	get_empty_index();
 	if ((i_empty - m) >= 0)
 		sides[0] = 1;
 	if (((i_empty + 1) % m) != 0)
