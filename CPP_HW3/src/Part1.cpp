@@ -91,7 +91,7 @@
 #include <string>
 #include "Part1.h"
 using namespace std;
-
+/*
 void n_puzzle_game_oop() {
 	int menu_choice, game_flag = 0; //game flag for lastly played version (resume/new game)
 	char save_choice = 'Y';
@@ -153,9 +153,9 @@ void n_puzzle_game_oop() {
 			break;
 	}
 	return;
-
 }
-
+*/
+/*
 void resume_game_menu(NPuzzle& resume_game) {
 	NPuzzle::Board new_board;
 	resume_game.readFromFile();
@@ -167,7 +167,7 @@ void new_game_menu(NPuzzle& new_game) {
 	new_game.build_new_table();
 	new_game.play_n_puzzle_game();
 }
-
+*/
 void NPuzzle::build_new_table() {
 	int n, m, n_num;
 

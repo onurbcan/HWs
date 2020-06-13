@@ -26,7 +26,7 @@ public:
 		//this Board constructor is for resume_game since values has not obtained yet, they are not set
 		Board() : num(0), n(), m(), n_num(), i_empty(), count(0), if_error(0), if_done(0) {}
 		//this Board constructor is for new_game since values has obtained before initialization, they are set
-		Board(int count_value) : num(0), n(), m(), n_num(), i_empty(), count(count_value), if_error(0), if_done(0) {}
+		//Board(int count_value) : num(0), n(), m(), n_num(), i_empty(), count(count_value), if_error(0), if_done(0) {}
 
 		//functions from the draft
 		void print();
@@ -90,8 +90,8 @@ private:
 };
 
 //global functions
-void n_puzzle_game_oop();
-void resume_game_menu(NPuzzle& resume_game);
-void new_game_menu(NPuzzle& new_game);
+//void n_puzzle_game_oop();
+//void resume_game_menu(NPuzzle& resume_game);
+//void new_game_menu(NPuzzle& new_game);
 
 #endif /* INC_PART1_H_ */
