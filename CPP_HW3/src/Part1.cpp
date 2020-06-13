@@ -93,9 +93,9 @@
 using namespace std;
 
 void n_puzzle_game_oop() {
-	int menu_choice;
-	char save_choice;
-	NPuzzle new_puzzle;
+	int menu_choice, game_flag = 0; //game flag for lastly played version (resume/new game)
+	char save_choice = 'Y';
+	NPuzzle resume_game, new_game;
 	srand(time(nullptr));
 
 	while (1) {
@@ -104,10 +104,11 @@ void n_puzzle_game_oop() {
 			system("clear");
 			cout << "Welcome to the N-Puzzle game." << endl;
 			cout << "1) Resume" << endl;
+			cout << "2) New game" << endl;
 			cout << "0) Quit" << endl;
 			cout << "Please enter your choice." << endl;
 			cin >> menu_choice;
-			if (!(menu_choice == 0 || menu_choice == 1))
+			if (!(menu_choice == 0 || menu_choice == 1 || menu_choice == 2))
 				cout << menu_choice << " is an invalid choice. Please try again." << endl;
 			else
 				break;
@@ -115,7 +116,7 @@ void n_puzzle_game_oop() {
 		switch (menu_choice) {
 		case (0):
 			system("clear");
-			do {
+			while (game_flag != 0) {
 				cout << "Would you like to save what you played so far to be ";
 				cout << "loaded next time? (Y/N)" << endl;
 				cin >> save_choice;
@@ -123,17 +124,27 @@ void n_puzzle_game_oop() {
 						save_choice == 'N' || save_choice == 'n')) {
 					cout << save_choice << " is an invalid choice. ";
 					cout << "Please enter Y for Yes or N for No" << endl;
+				} else {
+					break;
 				}
-			} while (!(save_choice == 'Y' || save_choice == 'y' ||
-					save_choice == 'N' || save_choice == 'n'));
+			}
 			if (save_choice == 'Y' || save_choice == 'y') {
-				new_puzzle.writeToFile();
+				if (game_flag == 1)
+					resume_game.writeToFile();
+				else if (game_flag == 2)
+					new_game.writeToFile();
+				else
+					cout << "Sorry that you haven't played here. See you next time. " << endl;
 			}
 			cout << "Good bye!" << endl;
 			break;
 		case (1):
-			new_puzzle.readFromFile();
-			new_puzzle.play_n_puzzle_game();
+			game_flag = 1;
+			resume_game_menu(resume_game);
+			break;
+		case (2):
+			game_flag = 2;
+			new_game_menu(new_game);
 			break;
 		default:
 			break;
@@ -143,6 +154,58 @@ void n_puzzle_game_oop() {
 	}
 	return;
 
+}
+
+void resume_game_menu(NPuzzle& resume_game) {
+	NPuzzle::Board new_board;
+	resume_game.readFromFile();
+	resume_game.play_n_puzzle_game();
+}
+
+void new_game_menu(NPuzzle& new_game) {
+	NPuzzle::Board new_board(0);
+	new_game.build_new_table();
+	new_game.play_n_puzzle_game();
+}
+
+void NPuzzle::build_new_table() {
+	int n, m, n_num;
+
+	while (1) {
+		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
+		cin >> n;
+		if (n < 2 || n > 9)
+			cout << "Table sizes can only values from 2 to 9. Please try again." << endl;
+		else {
+			new_board.setN(n);
+			break;
+		}
+	}
+	while (1) {
+		cout << "Please enter the M size of the game to be built N-by-M table" << endl;
+		cin >> m;
+		if (m < 2 || m > 9)
+			cout << "Table sizes can only values from 2 to 9. Please try again." << endl;
+		else {
+			new_board.setM(m);
+			break;
+		}
+	}
+	while (1) {
+		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
+		cin >> n_num;
+		if (n_num > (n * m) || n_num <= 1) {
+			cout << "Number of numbers has to be from 2 to " << (n * m);
+			cout << ".Please try again accordingly." << endl;
+		} else {
+			new_board.setN_num(n_num);
+			new_board.generate_table();
+			cout << n << "-by-" << m << " table with " << ((n * m) - n_num);
+			cout << " zeros is generated below. ";
+			break;
+		}
+	}
+	return;
 }
 
 void NPuzzle::play_n_puzzle_game() {
