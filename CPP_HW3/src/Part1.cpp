@@ -95,12 +95,13 @@ using namespace std;
 void n_puzzle_game_oop() {
 	int menu_choice;
 	char save_choice;
-	n_puzzle new_puzzle;
+	NPuzzle new_puzzle;
 	srand(time(nullptr));
 
 	while (1) {
 		// initial menu screen
 		while (1) {
+			system("clear");
 			cout << "Welcome to the N-Puzzle game." << endl;
 			cout << "1) Resume" << endl;
 			cout << "0) Quit" << endl;
@@ -113,13 +114,14 @@ void n_puzzle_game_oop() {
 		}
 		switch (menu_choice) {
 		case (0):
+			system("clear");
 			do {
 				cout << "Would you like to save what you played so far to be ";
 				cout << "loaded next time? (Y/N)" << endl;
 				cin >> save_choice;
 				if (!(save_choice == 'Y' || save_choice == 'y' ||
 						save_choice == 'N' || save_choice == 'n')) {
-					cout << save_choice << "is an invalid choice. ";
+					cout << save_choice << " is an invalid choice. ";
 					cout << "Please enter Y for Yes or N for No" << endl;
 				}
 			} while (!(save_choice == 'Y' || save_choice == 'y' ||
@@ -143,13 +145,14 @@ void n_puzzle_game_oop() {
 
 }
 
-void n_puzzle::play_n_puzzle_game() {
+void NPuzzle::play_n_puzzle_game() {
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
 		print();
 		cin >> command;
 		convert_command();
+		system("clear");
 
 		switch (oper) {
 		case (-1):
@@ -182,7 +185,6 @@ void n_puzzle::play_n_puzzle_game() {
 			moveRandom();
 			break;
 		default:
-			system("clear");
 			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
 			break;
 		}
@@ -192,7 +194,7 @@ void n_puzzle::play_n_puzzle_game() {
 	return;
 }
 
-void n_puzzle::convert_command() {
+void NPuzzle::convert_command() {
 	switch (command) {
 	/* Quit */
 	case 'Q':
@@ -262,12 +264,12 @@ void n_puzzle::convert_command() {
 	return;
 }
 
-void n_puzzle::print() {
+void NPuzzle::print() {
 	new_board.print();
 	return;
 }
 
-void n_puzzle::printReport() {
+void NPuzzle::printReport() {
 	cout << new_board.getCount() << " moves have been done. ";
 	if (new_board.getDone())
 		cout << "Solution has been found already." << endl;
@@ -276,56 +278,56 @@ void n_puzzle::printReport() {
 	return;
 }
 
-void n_puzzle::readFromFile() {
+void NPuzzle::readFromFile() {
 	new_board.readFromFile();
 	return;
 }
 
-void n_puzzle::writeToFile() {
+void NPuzzle::writeToFile() {
 	new_board.writeToFile();
 	return;
 }
 
-void n_puzzle::shuffle() {
+void NPuzzle::shuffle() {
 	new_board.shuffle_board();
 	return;
 }
 
-void n_puzzle::reset() {
+void NPuzzle::reset() {
 	new_board.reset();
 	return;
 }
 
-void n_puzzle::setsize() {
+void NPuzzle::setsize() {
 	new_board.setSize();
 	return;
 }
 
-void n_puzzle::moveRandom() {
+void NPuzzle::moveRandom() {
 	new_board.get_random_movement(route);
 	new_board.move(route);
 	return;
 }
 
-void n_puzzle::moveIntelligent() {
+void NPuzzle::moveIntelligent() {
 	new_board.get_intelligent_movement(route);
 	new_board.move(route);
 	return;
 }
 
-void n_puzzle::move() {
+void NPuzzle::move() {
 	new_board.move(command);
 	return;
 }
 
-void n_puzzle::solvePuzzle() {
+void NPuzzle::solvePuzzle() {
 	new_board.get_intelligent_movement_v2(route);
 	new_board.move(route);
 	return;
 }
 
 
-void n_puzzle::board::print() {
+void NPuzzle::Board::print() {
 	for (int i = 0; i < n; ++i) {
 		for (int j = 0; j < m; ++j) {
 			if (num[i][j] == 0) {
@@ -343,25 +345,27 @@ void n_puzzle::board::print() {
 	return;
 }
 
-void n_puzzle::board::readFromFile() {
+void NPuzzle::Board::readFromFile() {
+	system("clear");
 	while (1) {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
 		cin >> file_path;
 		get_from_file();
-		if (if_error)
+		system("clear");
+		if (if_error) {
 			cout << "File path is invalid. Please try again." << endl;
-		else {
+		} else {
 			n = sizes[0];
 			m = sizes[1];
-			cout << "Saved " << n << "-by-" << m << " table is loaded below. " << endl;
+			cout << "Saved " << n << "-by-" << m << " table is loaded below. " << endl << endl;
 			break;
 		}
 	}
 	return;
 }
 
-void n_puzzle::board::writeToFile() {
+void NPuzzle::Board::writeToFile() {
 	while (1) {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
@@ -379,7 +383,7 @@ void n_puzzle::board::writeToFile() {
 	return;
 }
 
-void n_puzzle::board::reset() {
+void NPuzzle::Board::reset() {
 	int i_num = 0;
 
 	cout << "Table is reseted to the solution." << endl;
@@ -397,7 +401,7 @@ void n_puzzle::board::reset() {
 	return;
 }
 
-void n_puzzle::board::setSize(){
+void NPuzzle::Board::setSize(){
 	if (n > 9 || m > 9) {
 		cout << "Error occurred! Board axis cannot be greater 9. ";
 		cout << "Please correct them accordingly and try again." << endl;
@@ -407,7 +411,7 @@ void n_puzzle::board::setSize(){
 	return;
 }
 
-void n_puzzle::board::move(char route) {
+void NPuzzle::Board::move(char route) {
 	int oper;
 
 	switch (route) {
@@ -437,7 +441,7 @@ void n_puzzle::board::move(char route) {
 	switch (oper) {
 	case (1):
 		if ((i_empty - m) < 0) {
-			cout << "Error occurred! Target direction is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
 		num[i_empty / m][i_empty % m] = num[(i_empty / m) - 1][i_empty % m];
@@ -446,7 +450,7 @@ void n_puzzle::board::move(char route) {
 		break;
 	case (2):
 		if (((i_empty + 1) % m) == 0) {
-			cout << "Error occurred! Target direction is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
 		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) + 1];
@@ -455,7 +459,7 @@ void n_puzzle::board::move(char route) {
 		break;
 	case (3):
 		if ((i_empty + m) >= (n * m)) {
-			cout << "Error occurred! Target direction is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
 		num[i_empty / m][i_empty % m] = num[(i_empty / m) + 1][i_empty % m];
@@ -464,7 +468,7 @@ void n_puzzle::board::move(char route) {
 		break;
 	case (4):
 		if ((i_empty % m) == 0) {
-			cout << "Error occurred! Target direction is invalid." << endl;
+			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
 		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) - 1];
@@ -479,7 +483,7 @@ void n_puzzle::board::move(char route) {
 	return;
 }
 
-void n_puzzle::board::isSolved() {
+void NPuzzle::Board::isSolved() {
 	if_done = 1;
 	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
 	for (int i = 1; i < n_num - 1; ++i) {
@@ -491,7 +495,7 @@ void n_puzzle::board::isSolved() {
 	return;
 }
 
-void n_puzzle::board::get_from_file() {
+void NPuzzle::Board::get_from_file() {
 	int i, i_row = 0, i_col = 0, i_sizes = 0, i_line = 0;
 	char c, temp_str[5];
 	n_num = 0;
@@ -555,7 +559,7 @@ void n_puzzle::board::get_from_file() {
 	fio.close();
 }
 
-void n_puzzle::board::save_to_file() {
+void NPuzzle::Board::save_to_file() {
 	fstream fio;
 	fio.open(file_path, ios::trunc | ios::out);
 	if (!fio.is_open()) {
@@ -578,7 +582,7 @@ void n_puzzle::board::save_to_file() {
 	return;
 }
 
-int n_puzzle::board::string_int_converter(string num_str) {
+int NPuzzle::Board::string_int_converter(string num_str) {
 	int num = 0, multiplier = 1;
 
 	for (int i = num_str.length() - 1; i >= 0; --i) {
@@ -592,7 +596,7 @@ int n_puzzle::board::string_int_converter(string num_str) {
 	return (num);
 }
 
-void n_puzzle::board::generate_table() {
+void NPuzzle::Board::generate_table() {
 	int i_num = 0, if_same, rand_num, temp_i_num;
 	int temp_arr[n_num];
 	num = (int**)realloc(num, n * sizeof(*num));
@@ -624,7 +628,7 @@ void n_puzzle::board::generate_table() {
 	}
 }
 
-void n_puzzle::board::get_empty_index() {
+void NPuzzle::Board::get_empty_index() {
 	i_empty = 0;
 
 	while (i_empty != (n * m)) {
@@ -635,14 +639,14 @@ void n_puzzle::board::get_empty_index() {
 	return;
 }
 
-void n_puzzle::board::shuffle_board() {
+void NPuzzle::Board::shuffle_board() {
 	cout << "Table is shuffled. Good luck!" << endl;
 	count = 0;
 	generate_table();
 	return;
 }
 
-void n_puzzle::board::get_intelligent_movement(char &route) {
+void NPuzzle::Board::get_intelligent_movement(char &route) {
 	int least = n * m, oper;
 
 	get_empty_index();
@@ -694,7 +698,7 @@ void n_puzzle::board::get_intelligent_movement(char &route) {
 	return;
 }
 
-void n_puzzle::board::get_intelligent_movement_v2(char &route) {
+void NPuzzle::Board::get_intelligent_movement_v2(char &route) {
 	int least = n * m, oper;
 
 	get_empty_index();
@@ -746,7 +750,7 @@ void n_puzzle::board::get_intelligent_movement_v2(char &route) {
 	return;
 }
 
-void n_puzzle::board::get_random_movement(char &route) {
+void NPuzzle::Board::get_random_movement(char &route) {
 	int oper, sides[4] = {0, 0, 0, 0};
 
 	get_empty_index();

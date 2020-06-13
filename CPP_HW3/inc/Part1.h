@@ -10,7 +10,7 @@
 
 void n_puzzle_game_oop();
 
-class n_puzzle {
+class NPuzzle {
 public:
 	void print();
 	void printReport();
@@ -28,7 +28,7 @@ public:
 	void play_n_puzzle_game();
 	void convert_command();
 
-	class board {
+	class Board {
 	public:
 		void print();
 		void readFromFile();
@@ -65,7 +65,7 @@ private:
 	int oper;
 	char command, route;
 
-	board new_board;
+	Board new_board;
 };
 
 #endif /* INC_PART1_H_ */
