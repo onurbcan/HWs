@@ -293,8 +293,8 @@ int* new_game_screen(int *n, int *m, int *n_num) {
 	while (1) {
 		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
 		cin >> *n_num;
-		if (*n_num > (*n * *m) || *n_num <= 0) {
-			cout << "Number of numbers has to be from 1 to " << (*n * *m);
+		if (*n_num > (*n * *m) || *n_num < 2) {
+			cout << "Number of numbers has to be from 2 to " << (*n * *m);
 			cout << ".Please try again accordingly." << endl;
 		} else {
 			num = generate_table(*n, *m, *n_num);
