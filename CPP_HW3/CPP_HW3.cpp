@@ -59,13 +59,11 @@ int main() {
 			break;
 		case (1):
 			game_flag = 1;
-//			resume_game_menu(resume_game);
 			resume_game.readFromFile();
 			resume_game.play_n_puzzle_game();
 			break;
 		case (2):
 			game_flag = 2;
-//			new_game_menu(new_game);
 			new_game.build_new_table();
 			new_game.play_n_puzzle_game();
 			break;
