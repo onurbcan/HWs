@@ -92,201 +92,147 @@
 #include "Part1.h"
 using namespace std;
 
-void NPuzzle::build_new_table() {
-	new_board.setSize();
-	new_board.generate_table();
+void NPuzzle::buildNewTable() {
+	nPuzzleBoard.setSize();
+	nPuzzleBoard.generateTable();
 	return;
 }
 
-void NPuzzle::play_n_puzzle_game() {
+void NPuzzle::playNPuzzleGame() {
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
 		print();
-		cin >> command;
-		convert_command();
+		cin >> m_command;
 		system("clear");
 
-		switch (oper) {
-		case (-1):
+		switch (m_command) {
+		case 'Q':
+		case 'q':
 			break;
-		case (0):
+		case 'S':
+		case 's':
 			shuffle();
 			break;
-		case (1):
-		case (2):
-		case (3):
-		case (4):
+		case 'U':
+		case 'u':
+		case 'R':
+		case 'r':
+		case 'D':
+		case 'd':
+		case 'L':
+		case 'l':
 			move();
 			break;
-		case (5):
+		case 'I':
+		case 'i':
 			moveIntelligent();
 			break;
-		case (6):
+		case 'V':
+		case 'v':
 			solvePuzzle();
 			break;
-		case (7):
+		case 'T':
+		case 't':
 			printReport();
 			break;
-		case (8):
+		case 'E':
+		case 'e':
 			writeToFile();
 			break;
-		case (9):
+		case 'O':
+		case 'o':
 			readFromFile();
 			break;
-		case (11):
+		case 'A':
+		case 'a':
 			moveRandom();
+			break;
+		case 'X':
+		case 'x':
+			reset();
 			break;
 		default:
 			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
 			break;
 		}
-		if (oper == -1)
+		if (m_command == 'Q' || m_command == 'q')
 			break;
 	}
 	return;
 }
 
-void NPuzzle::convert_command() {
-	switch (command) {
-	/* Quit */
-	case 'Q':
-	case 'q':
-		oper = -1;
-		break;
-	/* Shuffle */
-	case 'S':
-	case 's':
-		oper = 0;
-		break;
-	/* Up */
-	case 'U':
-	case 'u':
-		oper = 1;
-		break;
-	/* Right */
-	case 'R':
-	case 'r':
-		oper = 2;
-		break;
-	/* Down */
-	case 'D':
-	case 'd':
-		oper = 3;
-		break;
-	/* Left */
-	case 'L':
-	case 'l':
-		oper = 4;
-		break;
-	/* Intelligent */
-	case 'I':
-	case 'i':
-		oper = 5;
-		break;
-	/* Intelligent v2 */
-	case 'V':
-	case 'v':
-		oper = 6;
-		break;
-	/* Report */
-	case 'T':
-	case 't':
-		oper = 7;
-		break;
-	/* Save */
-	case 'E':
-	case 'e':
-		oper = 8;
-		break;
-	/* Load */
-	case 'O':
-	case 'o':
-		oper = 9;
-		break;
-	/* Random */
-	case 'A': /* additional input letter */
-	case 'a': /* additional input letter */
-		oper = 11;
-		break;
-	/* Invalid input */
-	default:
-		oper = 99;
-		break;
-	}
-	return;
-}
-
 void NPuzzle::print() {
-	new_board.print();
+	nPuzzleBoard.print();
 	return;
 }
 
 void NPuzzle::printReport() {
-	new_board.print_status();
+	nPuzzleBoard.printStatus();
 	return;
 }
 
 void NPuzzle::readFromFile() {
-	new_board.readFromFile();
+	nPuzzleBoard.readFromFile();
 	return;
 }
 
 void NPuzzle::writeToFile() {
-	new_board.writeToFile();
+	nPuzzleBoard.writeToFile();
 	return;
 }
 
 void NPuzzle::shuffle() {
-	new_board.shuffle_board();
+	nPuzzleBoard.shuffleBoard();
 	return;
 }
 
 void NPuzzle::reset() {
-	new_board.reset();
+	nPuzzleBoard.reset();
 	return;
 }
 
 void NPuzzle::setsize() {
-	new_board.setSize();
+	nPuzzleBoard.setSize();
 	return;
 }
 
 void NPuzzle::moveRandom() {
-	new_board.get_random_movement(route);
-	new_board.move(route);
+	nPuzzleBoard.getRandomMovement();
+	nPuzzleBoard.move();
 	return;
 }
 
 void NPuzzle::moveIntelligent() {
-	new_board.get_intelligent_movement(route);
-	new_board.move(route);
+	nPuzzleBoard.getIntelligentMovement();
+	nPuzzleBoard.move();
 	return;
 }
 
 void NPuzzle::move() {
-	new_board.move(command);
+	nPuzzleBoard.getRegularMovement(m_command);
+	nPuzzleBoard.move();
 	return;
 }
 
 void NPuzzle::solvePuzzle() {
-	new_board.get_intelligent_movement_v2(route);
-	new_board.move(route);
+	nPuzzleBoard.getIntelligentMovementV2();
+	nPuzzleBoard.move();
 	return;
 }
 
 
 void NPuzzle::Board::print() {
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < m; ++j) {
-			if (num[i][j] == 0) {
+	for (int i = 0; i < m_n; ++i) {
+		for (int j = 0; j < m_m; ++j) {
+			if (m_num[i][j] == 0) {
 				cout << "bb" << " ";
-			} else if (num[i][j] == -2) {
+			} else if (m_num[i][j] == -2) {
 				cout << "00" << " ";
 			} else {
-				if (num[i][j] < 10)
+				if (m_num[i][j] < 10)
 					cout << "0";
-				cout << num[i][j] << " ";
+				cout << m_num[i][j] << " ";
 			}
 		}
 		cout << endl;
@@ -299,15 +245,15 @@ void NPuzzle::Board::readFromFile() {
 	while (1) {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
-		cin >> file_path;
-		get_from_file();
+		cin >> m_filePath;
+		getFromFile();
 		system("clear");
-		if (if_error) {
+		if (m_isError) {
 			cout << "File path is invalid. Please try again." << endl;
 		} else {
-			n = sizes[0];
-			m = sizes[1];
-			cout << "Saved " << n << "-by-" << m << " table is loaded below. " << endl << endl;
+			m_n = m_sizes[0];
+			m_m = m_sizes[1];
+			cout << "Saved " << m_n << "-by-" << m_m << " table is loaded below. " << endl << endl;
 			break;
 		}
 	}
@@ -318,11 +264,11 @@ void NPuzzle::Board::writeToFile() {
 	while (1) {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
-		cin >> file_path;
-		sizes[0] = n;
-		sizes[1] = m;
-		save_to_file();
-		if (if_error)
+		cin >> m_filePath;
+		m_sizes[0] = m_n;
+		m_sizes[1] = m_m;
+		saveToFile();
+		if (m_isError)
 			cout << "File path is invalid. Please try again." << endl;
 		else {
 			cout << "Game configurations saved successfully. ";
@@ -333,18 +279,18 @@ void NPuzzle::Board::writeToFile() {
 }
 
 void NPuzzle::Board::reset() {
-	int i_num = 0;
+	int iNum = 0;
 
 	cout << "Table is reseted to the solution." << endl;
-	for (int i = 0; i < n; ++i) {
-		for (int j = 0; j < m; ++j) {
-			if (i_num < n_num - 1)
-				num[i][j] = i_num + 1;
-			else if (i_num == n_num - 1)
-				num[i][j] = 0;
+	for (int i = 0; i < m_n; ++i) {
+		for (int j = 0; j < m_m; ++j) {
+			if (iNum < m_nNum - 1)
+				m_num[i][j] = iNum + 1;
+			else if (iNum == m_nNum - 1)
+				m_num[i][j] = 0;
 			else
-				num[i][j] = -2;
-			++i_num;
+				m_num[i][j] = -2;
+			++iNum;
 		}
 	}
 	return;
@@ -353,8 +299,8 @@ void NPuzzle::Board::reset() {
 void NPuzzle::Board::setSize(){
 	while (1) {
 		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
-		cin >> n;
-		if (n < 2 || n > 9)
+		cin >> m_n;
+		if (m_n < 2 || m_n > 9)
 			cout << "Table sizes can only have values from 2 to 9. Please try again accordingly." << endl;
 		else {
 			break;
@@ -362,8 +308,8 @@ void NPuzzle::Board::setSize(){
 	}
 	while (1) {
 		cout << "Please enter the M size of the game to be built N-by-M table" << endl;
-		cin >> m;
-		if (m < 2 || m > 9)
+		cin >> m_m;
+		if (m_m < 2 || m_m > 9)
 			cout << "Table sizes can only have values from 2 to 9. Please try again accordingly." << endl;
 		else {
 			break;
@@ -371,12 +317,12 @@ void NPuzzle::Board::setSize(){
 	}
 	while (1) {
 		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
-		cin >> n_num;
-		if (n_num > (n * m) || n_num <= 1) {
-			cout << "Number of numbers has to be from 2 to " << (n * m);
+		cin >> m_nNum;
+		if (m_nNum > (m_n * m_m) || m_nNum <= 1) {
+			cout << "Number of numbers has to be from 2 to " << (m_n * m_m);
 			cout << ".Please try again accordingly." << endl;
 		} else {
-			cout << n << "-by-" << m << " table with " << ((n * m) - n_num);
+			cout << m_n << "-by-" << m_m << " table with " << ((m_n * m_m) - m_nNum);
 			cout << " zeros is generated below. ";
 			break;
 		}
@@ -384,126 +330,102 @@ void NPuzzle::Board::setSize(){
 	return;
 }
 
-void NPuzzle::Board::move(char route) {
-	int oper;
-
-	switch (route) {
-	/* Up */
-	case 'U':
-	case 'u':
-		oper = 1;
-		break;
-	/* Right */
-	case 'R':
-	case 'r':
-		oper = 2;
-		break;
-	/* Down */
-	case 'D':
-	case 'd':
-		oper = 3;
-		break;
-	/* Left */
-	case 'L':
-	case 'l':
-		oper = 4;
-		break;
-	}
-
-	get_empty_index();
-	switch (oper) {
-	case (1):
-		if ((i_empty - m) < 0) {
+void NPuzzle::Board::move() {
+	getEmptyIndex();
+	switch (m_oper) {
+	case U:
+		if ((m_iEmpty - m_m) < 0) {
 			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
-		num[i_empty / m][i_empty % m] = num[(i_empty / m) - 1][i_empty % m];
-		num[(i_empty / m) - 1][i_empty % m] = 0;
-		++count;
+		m_num[m_iEmpty / m_m][m_iEmpty % m_m] = m_num[(m_iEmpty / m_m) - 1][m_iEmpty % m_m];
+		m_num[(m_iEmpty / m_m) - 1][m_iEmpty % m_m] = 0;
+		++m_count;
 		break;
-	case (2):
-		if (((i_empty + 1) % m) == 0) {
+	case R:
+		if (((m_iEmpty + 1) % m_m) == 0) {
 			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
-		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) + 1];
-		num[i_empty / m][(i_empty % m) + 1] = 0;
-		++count;
+		m_num[m_iEmpty / m_m][m_iEmpty % m_m] = m_num[m_iEmpty / m_m][(m_iEmpty % m_m) + 1];
+		m_num[m_iEmpty / m_m][(m_iEmpty % m_m) + 1] = 0;
+		++m_count;
 		break;
-	case (3):
-		if ((i_empty + m) >= (n * m)) {
+	case D:
+		if ((m_iEmpty + m_m) >= (m_n * m_m)) {
 			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
-		num[i_empty / m][i_empty % m] = num[(i_empty / m) + 1][i_empty % m];
-		num[(i_empty / m) + 1][i_empty % m] = 0;
-		++count;
+		m_num[m_iEmpty / m_m][m_iEmpty % m_m] = m_num[(m_iEmpty / m_m) + 1][m_iEmpty % m_m];
+		m_num[(m_iEmpty / m_m) + 1][m_iEmpty % m_m] = 0;
+		++m_count;
 		break;
-	case (4):
-		if ((i_empty % m) == 0) {
+	case L:
+		if ((m_iEmpty % m_m) == 0) {
 			cout << "Error occurred! Target direction is invalid." << endl << endl;
 			break;
 		}
-		num[i_empty / m][i_empty % m] = num[i_empty / m][(i_empty % m) - 1];
-		num[i_empty / m][(i_empty % m) - 1] = 0;
-		++count;
+		m_num[m_iEmpty / m_m][m_iEmpty % m_m] = m_num[m_iEmpty / m_m][(m_iEmpty % m_m) - 1];
+		m_num[m_iEmpty / m_m][(m_iEmpty % m_m) - 1] = 0;
+		++m_count;
 		break;
 	}
 	isSolved();
-	if (if_done) {
+	if (m_isDone) {
 		cout << "Problem solved!" << endl;
 	}
 	return;
 }
 
 void NPuzzle::Board::isSolved() {
-	if_done = 1;
+	m_isDone = 1;
 	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
-	for (int i = 1; i < n_num - 1; ++i) {
-		if (num[(i - 1) / m][(i - 1) % m] > num[i / m][i % m]) {
-			if_done = 0;
+	for (int i = 1; i < m_nNum - 1; ++i) {
+		if (m_num[(i - 1) / m_m][(i - 1) % m_m] > m_num[i / m_m][i % m_m]) {
+			m_isDone = 0;
 			break;
 		}
 	}
 	return;
 }
 
-void NPuzzle::Board::print_status() {
-	cout << count << " moves have been done. ";
-	if (if_done)
+void NPuzzle::Board::printStatus() {
+	cout << m_count << " moves have been done. ";
+	if (m_isDone)
 		cout << "Solution has been found already." << endl;
 	else
 		cout << "Solution has not been found yet. Keep going!" << endl;
 	return;
 }
 
-void NPuzzle::Board::get_from_file() {
+void NPuzzle::Board::getFromFile() {
 	int i, i_row = 0, i_col = 0, i_sizes = 0, i_line = 0;
-	char c, temp_str[5];
-	n_num = 0;
-	fstream fio;
-	fio.open(file_path, ios::in);
-	if (!fio.is_open()) {
+	char c, strTemp[5];
+	m_nNum = 0;
+	fstream fIO;
+	fIO.open(m_filePath, ios::in);
+	if (!fIO.is_open()) {
 		cout << "Error occurred! File not found." << endl;
-		if_error = 1;
+		m_isError = 1;
+		return;
 	}
-	while (!fio.eof()) {
-		fio.get(c);
+	while (!fIO.eof()) {
+		fIO.get(c);
 		i = 0;
 		if (c == '\n') {
 			++i_line;
 		} else if (c != ' ' && i_line == 2) {
 			while (c != ' ') {
-				temp_str[i] = c;
-				fio.get(c);
+				strTemp[i] = c;
+				fIO.get(c);
 				++i;
 			}
-			temp_str[i] = '\0';
-			string str(temp_str);
-			num[i_row][i_col] = string_int_converter(temp_str);
-			if (num[i_row][i_col] != -2)
-				++n_num;
-			if (i_col == (sizes[1] - 1)) {
+			strTemp[i] = '\0';
+			string str(strTemp);
+			m_num[i_row][i_col] = stringIntConverter(strTemp);
+			if (m_num[i_row][i_col] != -2)
+				++m_nNum;
+			if (i_col == (m_sizes[1] - 1)) {
 				++i_row;
 				i_col = 0;
 			} else {
@@ -511,259 +433,248 @@ void NPuzzle::Board::get_from_file() {
 			}
 		} else if (c != ' ' && i_line == 0) {
 			while (c != ' ') {
-				temp_str[i] = c;
-				fio.get(c);
+				strTemp[i] = c;
+				fIO.get(c);
 				++i;
 			}
-			temp_str[i] = '\0';
-			string str(temp_str);
-			sizes[i_sizes] = string_int_converter(temp_str);
+			strTemp[i] = '\0';
+			string str(strTemp);
+			m_sizes[i_sizes] = stringIntConverter(strTemp);
 			if (i_sizes == 0) {
-				num = (int**)realloc(num, sizes[0] * sizeof(*num));
+				m_num = (int**)realloc(m_num, m_sizes[0] * sizeof(*m_num));
 			} else if (i_sizes == 1) {
-				for (int j = 0; j < sizes[0]; ++j) {
-					num[j] = (int*)malloc(sizes[1] * sizeof(int));
+				for (int j = 0; j < m_sizes[0]; ++j) {
+					m_num[j] = (int*)malloc(m_sizes[1] * sizeof(int));
 				}
 			}
 			++i_sizes;
 		} else if (c != ' ' && i_line == 1) {
 			while (c != ' ') {
-				temp_str[i] = c;
-				fio.get(c);
+				strTemp[i] = c;
+				fIO.get(c);
 				++i;
 			}
-			temp_str[i] = '\0';
-			string str(temp_str);
-			count = string_int_converter(temp_str);
+			strTemp[i] = '\0';
+			string str(strTemp);
+			m_count = stringIntConverter(strTemp);
 		}
 	}
-	if_error = 0;
-	fio.close();
+	m_isError = 0;
+	fIO.close();
+	return;
 }
 
-void NPuzzle::Board::save_to_file() {
-	fstream fio;
-	fio.open(file_path, ios::trunc | ios::out);
-	if (!fio.is_open()) {
+void NPuzzle::Board::saveToFile() {
+	fstream fIO;
+	fIO.open(m_filePath, ios::trunc | ios::out);
+	if (!fIO.is_open()) {
 		cout << "Error occurred! File not found." << endl;
-		if_error = 1;
+		m_isError = 1;
 		return;
 	}
 	/* n and m sizes */
-	fio << sizes[0] << " " << sizes[1] << " ";
+	fIO << m_sizes[0] << " " << m_sizes[1] << " ";
 	/* number of moves */
-	fio << endl << count << " " << endl;
+	fIO << endl << m_count << " " << endl;
 	/* num data */
-	for (int i = 0; i < sizes[0]; ++i) {
-		for (int j = 0; j < sizes[1]; ++j) {
-			fio << num[i][j] << " ";
+	for (int i = 0; i < m_sizes[0]; ++i) {
+		for (int j = 0; j < m_sizes[1]; ++j) {
+			fIO << m_num[i][j] << " ";
 		}
 	}
-	fio.close();
-	if_error = 0;
+	fIO.close();
+	m_isError = 0;
 	return;
 }
 
-int NPuzzle::Board::string_int_converter(string num_str) {
-	int num = 0, multiplier = 1;
+int NPuzzle::Board::stringIntConverter(string num_str) {
+	int intValue = 0, multiplier = 1;
 
 	for (int i = num_str.length() - 1; i >= 0; --i) {
 		if (num_str[i] == '-') {
-			num *= -1;
+			intValue *= -1;
 			continue;
 		}
-		num += ((num_str[i] - 48) * multiplier);
+		intValue += ((num_str[i] - 48) * multiplier);
 		multiplier *= 10;
 	}
-	return (num);
+	return (intValue);
 }
 
-void NPuzzle::Board::generate_table() {
-	int i_num = 0, if_same, rand_num, temp_i_num;
-	int temp_arr[n_num];
-	num = (int**)realloc(num, n * sizeof(*num));
-	for (int j = 0; j < n; ++j) {
-		num[j] = (int*)malloc(m * sizeof(int));
-	}
+void NPuzzle::Board::generateTable() {
+	int iNum = 0, isSame, randNum, iNumTemp;
+	int numTemp[m_nNum];
 
-	while (i_num < (n * m)) {
-		if (i_num < n_num) {
-			if_same = 0;
-			rand_num = rand() % n_num;
-			temp_i_num = i_num - 1;
-			while (temp_i_num >= 0) {
-				if (rand_num == temp_arr[temp_i_num]) {
-					if_same = 1;
+	m_num = (int**)realloc(m_num, m_n * sizeof(*m_num));
+	for (int j = 0; j < m_n; ++j) {
+		m_num[j] = (int*)malloc(m_m * sizeof(int));
+	}
+	while (iNum < (m_n * m_m)) {
+		if (iNum < m_nNum) {
+			isSame = 0;
+			randNum = rand() % m_nNum;
+			iNumTemp = iNum - 1;
+			while (iNumTemp >= 0) {
+				if (randNum == numTemp[iNumTemp]) {
+					isSame = 1;
 					break;
 				}
-				--temp_i_num;
+				--iNumTemp;
 			}
-			if (if_same)
+			if (isSame)
 				continue;
-			temp_arr[i_num] = rand_num;
-			num[i_num / m][i_num % m] = rand_num;
+			numTemp[iNum] = randNum;
+			m_num[iNum / m_m][iNum % m_m] = randNum;
 		} else {
 			// -2 will represent zeros on the table
-			num[i_num / m][i_num % m] = -2;
+			m_num[iNum / m_m][iNum % m_m] = -2;
 		}
-		++i_num;
+		++iNum;
 	}
 }
 
-void NPuzzle::Board::get_empty_index() {
-	i_empty = 0;
-
-	while (i_empty != (n * m)) {
-		if (num[i_empty / m][i_empty % m] == 0)
+void NPuzzle::Board::getEmptyIndex() {
+	m_iEmpty = 0;
+	while (m_iEmpty != (m_n * m_m)) {
+		if (m_num[m_iEmpty / m_m][m_iEmpty % m_m] == 0)
 			break;
-		++i_empty;
+		++m_iEmpty;
 	}
 	return;
 }
 
-void NPuzzle::Board::shuffle_board() {
+void NPuzzle::Board::shuffleBoard() {
 	cout << "Table is shuffled. Good luck!" << endl;
-	count = 0;
-	generate_table();
+	m_count = 0;
+	generateTable();
 	return;
 }
 
-void NPuzzle::Board::get_intelligent_movement(char &route) {
-	int least = n * m, oper;
+void NPuzzle::Board::getRegularMovement(char& route) {
+	switch (route) {
+	/* Up */
+	case 'U':
+	case 'u':
+		m_oper = U;
+		break;
+	/* Right */
+	case 'R':
+	case 'r':
+		m_oper = R;
+		break;
+	/* Down */
+	case 'D':
+	case 'd':
+		m_oper = D;
+		break;
+	/* Left */
+	case 'L':
+	case 'l':
+		m_oper = L;
+		break;
+	}
+}
 
-	get_empty_index();
-	if ((i_empty - m) >= 0) {
-		if (num[(i_empty / m) - 1][i_empty % m] < least) {
-			least = num[(i_empty / m) - 1][i_empty % m];
-			oper = 1;
-		}
-	}
-	if (((i_empty + 1) % m) != 0) {
-		if (num[i_empty / m][(i_empty % m) + 1] < least) {
-			least = num[i_empty / m][(i_empty % m) + 1];
-			oper = 2;
-		}
-	}
-	if ((i_empty + m) < (n * m)) {
-		if (num[(i_empty / m) + 1][i_empty % m] < least) {
-			least = num[(i_empty / m) + 1][i_empty % m];
-			oper = 3;
-		}
-	}
-	if ((i_empty % m) != 0) {
-		if (num[i_empty / m][(i_empty % m) - 1] < least) {
-			least = num[i_empty / m][(i_empty % m) - 1];
-			oper = 4;
-		}
-	}
+void NPuzzle::Board::getIntelligentMovement() {
+	int least = m_n * m_m;
+
 	cout << "Intelligent move chooses ";
-	switch (oper) {
-	case (1):
-		cout << "U" << endl;
-		route = 'U';
-		break;
-	case (2):
-		cout << "R" << endl;
-		route = 'R';
-		break;
-	case (3):
-		cout << "D" << endl;
-		route = 'D';
-		break;
-	case (4):
-		cout << "L" << endl;
-		route = 'L';
-		break;
-	default:
-		break;
+	getEmptyIndex();
+	if ((m_iEmpty - m_m) >= 0) {
+		if (m_num[(m_iEmpty / m_m) - 1][m_iEmpty % m_m] < least) {
+			least = m_num[(m_iEmpty / m_m) - 1][m_iEmpty % m_m];
+			cout << "U" << endl;
+			m_oper = U;
+		}
+	}
+	if (((m_iEmpty + 1) % m_m) != 0) {
+		if (m_num[m_iEmpty / m_m][(m_iEmpty % m_m) + 1] < least) {
+			least = m_num[m_iEmpty / m_m][(m_iEmpty % m_m) + 1];
+			cout << "R" << endl;
+			m_oper = R;
+		}
+	}
+	if ((m_iEmpty + m_m) < (m_n * m_m)) {
+		if (m_num[(m_iEmpty / m_m) + 1][m_iEmpty % m_m] < least) {
+			least = m_num[(m_iEmpty / m_m) + 1][m_iEmpty % m_m];
+			cout << "D" << endl;
+			m_oper = D;
+		}
+	}
+	if ((m_iEmpty % m_m) != 0) {
+		if (m_num[m_iEmpty / m_m][(m_iEmpty % m_m) - 1] < least) {
+			least = m_num[m_iEmpty / m_m][(m_iEmpty % m_m) - 1];
+			cout << "L" << endl;
+			m_oper = L;
+		}
 	}
 	return;
 }
 
-void NPuzzle::Board::get_intelligent_movement_v2(char &route) {
-	int least = n * m, oper;
+void NPuzzle::Board::getIntelligentMovementV2() {
+	int least = m_n * m_m;
 
-	get_empty_index();
-	if ((i_empty - m) >= 0) {
-		if (num[(i_empty / m) - 1][i_empty % m] < least) {
-			least = num[(i_empty / m) - 1][i_empty % m];
-			oper = 1;
-		}
-	}
-	if (((i_empty + 1) % m) != 0) {
-		if (num[i_empty / m][(i_empty % m) + 1] < least) {
-			least = num[i_empty / m][(i_empty % m) + 1];
-			oper = 2;
-		}
-	}
-	if ((i_empty + m) < (n * m)) {
-		if (num[(i_empty / m) + 1][i_empty % m] < least) {
-			least = num[(i_empty / m) + 1][i_empty % m];
-			oper = 3;
-		}
-	}
-	if ((i_empty % m) != 0) {
-		if (num[i_empty / m][(i_empty % m) - 1] < least) {
-			least = num[i_empty / m][(i_empty % m) - 1];
-			oper = 4;
-		}
-	}
 	cout << "Solve puzzle move chooses ";
-	switch (oper) {
-	case (1):
-		cout << "U" << endl;
-		route = 'U';
-		break;
-	case (2):
-		cout << "R" << endl;
-		route = 'R';
-		break;
-	case (3):
-		cout << "D" << endl;
-		route = 'D';
-		break;
-	case (4):
-		cout << "L" << endl;
-		route = 'L';
-		break;
-	default:
-		break;
+	getEmptyIndex();
+	if ((m_iEmpty - m_m) >= 0) {
+		if (m_num[(m_iEmpty / m_m) - 1][m_iEmpty % m_m] < least) {
+			least = m_num[(m_iEmpty / m_m) - 1][m_iEmpty % m_m];
+			cout << "U" << endl;
+			m_oper = U;
+		}
+	}
+	if (((m_iEmpty + 1) % m_m) != 0) {
+		if (m_num[m_iEmpty / m_m][(m_iEmpty % m_m) + 1] < least) {
+			least = m_num[m_iEmpty / m_m][(m_iEmpty % m_m) + 1];
+			cout << "R" << endl;
+			m_oper = R;
+		}
+	}
+	if ((m_iEmpty + m_m) < (m_n * m_m)) {
+		if (m_num[(m_iEmpty / m_m) + 1][m_iEmpty % m_m] < least) {
+			least = m_num[(m_iEmpty / m_m) + 1][m_iEmpty % m_m];
+			cout << "D" << endl;
+			m_oper = D;
+		}
+	}
+	if ((m_iEmpty % m_m) != 0) {
+		if (m_num[m_iEmpty / m_m][(m_iEmpty % m_m) - 1] < least) {
+			least = m_num[m_iEmpty / m_m][(m_iEmpty % m_m) - 1];
+			cout << "L" << endl;
+			m_oper = L;
+		}
 	}
 	return;
 }
 
-void NPuzzle::Board::get_random_movement(char &route) {
-	int oper, sides[4] = {0, 0, 0, 0};
+void NPuzzle::Board::getRandomMovement() {
+	int sides[4] = {0, 0, 0, 0};
 
-	get_empty_index();
-	if ((i_empty - m) >= 0)
+	getEmptyIndex();
+	if ((m_iEmpty - m_m) >= 0)
 		sides[0] = 1;
-	if (((i_empty + 1) % m) != 0)
+	if (((m_iEmpty + 1) % m_m) != 0)
 		sides[1] = 1;
-	if ((i_empty + m) < (n * m))
+	if ((m_iEmpty + m_m) < (m_n * m_m))
 		sides[2] = 1;
-	if ((i_empty % m) != 0)
+	if ((m_iEmpty % m_m) != 0)
 		sides[3] = 1;
 	do {
-		oper = (rand() % 4) + 1;
-	} while (sides[oper - 1] != 1);
+		m_oper = (rand() % 4) + 1;
+	} while (sides[m_oper - 1] != 1);
 	cout << "Random move chooses ";
-	switch (oper) {
-	case (1):
+	switch (m_oper) {
+	case U:
 		cout << "U" << endl;
-		route = 'U';
 		break;
-	case (2):
+	case R:
 		cout << "R" << endl;
-		route = 'R';
 		break;
-	case (3):
+	case D:
 		cout << "D" << endl;
-		route = 'D';
 		break;
-	case (4):
+	case L:
 		cout << "L" << endl;
-		route = 'L';
 		break;
 	default:
 		break;

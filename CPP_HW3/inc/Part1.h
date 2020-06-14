@@ -8,23 +8,33 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
+enum menuOptions {
+	EXIT = 0, RESUME = 1, NEWGAME = 2
+};
+
+enum commands {
+	Q = -1, S = 0, U = 1, R = 2, D = 3, L = 4, I = 5, V = 6, T = 7, E = 8,
+	O = 9, N = 10, A = 11, X = 12
+};
+
 class NPuzzle {
 public:
 	//NPuzzle constructor
-	NPuzzle() : oper(), command(), route() {}
+	NPuzzle() : m_command() {}
 
 	//functions from the draft
 	void readFromFile();
 	void writeToFile();
 
 	//helper functions
-	void build_new_table();
-	void play_n_puzzle_game();
+	void buildNewTable();
+	void playNPuzzleGame();
 
 	class Board {
 	public:
 		//Board constructor
-		Board() : num(0), n(), m(), n_num(), i_empty(), count(0), if_error(0), if_done(0) {}
+		Board() : m_num(0), m_n(), m_m(), m_nNum(), m_count(0), m_oper(),
+				  m_iEmpty(), m_isError(0), m_isDone(0) {}
 
 		//functions from the draft
 		void print();
@@ -32,36 +42,36 @@ public:
 		void writeToFile();
 		void reset();
 		void setSize();
-		void move(char route);
+		void move();
 
 		//helper functions
-		void print_status();
-		void generate_table();
-		void shuffle_board();
-		void get_intelligent_movement(char &route);
-		void get_intelligent_movement_v2(char &route);
-		void get_random_movement(char &route);
+		void printStatus();
+		void generateTable();
+		void shuffleBoard();
+		void getRegularMovement(char& route);
+		void getIntelligentMovement();
+		void getIntelligentMovementV2();
+		void getRandomMovement();
 
 	private:
-		int **num, n, m, n_num, i_empty;
-		int count, if_error, if_done;
-		int sizes[2];
-		std::string file_path;
+		int **m_num, m_n, m_m, m_nNum, m_count;
+		int m_oper, m_iEmpty, m_isError, m_isDone;
+		int m_sizes[2];
+		std::string m_filePath;
 
 		//function from the draft
 		void isSolved();
 
 		//helper functions
-		void get_from_file();
-		void save_to_file();
-		int string_int_converter(std::string num_str);
-		void get_empty_index();
+		void getFromFile();
+		void saveToFile();
+		int stringIntConverter(std::string num_str);
+		void getEmptyIndex();
 	};
 
 private:
-	int oper;
-	char command, route;
-	Board new_board;
+	char m_command;
+	Board nPuzzleBoard;
 
 	//functions from the draft
 	void print();
@@ -73,9 +83,6 @@ private:
 	void moveIntelligent();
 	void move();
 	void solvePuzzle();
-
-	//helper functions
-	void convert_command();
 };
 
 #endif /* INC_PART1_H_ */
