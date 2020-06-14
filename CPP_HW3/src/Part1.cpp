@@ -100,65 +100,52 @@ void NPuzzle::buildNewTable() {
 
 void NPuzzle::playNPuzzleGame() {
 	while (1) {
-		while(getchar() != '\n');
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
 		print();
-		//cin >> commands(m_command);
-		m_command = (char)cin.get();
+		cin >> m_command;
+		//converts lower case letter to upper case
+		if (97 <= m_command && m_command <= 122)
+			m_command -= 32;
 		system("clear");
-		cout << "m_command: " << m_command << endl;
 		switch (m_command) {
-		case Q:
-//		case 'q':
+		case QUIT:
 			break;
-		case S:
-//		case 's':
+		case SHUFFLE:
 			shuffle();
 			break;
-		case U:
-//		case 'u':
-		case R:
-//		case 'r':
-		case D:
-//		case 'd':
-		case L:
-//		case 'l':
+		case UP:
+		case RIGHT:
+		case DOWN:
+		case LEFT:
 			move();
 			break;
-		case I:
-//		case 'i':
+		case INTELLIGENT:
 			moveIntelligent();
 			break;
-		case V:
-//		case 'v':
+		case SOLVEPUZZLE:
 			solvePuzzle();
 			break;
-		case T:
-//		case 't':
+		case PRINTREPORT:
 			printReport();
 			break;
-		case E:
-//		case 'e':
+		case WRITETOFILE:
 			writeToFile();
 			break;
-		case O:
-//		case 'o':
+		case READFROMFILE:
 			readFromFile();
 			break;
-		case A:
-//		case 'a':
+		case MOVERANDOM:
 			moveRandom();
 			break;
-		case X:
-//		case 'x':
+		case RESET:
 			reset();
 			break;
 		default:
 			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
 			break;
 		}
-		if (m_command == Q)
+		if (m_command == 'Q' || m_command == 'q')
 			break;
 	}
 	return;
@@ -489,15 +476,15 @@ void NPuzzle::Board::saveToFile() {
 	return;
 }
 
-int NPuzzle::Board::stringIntConverter(string num_str) {
+int NPuzzle::Board::stringIntConverter(const string& numStr) {
 	int intValue = 0, multiplier = 1;
 
-	for (int i = num_str.length() - 1; i >= 0; --i) {
-		if (num_str[i] == '-') {
+	for (int i = numStr.length() - 1; i >= 0; --i) {
+		if (numStr[i] == '-') {
 			intValue *= -1;
 			continue;
 		}
-		intValue += ((num_str[i] - 48) * multiplier);
+		intValue += ((numStr[i] - 48) * multiplier);
 		multiplier *= 10;
 	}
 	return (intValue);
@@ -552,26 +539,26 @@ void NPuzzle::Board::shuffleBoard() {
 	return;
 }
 
-void NPuzzle::Board::getRegularMovement(commands& route) {
+void NPuzzle::Board::getRegularMovement(char& route) {
 	switch (route) {
 	/* Up */
-	case U:
-//	case 'u':
+	case 'U':
+	case 'u':
 		m_oper = U;
 		break;
 	/* Right */
-	case R:
-//	case 'r':
+	case 'R':
+	case 'r':
 		m_oper = R;
 		break;
 	/* Down */
-	case D:
-//	case 'd':
+	case 'D':
+	case 'd':
 		m_oper = D;
 		break;
 	/* Left */
-	case L:
-//	case 'l':
+	case 'L':
+	case 'l':
 		m_oper = L;
 		break;
 	default:
@@ -582,72 +569,66 @@ void NPuzzle::Board::getRegularMovement(commands& route) {
 void NPuzzle::Board::getIntelligentMovement() {
 	int least = m_nRow * m_nColumn;
 
-	cout << "Intelligent move chooses ";
 	getEmptyIndex();
 	if ((m_iEmpty - m_nColumn) >= 0) {
 		if (m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn] < least) {
 			least = m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn];
-			cout << "U" << endl;
 			m_oper = U;
 		}
 	}
 	if (((m_iEmpty + 1) % m_nColumn) != 0) {
 		if (m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1] < least) {
 			least = m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1];
-			cout << "R" << endl;
 			m_oper = R;
 		}
 	}
 	if ((m_iEmpty + m_nColumn) < (m_nRow * m_nColumn)) {
 		if (m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn] < least) {
 			least = m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn];
-			cout << "D" << endl;
 			m_oper = D;
 		}
 	}
 	if ((m_iEmpty % m_nColumn) != 0) {
 		if (m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1] < least) {
 			least = m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1];
-			cout << "L" << endl;
 			m_oper = L;
 		}
 	}
+	cout << "Intelligent move chooses ";
+	getRouteChosenRouteName();
 	return;
 }
 
 void NPuzzle::Board::getIntelligentMovementV2() {
 	int least = m_nRow * m_nColumn;
 
-	cout << "Solve puzzle move chooses ";
 	getEmptyIndex();
 	if ((m_iEmpty - m_nColumn) >= 0) {
 		if (m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn] < least) {
 			least = m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn];
-			cout << "U" << endl;
 			m_oper = U;
 		}
 	}
 	if (((m_iEmpty + 1) % m_nColumn) != 0) {
 		if (m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1] < least) {
 			least = m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1];
-			cout << "R" << endl;
 			m_oper = R;
 		}
 	}
 	if ((m_iEmpty + m_nColumn) < (m_nRow * m_nColumn)) {
 		if (m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn] < least) {
 			least = m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn];
-			cout << "D" << endl;
 			m_oper = D;
 		}
 	}
 	if ((m_iEmpty % m_nColumn) != 0) {
 		if (m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1] < least) {
 			least = m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1];
-			cout << "L" << endl;
 			m_oper = L;
 		}
 	}
+	cout << "Solve puzzle move chooses ";
+	getRouteChosenRouteName();
 	return;
 }
 
@@ -667,18 +648,23 @@ void NPuzzle::Board::getRandomMovement() {
 		m_oper = (rand() % 4) + 1;
 	} while (sides[m_oper - 1] != 1);
 	cout << "Random move chooses ";
+	getRouteChosenRouteName();
+	return;
+}
+
+void NPuzzle::Board::getRouteChosenRouteName() {
 	switch (m_oper) {
 	case U:
-		cout << "U" << endl;
+		cout << "Up" << endl;
 		break;
 	case R:
-		cout << "R" << endl;
+		cout << "Right" << endl;
 		break;
 	case D:
-		cout << "D" << endl;
+		cout << "Down" << endl;
 		break;
 	case L:
-		cout << "L" << endl;
+		cout << "Left" << endl;
 		break;
 	default:
 		break;

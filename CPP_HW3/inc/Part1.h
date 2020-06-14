@@ -19,10 +19,16 @@ enum commands {
 	o = 9, n = 10, a = 11, x = 12
 };
 
+enum commandsFullNames {
+	QUIT = 'Q', SHUFFLE = 'S', UP = 'U', RIGHT = 'R', DOWN = 'D', LEFT = 'L',
+	INTELLIGENT = 'I', SOLVEPUZZLE = 'V', PRINTREPORT = 'T', WRITETOFILE = 'E',
+	READFROMFILE = 'O', MOVERANDOM = 'A', RESET = 'X'
+};
+
 class NPuzzle {
 public:
 	//NPuzzle constructor
-	//NPuzzle() : m_command() {}
+	NPuzzle() : m_command() {}
 
 	//functions from the draft
 	void readFromFile();
@@ -50,10 +56,11 @@ public:
 		void printStatus();
 		void generateTable();
 		void shuffleBoard();
-		void getRegularMovement(commands& route);
+		void getRegularMovement(char& route);
 		void getIntelligentMovement();
 		void getIntelligentMovementV2();
 		void getRandomMovement();
+		void getRouteChosenRouteName();
 
 	private:
 		int **m_num, m_nRow, m_nColumn, m_nNum, m_count;
@@ -67,12 +74,12 @@ public:
 		//helper functions
 		void getFromFile();
 		void saveToFile();
-		int stringIntConverter(std::string num_str);
+		int stringIntConverter(const std::string& numStr);
 		void getEmptyIndex();
 	};
 
 private:
-	commands m_command;
+	char m_command;
 	Board nPuzzleBoard;
 
 	//functions from the draft
