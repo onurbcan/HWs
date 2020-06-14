@@ -14,13 +14,15 @@ enum menuOptions {
 
 enum commands {
 	Q = -1, S = 0, U = 1, R = 2, D = 3, L = 4, I = 5, V = 6, T = 7, E = 8,
-	O = 9, N = 10, A = 11, X = 12
+	O = 9, N = 10, A = 11, X = 12,
+	q = -1, s = 0, u = 1, r = 2, d = 3, l = 4, i = 5, v = 6, t = 7, e = 8,
+	o = 9, n = 10, a = 11, x = 12
 };
 
 class NPuzzle {
 public:
 	//NPuzzle constructor
-	NPuzzle() : m_command() {}
+	//NPuzzle() : m_command() {}
 
 	//functions from the draft
 	void readFromFile();
@@ -33,7 +35,7 @@ public:
 	class Board {
 	public:
 		//Board constructor
-		Board() : m_num(0), m_n(), m_m(), m_nNum(), m_count(0), m_oper(),
+		Board() : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0), m_oper(),
 				  m_iEmpty(), m_isError(0), m_isDone(0) {}
 
 		//functions from the draft
@@ -48,13 +50,13 @@ public:
 		void printStatus();
 		void generateTable();
 		void shuffleBoard();
-		void getRegularMovement(char& route);
+		void getRegularMovement(commands& route);
 		void getIntelligentMovement();
 		void getIntelligentMovementV2();
 		void getRandomMovement();
 
 	private:
-		int **m_num, m_n, m_m, m_nNum, m_count;
+		int **m_num, m_nRow, m_nColumn, m_nNum, m_count;
 		int m_oper, m_iEmpty, m_isError, m_isDone;
 		int m_sizes[2];
 		std::string m_filePath;
@@ -70,7 +72,7 @@ public:
 	};
 
 private:
-	char m_command;
+	commands m_command;
 	Board nPuzzleBoard;
 
 	//functions from the draft
