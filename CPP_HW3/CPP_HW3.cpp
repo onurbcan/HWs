@@ -14,7 +14,6 @@ int main() {
 	int menu_choice, game_flag = 0; //game flag for lastly played version (resume/new game)
 	char save_choice = 'Y';
 	NPuzzle resume_game, new_game;
-	NPuzzle::Board new_board;
 	srand(time(nullptr));
 
 	while (1) {

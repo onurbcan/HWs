@@ -34,22 +34,13 @@ public:
 		void setSize();
 		void move(char route);
 
-		//get methods
-		int getCount() const { return count; }
-		int getDone() const { return if_done; }
-
-		//set methods
-		void setN(int n_value) { n = n_value; }
-		void setM(int m_value) { m = m_value; }
-		void setN_num(int n_num_value) { n_num = n_num_value; }
-
 		//helper functions
+		void print_status();
 		void generate_table();
 		void shuffle_board();
 		void get_intelligent_movement(char &route);
 		void get_intelligent_movement_v2(char &route);
 		void get_random_movement(char &route);
-
 
 	private:
 		int **num, n, m, n_num, i_empty;

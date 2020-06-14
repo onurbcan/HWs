@@ -93,42 +93,8 @@
 using namespace std;
 
 void NPuzzle::build_new_table() {
-	int n, m, n_num;
-
-	while (1) {
-		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
-		cin >> n;
-		if (n < 2 || n > 9)
-			cout << "Table sizes can only values from 2 to 9. Please try again." << endl;
-		else {
-			new_board.setN(n);
-			break;
-		}
-	}
-	while (1) {
-		cout << "Please enter the M size of the game to be built N-by-M table" << endl;
-		cin >> m;
-		if (m < 2 || m > 9)
-			cout << "Table sizes can only values from 2 to 9. Please try again." << endl;
-		else {
-			new_board.setM(m);
-			break;
-		}
-	}
-	while (1) {
-		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
-		cin >> n_num;
-		if (n_num > (n * m) || n_num <= 1) {
-			cout << "Number of numbers has to be from 2 to " << (n * m);
-			cout << ".Please try again accordingly." << endl;
-		} else {
-			new_board.setN_num(n_num);
-			new_board.generate_table();
-			cout << n << "-by-" << m << " table with " << ((n * m) - n_num);
-			cout << " zeros is generated below. ";
-			break;
-		}
-	}
+	new_board.setSize();
+	new_board.generate_table();
 	return;
 }
 
@@ -257,11 +223,7 @@ void NPuzzle::print() {
 }
 
 void NPuzzle::printReport() {
-	cout << new_board.getCount() << " moves have been done. ";
-	if (new_board.getDone())
-		cout << "Solution has been found already." << endl;
-	else
-		cout << "Solution has not been found yet. Keep going!" << endl;
+	new_board.print_status();
 	return;
 }
 
@@ -389,11 +351,35 @@ void NPuzzle::Board::reset() {
 }
 
 void NPuzzle::Board::setSize(){
-	if (n > 9 || m > 9) {
-		cout << "Error occurred! Board axis cannot be greater 9. ";
-		cout << "Please correct them accordingly and try again." << endl;
-	} else {
-		generate_table();
+	while (1) {
+		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
+		cin >> n;
+		if (n < 2 || n > 9)
+			cout << "Table sizes can only have values from 2 to 9. Please try again accordingly." << endl;
+		else {
+			break;
+		}
+	}
+	while (1) {
+		cout << "Please enter the M size of the game to be built N-by-M table" << endl;
+		cin >> m;
+		if (m < 2 || m > 9)
+			cout << "Table sizes can only have values from 2 to 9. Please try again accordingly." << endl;
+		else {
+			break;
+		}
+	}
+	while (1) {
+		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
+		cin >> n_num;
+		if (n_num > (n * m) || n_num <= 1) {
+			cout << "Number of numbers has to be from 2 to " << (n * m);
+			cout << ".Please try again accordingly." << endl;
+		} else {
+			cout << n << "-by-" << m << " table with " << ((n * m) - n_num);
+			cout << " zeros is generated below. ";
+			break;
+		}
 	}
 	return;
 }
@@ -479,6 +465,15 @@ void NPuzzle::Board::isSolved() {
 			break;
 		}
 	}
+	return;
+}
+
+void NPuzzle::Board::print_status() {
+	cout << count << " moves have been done. ";
+	if (if_done)
+		cout << "Solution has been found already." << endl;
+	else
+		cout << "Solution has not been found yet. Keep going!" << endl;
 	return;
 }
 
