@@ -105,8 +105,8 @@ void NPuzzle::playNPuzzleGame() {
 		print();
 		cin >> m_command;
 		//converts lower case letter to upper case
-		if (97 <= m_command && m_command <= 122)
-			m_command -= 32;
+		if (aVALUE <= m_command && m_command <= zVALUE)
+			m_command -= LOWERCASEUPPERCASEDIFFERENCE;
 		system("clear");
 		switch (m_command) {
 		case QUIT:
@@ -539,7 +539,7 @@ void NPuzzle::Board::shuffleBoard() {
 	return;
 }
 
-void NPuzzle::Board::getRegularMovement(char& route) {
+void NPuzzle::Board::getRegularMovement(const char& route) {
 	switch (route) {
 	case UP:
 		m_oper = U; //Up

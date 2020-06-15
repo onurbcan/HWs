@@ -8,6 +8,10 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
+#define aVALUE 97
+#define zVALUE 122
+#define LOWERCASEUPPERCASEDIFFERENCE 32
+
 enum menuOptions {
 	EXIT = 0, RESUME = 1, NEWGAME = 2
 };
@@ -54,7 +58,7 @@ public:
 		void printStatus();
 		void generateTable();
 		void shuffleBoard();
-		void getRegularMovement(char& route);
+		void getRegularMovement(const char& route);
 		void getIntelligentMovement();
 		void getIntelligentMovementV2();
 		void getRandomMovement();
