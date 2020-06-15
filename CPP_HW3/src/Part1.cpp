@@ -214,12 +214,12 @@ void NPuzzle::solvePuzzle() {
 void NPuzzle::Board::print() {
 	for (int i = 0; i < m_nRow; ++i) {
 		for (int j = 0; j < m_nColumn; ++j) {
-			if (m_num[i][j] == 0) {
+			if (m_num[i][j] == REGULARZERO) {
 				cout << "bb" << " ";
-			} else if (m_num[i][j] == -2) {
+			} else if (m_num[i][j] == FILLEDZERO) {
 				cout << "00" << " ";
 			} else {
-				if (m_num[i][j] < 10)
+				if (m_num[i][j] <= MAXSINGLEDIGITNUMBER)
 					cout << "0";
 				cout << m_num[i][j] << " ";
 			}
@@ -278,7 +278,7 @@ void NPuzzle::Board::reset() {
 			else if (iNum == m_nNum - 1)
 				m_num[i][j] = 0;
 			else
-				m_num[i][j] = -2;
+				m_num[i][j] = FILLEDZERO;
 			++iNum;
 		}
 	}
@@ -289,7 +289,7 @@ void NPuzzle::Board::setSize(){
 	while (1) {
 		cout << "Please enter the N size of the game to be built N-by-M table" << endl;
 		cin >> m_nRow;
-		if (m_nRow < 2 || m_nRow > 9)
+		if (!(MINSIZES <= m_nRow && m_nRow <= MAXSIZES))
 			cout << "Table sizes can only have values from 2 to 9. Please try again accordingly." << endl;
 		else {
 			break;
@@ -298,7 +298,7 @@ void NPuzzle::Board::setSize(){
 	while (1) {
 		cout << "Please enter the M size of the game to be built N-by-M table" << endl;
 		cin >> m_nColumn;
-		if (m_nColumn < 2 || m_nColumn > 9)
+		if (!(MINSIZES <= m_nColumn && m_nColumn <= MAXSIZES))
 			cout << "Table sizes can only have values from 2 to 9. Please try again accordingly." << endl;
 		else {
 			break;
@@ -307,7 +307,7 @@ void NPuzzle::Board::setSize(){
 	while (1) {
 		cout << "Please enter the number of numbers on the table. Rest will be zeros." << endl;
 		cin >> m_nNum;
-		if (m_nNum > (m_nRow * m_nColumn) || m_nNum <= 1) {
+		if (!(MINnNUM <= m_nNum && m_nNum <= (m_nRow * m_nColumn))) {
 			cout << "Number of numbers has to be from 2 to " << (m_nRow * m_nColumn);
 			cout << ".Please try again accordingly." << endl;
 		} else {
@@ -328,7 +328,7 @@ void NPuzzle::Board::move() {
 			break;
 		}
 		m_num[m_iEmpty / m_nColumn][m_iEmpty % m_nColumn] = m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn];
-		m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn] = 0;
+		m_num[(m_iEmpty / m_nColumn) - 1][m_iEmpty % m_nColumn] = REGULARZERO;
 		++m_count;
 		break;
 	case R:
@@ -337,7 +337,7 @@ void NPuzzle::Board::move() {
 			break;
 		}
 		m_num[m_iEmpty / m_nColumn][m_iEmpty % m_nColumn] = m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1];
-		m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1] = 0;
+		m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) + 1] = REGULARZERO;
 		++m_count;
 		break;
 	case D:
@@ -346,7 +346,7 @@ void NPuzzle::Board::move() {
 			break;
 		}
 		m_num[m_iEmpty / m_nColumn][m_iEmpty % m_nColumn] = m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn];
-		m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn] = 0;
+		m_num[(m_iEmpty / m_nColumn) + 1][m_iEmpty % m_nColumn] = REGULARZERO;
 		++m_count;
 		break;
 	case L:
@@ -355,7 +355,7 @@ void NPuzzle::Board::move() {
 			break;
 		}
 		m_num[m_iEmpty / m_nColumn][m_iEmpty % m_nColumn] = m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1];
-		m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1] = 0;
+		m_num[m_iEmpty / m_nColumn][(m_iEmpty % m_nColumn) - 1] = REGULARZERO;
 		++m_count;
 		break;
 	}
@@ -388,8 +388,8 @@ void NPuzzle::Board::printStatus() {
 }
 
 void NPuzzle::Board::getFromFile() {
-	int i, i_row = 0, i_col = 0, i_sizes = 0, i_line = 0;
-	char c, strTemp[5];
+	int i, iRow = 0, iColumn = 0, iSizes = 0, iLine = 0;
+	char c, strTemp[LENGTHSTRTEMP];
 	m_nNum = 0;
 	fstream fIO;
 	fIO.open(m_filePath, ios::in);
@@ -402,8 +402,8 @@ void NPuzzle::Board::getFromFile() {
 		fIO.get(c);
 		i = 0;
 		if (c == '\n') {
-			++i_line;
-		} else if (c != ' ' && i_line == 2) {
+			++iLine;
+		} else if (c != ' ' && iLine == LINENUM) {
 			while (c != ' ') {
 				strTemp[i] = c;
 				fIO.get(c);
@@ -411,16 +411,16 @@ void NPuzzle::Board::getFromFile() {
 			}
 			strTemp[i] = '\0';
 			string str(strTemp);
-			m_num[i_row][i_col] = stringIntConverter(strTemp);
-			if (m_num[i_row][i_col] != -2)
+			m_num[iRow][iColumn] = stringIntConverter(strTemp);
+			if (m_num[iRow][iColumn] != FILLEDZERO)
 				++m_nNum;
-			if (i_col == (m_sizes[1] - 1)) {
-				++i_row;
-				i_col = 0;
+			if (iColumn == (m_sizes[1] - 1)) {
+				++iRow;
+				iColumn = 0;
 			} else {
-				++i_col;
+				++iColumn;
 			}
-		} else if (c != ' ' && i_line == 0) {
+		} else if (c != ' ' && iLine == LINESIZES) {
 			while (c != ' ') {
 				strTemp[i] = c;
 				fIO.get(c);
@@ -428,16 +428,16 @@ void NPuzzle::Board::getFromFile() {
 			}
 			strTemp[i] = '\0';
 			string str(strTemp);
-			m_sizes[i_sizes] = stringIntConverter(strTemp);
-			if (i_sizes == 0) {
+			m_sizes[iSizes] = stringIntConverter(strTemp);
+			if (iSizes == 0) {
 				m_num = (int**)realloc(m_num, m_sizes[0] * sizeof(*m_num));
-			} else if (i_sizes == 1) {
+			} else if (iSizes == 1) {
 				for (int j = 0; j < m_sizes[0]; ++j) {
 					m_num[j] = (int*)malloc(m_sizes[1] * sizeof(int));
 				}
 			}
-			++i_sizes;
-		} else if (c != ' ' && i_line == 1) {
+			++iSizes;
+		} else if (c != ' ' && iLine == LINECOUNT) {
 			while (c != ' ') {
 				strTemp[i] = c;
 				fIO.get(c);
@@ -484,8 +484,8 @@ int NPuzzle::Board::stringIntConverter(const string& numStr) {
 			intValue *= -1;
 			continue;
 		}
-		intValue += ((numStr[i] - 48) * multiplier);
-		multiplier *= 10;
+		intValue += ((numStr[i] - ASCIINUMBERDIFFERENCE) * multiplier);
+		multiplier *= 10; //tenth part selector
 	}
 	return (intValue);
 }
@@ -515,8 +515,8 @@ void NPuzzle::Board::generateTable() {
 			numTemp[iNum] = randNum;
 			m_num[iNum / m_nColumn][iNum % m_nColumn] = randNum;
 		} else {
-			// -2 will represent zeros on the table
-			m_num[iNum / m_nColumn][iNum % m_nColumn] = -2;
+			// FILLEDZERO (-2) will represent zeros on the table
+			m_num[iNum / m_nColumn][iNum % m_nColumn] = FILLEDZERO;
 		}
 		++iNum;
 	}
@@ -525,7 +525,7 @@ void NPuzzle::Board::generateTable() {
 void NPuzzle::Board::getEmptyIndex() {
 	m_iEmpty = 0;
 	while (m_iEmpty != (m_nRow * m_nColumn)) {
-		if (m_num[m_iEmpty / m_nColumn][m_iEmpty % m_nColumn] == 0)
+		if (m_num[m_iEmpty / m_nColumn][m_iEmpty % m_nColumn] == REGULARZERO)
 			break;
 		++m_iEmpty;
 	}

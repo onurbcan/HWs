@@ -11,9 +11,23 @@
 #define aVALUE 97
 #define zVALUE 122
 #define LOWERCASEUPPERCASEDIFFERENCE 32
+#define ASCIINUMBERDIFFERENCE 48
+
+#define REGULARZERO 0
+#define FILLEDZERO -2
+
+#define MINSIZES 2
+#define MAXSIZES 9
+#define MINnNUM 2
+#define MAXSINGLEDIGITNUMBER 9
+
+#define LENGTHSTRTEMP 5
+#define LINESIZES 0
+#define LINECOUNT 1
+#define LINENUM 2
 
 enum menuOptions {
-	EXIT = 0, RESUME = 1, NEWGAME = 2
+	EXIT = 0, RESUME = 1, NEWGAME = 2, YES = 'Y', NO = 'N'
 };
 
 enum commands {

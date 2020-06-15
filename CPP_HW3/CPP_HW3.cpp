@@ -11,8 +11,8 @@
 using namespace std;
 
 int main() {
-	int menuChoice, gameFlag = 0; //game flag for lastly played version (resume/new game)
-	char saveChoice = 'Y';
+	int menuChoice, gameFlag = EXIT; //game flag for lastly played version (resume/new game)
+	char saveChoice = YES;
 	NPuzzle resumeGame, newGame;
 	srand(time(nullptr));
 
@@ -26,7 +26,7 @@ int main() {
 			cout << "0) Exit" << endl;
 			cout << "Please enter your choice." << endl;
 			cin >> menuChoice;
-			if (!(menuChoice == 0 || menuChoice == 1 || menuChoice == 2))
+			if (!(menuChoice == EXIT || menuChoice == RESUME || menuChoice == NEWGAME))
 				cout << menuChoice << " is an invalid choice. Please try again." << endl;
 			else
 				break;
@@ -34,22 +34,23 @@ int main() {
 		switch (menuChoice) {
 		case EXIT:
 			system("clear");
-			while (gameFlag != 0) {
+			while (gameFlag != EXIT) {
 				cout << "Would you like to save what you played so far to be ";
 				cout << "loaded next time? (Y/N)" << endl;
 				cin >> saveChoice;
-				if (!(saveChoice == 'Y' || saveChoice == 'y' ||
-						saveChoice == 'N' || saveChoice == 'n')) {
+				if (aVALUE <= saveChoice && saveChoice <= zVALUE)
+					saveChoice -= LOWERCASEUPPERCASEDIFFERENCE;
+				if (!(saveChoice == YES || saveChoice == NO)) {
 					cout << saveChoice << " is an invalid choice. ";
 					cout << "Please enter Y for Yes or N for No" << endl;
 				} else {
 					break;
 				}
 			}
-			if (saveChoice == 'Y' || saveChoice == 'y') {
-				if (gameFlag == 1)
+			if (saveChoice == YES) {
+				if (gameFlag == RESUME)
 					resumeGame.writeToFile();
-				else if (gameFlag == 2)
+				else if (gameFlag == EXIT)
 					newGame.writeToFile();
 				else
 					cout << "Sorry that you haven't played here. See you next time. " << endl;
@@ -57,19 +58,19 @@ int main() {
 			cout << "Good bye!" << endl;
 			break;
 		case RESUME:
-			gameFlag = 1;
+			gameFlag = RESUME;
 			resumeGame.readFromFile();
 			resumeGame.playNPuzzleGame();
 			break;
 		case NEWGAME:
-			gameFlag = 2;
+			gameFlag = NEWGAME;
 			newGame.buildNewTable();
 			newGame.playNPuzzleGame();
 			break;
 		default:
 			break;
 		}
-		if (menuChoice == 0)
+		if (menuChoice == EXIT)
 			break;
 	}
 	return 0;
