@@ -543,22 +543,18 @@ void NPuzzle::Board::getRegularMovement(char& route) {
 	switch (route) {
 	/* Up */
 	case 'U':
-	case 'u':
 		m_oper = U;
 		break;
 	/* Right */
 	case 'R':
-	case 'r':
 		m_oper = R;
 		break;
 	/* Down */
 	case 'D':
-	case 'd':
 		m_oper = D;
 		break;
 	/* Left */
 	case 'L':
-	case 'l':
 		m_oper = L;
 		break;
 	default:
@@ -595,7 +591,7 @@ void NPuzzle::Board::getIntelligentMovement() {
 		}
 	}
 	cout << "Intelligent move chooses ";
-	getRouteChosenRouteName();
+	getChosenRouteName();
 	return;
 }
 
@@ -628,7 +624,7 @@ void NPuzzle::Board::getIntelligentMovementV2() {
 		}
 	}
 	cout << "Solve puzzle move chooses ";
-	getRouteChosenRouteName();
+	getChosenRouteName();
 	return;
 }
 
@@ -648,11 +644,11 @@ void NPuzzle::Board::getRandomMovement() {
 		m_oper = (rand() % 4) + 1;
 	} while (sides[m_oper - 1] != 1);
 	cout << "Random move chooses ";
-	getRouteChosenRouteName();
+	getChosenRouteName();
 	return;
 }
 
-void NPuzzle::Board::getRouteChosenRouteName() {
+void NPuzzle::Board::getChosenRouteName() {
 	switch (m_oper) {
 	case U:
 		cout << "Up" << endl;

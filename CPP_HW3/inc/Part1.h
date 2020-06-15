@@ -14,9 +14,7 @@ enum menuOptions {
 
 enum commands {
 	Q = -1, S = 0, U = 1, R = 2, D = 3, L = 4, I = 5, V = 6, T = 7, E = 8,
-	O = 9, N = 10, A = 11, X = 12,
-	q = -1, s = 0, u = 1, r = 2, d = 3, l = 4, i = 5, v = 6, t = 7, e = 8,
-	o = 9, n = 10, a = 11, x = 12
+	O = 9, N = 10, A = 11, X = 12
 };
 
 enum commandsFullNames {
@@ -60,7 +58,7 @@ public:
 		void getIntelligentMovement();
 		void getIntelligentMovementV2();
 		void getRandomMovement();
-		void getRouteChosenRouteName();
+		void getChosenRouteName();
 
 	private:
 		int **m_num, m_nRow, m_nColumn, m_nNum, m_count;
