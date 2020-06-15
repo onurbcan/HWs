@@ -71,3 +71,9 @@
 /HW12/html/*
 /HW12/HW12_Doxyfile.Doxyfile
 /HW12/HW12_Doxyfile.Doxyfile.bak
+/CPP_HW4/Debug/*
+/CPP_HW4/.*
+/CPP_HW4/files/*
+/CPP_HW4/html/*
+/CPP_HW4/CPP_HW4_Doxyfile.Doxyfile
+/CPP_HW4/CPP_HW4_Doxyfile.Doxyfile.bak
