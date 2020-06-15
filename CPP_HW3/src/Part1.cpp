@@ -145,7 +145,7 @@ void NPuzzle::playNPuzzleGame() {
 			cout << "Error occurred! You entered an invalid input. Please try again." << endl;
 			break;
 		}
-		if (m_command == 'Q' || m_command == 'q')
+		if (m_command == QUIT)
 			break;
 	}
 	return;
@@ -541,21 +541,17 @@ void NPuzzle::Board::shuffleBoard() {
 
 void NPuzzle::Board::getRegularMovement(char& route) {
 	switch (route) {
-	/* Up */
-	case 'U':
-		m_oper = U;
+	case UP:
+		m_oper = U; //Up
 		break;
-	/* Right */
-	case 'R':
-		m_oper = R;
+	case RIGHT:
+		m_oper = R; //Right
 		break;
-	/* Down */
-	case 'D':
-		m_oper = D;
+	case DOWN:
+		m_oper = D; //Down
 		break;
-	/* Left */
-	case 'L':
-		m_oper = L;
+	case LEFT:
+		m_oper = L; //Left
 		break;
 	default:
 		break;
