@@ -46,7 +46,8 @@ enum commandsFullNames {
 class NPuzzle {
 public:
 	//NPuzzle constructor
-	NPuzzle() : m_command() {}
+	NPuzzle() : m_iObject(0), m_command() {}
+	int m_iObject;
 
 	//functions from the draft
 	void readFromFile();
@@ -59,8 +60,11 @@ public:
 	class Board {
 	public:
 		//Board constructor
-		Board() : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0), m_oper(),
-				  m_iEmpty(), m_isError(0), m_isDone(0) {}
+		Board() : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
+				  m_iMove(0), m_oper(), m_iEmpty(), m_isError(0),
+				  m_isDone(0) {
+			//countObject();
+		}
 
 		//functions from the draft
 		void print();
@@ -69,6 +73,23 @@ public:
 		void reset();
 		void setSize();
 		void move();
+//		void countObject() { ++m_iObject; }
+//		int numberOfBoards() { return m_iObject; }
+		char lastMove() {
+			if (m_iMove == 0) {
+				return 'S';
+			} else {
+				if (m_oper == 1)
+					return static_cast<char>(UP);
+				else if (m_oper == 2)
+					return static_cast<char>(RIGHT);
+				else if (m_oper == 3)
+					return static_cast<char>(DOWN);
+				else if (m_oper == 4)
+					return static_cast<char>(LEFT);
+			}
+		}
+		int numberOfMoves() { return m_iMove; }
 
 		//helper functions
 		void printStatus();
@@ -80,8 +101,12 @@ public:
 		void getRandomMovement();
 		void getChosenRouteName();
 
+		Board operator =(Board& boardObject1, const Board& boardObject2) {
+			boardObject1 = boardObject2;
+		}
+
 	private:
-		int **m_num, m_nRow, m_nColumn, m_nNum, m_count;
+		int **m_num, m_nRow, m_nColumn, m_nNum, m_count, m_iMove;
 		int m_oper, m_iEmpty, m_isError, m_isDone;
 		int m_sizes[2];
 		std::string m_filePath;
@@ -113,7 +138,10 @@ private:
 	void solvePuzzle();
 
 	//helper functions
-	void init() { nPuzzleBoard.push_back(newBoard); }
+	void init() {
+		++m_iObject;
+		nPuzzleBoard.push_back(newBoard);
+	}
 };
 
 #endif /* INC_PART1_H_ */

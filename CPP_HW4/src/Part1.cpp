@@ -133,6 +133,7 @@
 #include "Part1.h"
 using namespace std;
 
+
 void NPuzzle::buildNewTable() {
 	init();
 	nPuzzleBoard.resize(1);
