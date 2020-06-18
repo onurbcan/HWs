@@ -133,6 +133,10 @@
 #include "Part1.h"
 using namespace std;
 
+//NPuzzle::Board& NPuzzle::Board::operator =(const Board& boardObject) {
+//	m_num = boardObject.m_num;
+//	return;
+//}
 
 void NPuzzle::buildNewTable() {
 	init();
@@ -268,7 +272,7 @@ void NPuzzle::solvePuzzle() {
 		++iPBVector;
 		cout << "iPBV1: " << iPBVector << endl;
 		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-		nPuzzleBoard[iPBVector].move();
+	//	nPuzzleBoard[iPBVector].move();
 	}
 	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(R, isAvailable);
 	if (isAvailable) {
@@ -276,7 +280,7 @@ void NPuzzle::solvePuzzle() {
 		++iPBVector;
 		cout << "iPBV2: " << iPBVector << endl;
 		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-		nPuzzleBoard[iPBVector].move();
+	//	nPuzzleBoard[iPBVector].move();
 	}
 	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(D, isAvailable);
 	if (isAvailable) {
@@ -284,7 +288,7 @@ void NPuzzle::solvePuzzle() {
 		++iPBVector;
 		cout << "iPBV3: " << iPBVector << endl;
 		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-		nPuzzleBoard[iPBVector].move();
+	//	nPuzzleBoard[iPBVector].move();
 	}
 	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(L, isAvailable);
 	if (isAvailable) {
@@ -292,7 +296,7 @@ void NPuzzle::solvePuzzle() {
 		++iPBVector;
 		cout << "iPBV4: " << iPBVector << endl;
 		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-		nPuzzleBoard[iPBVector].move();
+	//	nPuzzleBoard[iPBVector].move();
 	}
 	cout << "size2: " << nPuzzleBoard.size() << endl;
 	return;

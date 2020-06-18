@@ -49,6 +49,7 @@ public:
 	NPuzzle() : m_iObject(0), m_command() {}
 	int m_iObject;
 
+
 	//functions from the draft
 	void readFromFile();
 	void writeToFile();
@@ -101,8 +102,16 @@ public:
 		void getRandomMovement();
 		void getChosenRouteName();
 
-		Board operator =(Board& boardObject1, const Board& boardObject2) {
-			boardObject1 = boardObject2;
+
+		void operator =(const Board& boardObject) {
+			m_nRow = boardObject.m_nRow;
+			m_nColumn = boardObject.m_nColumn;
+			for (int i = 0; i < m_nRow; ++i) {
+				for (int j = 0; j < m_nColumn; ++j) {
+					m_num[i][j] = boardObject.m_num[i][j];
+				}
+			}
+			//return *this;
 		}
 
 	private:
@@ -142,6 +151,20 @@ private:
 		++m_iObject;
 		nPuzzleBoard.push_back(newBoard);
 	}
+
+//	Board operator = (const Board& boardObject) {
+////		if (this != &boardObject)
+////			*m_num = **boardObject.m_num;
+////		return *this;
+//		Board tempBoard;
+//		for (int i = 0; i < 3; ++i) {
+//			for (int j = 0; j < 3; ++j) {
+//				tempBoard.m_num[i][j] = boardObject.m_num[i][j];
+//			}
+//		}
+//		return tempBoard;
+//	}
+
 };
 
 #endif /* INC_PART1_H_ */
