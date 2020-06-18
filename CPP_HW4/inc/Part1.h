@@ -46,9 +46,7 @@ enum commandsFullNames {
 class NPuzzle {
 public:
 	//NPuzzle constructor
-	NPuzzle() : m_iObject(0), m_command() {}
-	int m_iObject;
-
+	NPuzzle() : countObject(0), eachStepValues(), m_command() {}
 
 	//functions from the draft
 	void readFromFile();
@@ -58,13 +56,29 @@ public:
 	void buildNewTable();
 	void playNPuzzleGame();
 
+	//void operator >>() {
+
+
+	//	return;
+	//}
+
+	//void operator <<() {
+
+
+	//	return;
+	//}
+
 	class Board {
 	public:
 		//Board constructor
 		Board() : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
 				  m_iMove(0), m_oper(), m_iEmpty(), m_isError(0),
-				  m_isDone(0) {
-			//countObject();
+				  m_isDone(0), m_iObject(0) {
+		}
+
+		Board(int iObject) : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
+				  m_iMove(0), m_oper(), m_iEmpty(), m_isError(0),
+				  m_isDone(0), m_iObject(iObject) {
 		}
 
 		//functions from the draft
@@ -74,8 +88,8 @@ public:
 		void reset();
 		void setSize();
 		void move();
-//		void countObject() { ++m_iObject; }
-//		int numberOfBoards() { return m_iObject; }
+		int isSolved();
+		int numberOfBoards() { return m_iObject; }
 		char lastMove() {
 			if (m_iMove == 0) {
 				return 'S';
@@ -90,6 +104,7 @@ public:
 					return static_cast<char>(LEFT);
 			}
 		}
+		void incrementNumberOfMoves() { ++m_iMove; }
 		int numberOfMoves() { return m_iMove; }
 
 		//helper functions
@@ -102,26 +117,48 @@ public:
 		void getRandomMovement();
 		void getChosenRouteName();
 
-
-		void operator =(const Board& boardObject) {
-			m_nRow = boardObject.m_nRow;
-			m_nColumn = boardObject.m_nColumn;
+		bool operator ==(const Board& otherObject) {
+			int isSame = 1;
 			for (int i = 0; i < m_nRow; ++i) {
 				for (int j = 0; j < m_nColumn; ++j) {
-					m_num[i][j] = boardObject.m_num[i][j];
+					if (m_num[i][j] != otherObject.m_num[i][j])
+						isSame = 0;
 				}
 			}
-			//return *this;
+			return isSame;
+		}
+
+		int operator ()(int indexX, int indexY) {
+			if (!((2 <= indexX && indexX <= m_nRow) && (2 <= indexY && indexY <= m_nColumn)))
+				exit(0);
+			return m_num[indexX][indexY];
+		}
+
+		Board& operator =(const Board& otherObject) {
+			m_nRow = otherObject.m_nRow;
+			m_nColumn = otherObject.m_nColumn;
+			m_nNum = otherObject.m_nNum;
+			m_count = otherObject.m_count;
+			m_iMove = otherObject.m_iMove;
+			m_oper = otherObject.m_oper;
+			m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
+			for (int i = 0; i < m_nRow; ++i) {
+				m_num[i] = (int*)malloc(m_nColumn * sizeof(int));
+				for (int j = 0; j < m_nColumn; ++j) {
+					m_num[i][j] = otherObject.m_num[i][j];
+				}
+			}
+			return *this;
 		}
 
 	private:
 		int **m_num, m_nRow, m_nColumn, m_nNum, m_count, m_iMove;
 		int m_oper, m_iEmpty, m_isError, m_isDone;
-		int m_sizes[2];
+		int m_sizes[2], m_iObject;
 		std::string m_filePath;
 
 		//function from the draft
-		void isSolved();
+		
 
 		//helper functions
 		void getFromFile();
@@ -131,6 +168,7 @@ public:
 	};
 
 private:
+	int countObject, eachStepValues[5];
 	char m_command;
 	std::vector<Board> nPuzzleBoard;
 	Board newBoard;
@@ -147,24 +185,11 @@ private:
 	void solvePuzzle();
 
 	//helper functions
+
 	void init() {
-		++m_iObject;
-		nPuzzleBoard.push_back(newBoard);
+		Board nextBoard(++countObject);
+		nPuzzleBoard.push_back(nextBoard);
 	}
-
-//	Board operator = (const Board& boardObject) {
-////		if (this != &boardObject)
-////			*m_num = **boardObject.m_num;
-////		return *this;
-//		Board tempBoard;
-//		for (int i = 0; i < 3; ++i) {
-//			for (int j = 0; j < 3; ++j) {
-//				tempBoard.m_num[i][j] = boardObject.m_num[i][j];
-//			}
-//		}
-//		return tempBoard;
-//	}
-
 };
 
 #endif /* INC_PART1_H_ */

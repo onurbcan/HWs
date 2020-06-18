@@ -98,7 +98,6 @@
  * already in the vector. If one of the pushed objects is the solution, then
  * your solution is found.
  * 4. Take another element from the vector in order and go to step 3.
- *
  * Note that the above algorithm can stop in two cases: solution is found or
  * there are no elements to take from the vector. We expect that if there is a
  * solution, we will find it. In order to demonstrate the algorithm better,
@@ -133,22 +132,18 @@
 #include "Part1.h"
 using namespace std;
 
-//NPuzzle::Board& NPuzzle::Board::operator =(const Board& boardObject) {
-//	m_num = boardObject.m_num;
-//	return;
-//}
-
 void NPuzzle::buildNewTable() {
 	init();
 	nPuzzleBoard.resize(1);
+	countObject = 1; //resets no objects, since vector was resized
 
 	nPuzzleBoard[0].setSize();
 	nPuzzleBoard[0].generateTable();
-//	playNPuzzleGame();
 	return;
 }
 
 void NPuzzle::playNPuzzleGame() {
+	eachStepValues[0] = 0;
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
@@ -214,8 +209,9 @@ void NPuzzle::printReport() {
 void NPuzzle::readFromFile() {
 	init();
 	nPuzzleBoard.resize(1);
+	countObject = 1; //resets no objects, since vector was resized
+
 	nPuzzleBoard[0].readFromFile();
-//	playNPuzzleGame();
 	return;
 }
 
@@ -226,6 +222,7 @@ void NPuzzle::writeToFile() {
 
 void NPuzzle::shuffle() {
 	nPuzzleBoard.resize(1);
+	countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].shuffleBoard();
 	return;
 }
@@ -242,6 +239,7 @@ void NPuzzle::setsize() {
 
 void NPuzzle::moveRandom() {
 	nPuzzleBoard.resize(1);
+	countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].getRandomMovement();
 	nPuzzleBoard[0].move();
 	return;
@@ -249,6 +247,7 @@ void NPuzzle::moveRandom() {
 
 void NPuzzle::moveIntelligent() {
 	nPuzzleBoard.resize(1);
+	countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].getIntelligentMovement();
 	nPuzzleBoard[0].move();
 	return;
@@ -256,48 +255,68 @@ void NPuzzle::moveIntelligent() {
 
 void NPuzzle::move() {
 	nPuzzleBoard.resize(1);
+	countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].getRegularMovement(m_command);
 	nPuzzleBoard[0].move();
 	return;
 }
 
 void NPuzzle::solvePuzzle() {
-	int isAvailable;
-	int nPBVectorSize = nPuzzleBoard.size();
-	int iPBVector = nPBVectorSize - 1;
-	cout << "size1: " << nPuzzleBoard.size() << endl;
-	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(U, isAvailable);
-	if (isAvailable) {
-		init();
-		++iPBVector;
-		cout << "iPBV1: " << iPBVector << endl;
-		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-	//	nPuzzleBoard[iPBVector].move();
+	int isAvailable, initialLastVector = 0, finalLastVector = 1;
+	int nNPBVector = nPuzzleBoard.size();
+	int iNPBVector = nNPBVector - 1;
+	if (1 <= nPuzzleBoard[nNPBVector - 1].numberOfMoves()) {
+		initialLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] + 1;
+		finalLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves() - 1];
 	}
-	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(R, isAvailable);
-	if (isAvailable) {
-		init();
-		++iPBVector;
-		cout << "iPBV2: " << iPBVector << endl;
-		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-	//	nPuzzleBoard[iPBVector].move();
+
+	nPuzzleBoard[nNPBVector - 1].incrementNumberOfMoves();
+//	cout << "m_iObject: " << nPuzzleBoard[nNPuzzleBoardVectorSize - 1].m_iObject << endl;
+
+	for (int i = initialLastVector; i <= finalLastVector; ++i) {
+		cout << "size1: " << nPuzzleBoard.size() << endl;
+		nPuzzleBoard[i].getIntelligentMovementV2(U, isAvailable);
+		if (isAvailable) {
+			init();
+			++iNPBVector;
+			cout << "iPBV1: " << iNPBVector << endl;
+			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
+			nPuzzleBoard[iNPBVector].move();
+			if (nPuzzleBoard[iNPBVector].isSolved())
+				nPuzzleBoard[iNPBVector].print();
+		}
+		nPuzzleBoard[i].getIntelligentMovementV2(R, isAvailable);
+		if (isAvailable) {
+			init();
+			++iNPBVector;
+			cout << "iPBV2: " << iNPBVector << endl;
+			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
+			nPuzzleBoard[iNPBVector].move();
+			if (nPuzzleBoard[iNPBVector].isSolved())
+				nPuzzleBoard[iNPBVector].print();
+		}
+		nPuzzleBoard[i].getIntelligentMovementV2(D, isAvailable);
+		if (isAvailable) {
+			init();
+			++iNPBVector;
+			cout << "iPBV3: " << iNPBVector << endl;
+			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
+			nPuzzleBoard[iNPBVector].move();
+			if (nPuzzleBoard[iNPBVector].isSolved())
+				nPuzzleBoard[iNPBVector].print();
+		}
+		nPuzzleBoard[i].getIntelligentMovementV2(L, isAvailable);
+		if (isAvailable) {
+			init();
+			++iNPBVector;
+			cout << "iPBV4: " << iNPBVector << endl;
+			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
+			nPuzzleBoard[iNPBVector].move();
+			if (nPuzzleBoard[iNPBVector].isSolved())
+				nPuzzleBoard[iNPBVector].print();
+		}
 	}
-	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(D, isAvailable);
-	if (isAvailable) {
-		init();
-		++iPBVector;
-		cout << "iPBV3: " << iPBVector << endl;
-		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-	//	nPuzzleBoard[iPBVector].move();
-	}
-	nPuzzleBoard[nPBVectorSize - 1].getIntelligentMovementV2(L, isAvailable);
-	if (isAvailable) {
-		init();
-		++iPBVector;
-		cout << "iPBV4: " << iPBVector << endl;
-		nPuzzleBoard[iPBVector] = nPuzzleBoard[nPBVectorSize - 1];
-	//	nPuzzleBoard[iPBVector].move();
-	}
+	eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
 	cout << "size2: " << nPuzzleBoard.size() << endl;
 	return;
 }
@@ -450,14 +469,14 @@ void NPuzzle::Board::move() {
 		++m_count;
 		break;
 	}
-	isSolved();
-	if (m_isDone) {
+	//isSolved();
+	if (isSolved()) {
 		cout << "Problem solved!" << endl;
 	}
 	return;
 }
 
-void NPuzzle::Board::isSolved() {
+int NPuzzle::Board::isSolved() {
 	m_isDone = 1;
 	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
 	for (int i = 1; i < m_nNum - 1; ++i) {
@@ -466,7 +485,7 @@ void NPuzzle::Board::isSolved() {
 			break;
 		}
 	}
-	return;
+	return m_isDone;
 }
 
 void NPuzzle::Board::printStatus() {
