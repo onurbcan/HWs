@@ -133,7 +133,7 @@
 using namespace std;
 
 void NPuzzle::buildNewTable() {
-	init();
+	init(0);
 	nPuzzleBoard.resize(1);
 	countObject = 1; //resets no objects, since vector was resized
 
@@ -207,7 +207,7 @@ void NPuzzle::printReport() {
 }
 
 void NPuzzle::readFromFile() {
-	init();
+	init(0);
 	nPuzzleBoard.resize(1);
 	countObject = 1; //resets no objects, since vector was resized
 
@@ -262,62 +262,99 @@ void NPuzzle::move() {
 }
 
 void NPuzzle::solvePuzzle() {
-	int isAvailable, initialLastVector = 0, finalLastVector = 1;
+	int isAvailable, isSolved = 0, initialLastVector = 0, finalLastVector = 1;
 	int nNPBVector = nPuzzleBoard.size();
 	int iNPBVector = nNPBVector - 1;
 	if (1 <= nPuzzleBoard[nNPBVector - 1].numberOfMoves()) {
-		initialLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] + 1;
-		finalLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves() - 1];
+		initialLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves() - 1] + 1;
+		finalLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] + 1;
+//		cout << "initial: " << initialLastVector << ", final: " << finalLastVector << endl;
 	}
 
 	nPuzzleBoard[nNPBVector - 1].incrementNumberOfMoves();
 //	cout << "m_iObject: " << nPuzzleBoard[nNPuzzleBoardVectorSize - 1].m_iObject << endl;
 
-	for (int i = initialLastVector; i <= finalLastVector; ++i) {
-		cout << "size1: " << nPuzzleBoard.size() << endl;
+	for (int i = initialLastVector; i < finalLastVector; ++i) {
+//		cout << "size1: " << nPuzzleBoard.size() << endl;
 		nPuzzleBoard[i].getIntelligentMovementV2(U, isAvailable);
 		if (isAvailable) {
-			init();
+			init(U);
 			++iNPBVector;
-			cout << "iPBV1: " << iNPBVector << endl;
+//			cout << "iPBV1: " << iNPBVector << endl;
 			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
 			nPuzzleBoard[iNPBVector].move();
-			if (nPuzzleBoard[iNPBVector].isSolved())
+			if (nPuzzleBoard[iNPBVector].isSolved()) {
+				isSolved = 1;
+				cout << "Solution found in solvePuzzle command number ";
+				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove();
+				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
+			} else {
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove() << endl;
+			}
 		}
 		nPuzzleBoard[i].getIntelligentMovementV2(R, isAvailable);
 		if (isAvailable) {
-			init();
+			init(R);
 			++iNPBVector;
-			cout << "iPBV2: " << iNPBVector << endl;
+//			cout << "iPBV2: " << iNPBVector << endl;
 			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
 			nPuzzleBoard[iNPBVector].move();
-			if (nPuzzleBoard[iNPBVector].isSolved())
+			if (nPuzzleBoard[iNPBVector].isSolved()) {
+				isSolved = 1;
+				cout << "Solution found in solvePuzzle command number ";
+				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove();
+				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
+			} else {
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove() << endl;
+			}
 		}
 		nPuzzleBoard[i].getIntelligentMovementV2(D, isAvailable);
 		if (isAvailable) {
-			init();
+			init(D);
 			++iNPBVector;
-			cout << "iPBV3: " << iNPBVector << endl;
+//			cout << "iPBV3: " << iNPBVector << endl;
 			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
 			nPuzzleBoard[iNPBVector].move();
-			if (nPuzzleBoard[iNPBVector].isSolved())
+			if (nPuzzleBoard[iNPBVector].isSolved()) {
+				isSolved = 1;
+				cout << "Solution found in solvePuzzle command number ";
+				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove();
+				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
+			} else {
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove() << endl;
+			}
 		}
 		nPuzzleBoard[i].getIntelligentMovementV2(L, isAvailable);
 		if (isAvailable) {
-			init();
+			init(L);
 			++iNPBVector;
-			cout << "iPBV4: " << iNPBVector << endl;
+//			cout << "iPBV4: " << iNPBVector << endl;
 			nPuzzleBoard[iNPBVector] = nPuzzleBoard[i]; //using operator=
 			nPuzzleBoard[iNPBVector].move();
-			if (nPuzzleBoard[iNPBVector].isSolved())
+			if (nPuzzleBoard[iNPBVector].isSolved()) {
+				isSolved = 1;
+				cout << "Solution found in solvePuzzle command number ";
+				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove();
+				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
+			} else {
+				cout << " with the last move of " << nPuzzleBoard[i].lastMove() << endl;
+			}
 		}
 	}
+	if (!isSolved)
+		cout << "Solution not found yet. Please try again solvePuzzle command." << endl;
+
+//	cout << "number of moves: " << nPuzzleBoard[nNPBVector - 1].numberOfMoves() << " and " << iNPBVector << endl;
 	eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
-	cout << "size2: " << nPuzzleBoard.size() << endl;
+//	cout << "size2: " << nPuzzleBoard.size() << endl;
 	return;
 }
 
@@ -469,7 +506,6 @@ void NPuzzle::Board::move() {
 		++m_count;
 		break;
 	}
-	//isSolved();
 	if (isSolved()) {
 		cout << "Problem solved!" << endl;
 	}
@@ -486,6 +522,43 @@ int NPuzzle::Board::isSolved() {
 		}
 	}
 	return m_isDone;
+}
+
+char NPuzzle::Board::lastMove() {
+	std::cout << "iMove: " << m_iMove << endl;
+	if (m_iMove == 0) {
+		return 'S';
+	} else {
+		if (m_oper == 1)
+			return static_cast<char>(UP);
+		else if (m_oper == 2)
+			return static_cast<char>(RIGHT);
+		else if (m_oper == 3)
+			return static_cast<char>(DOWN);
+		else if (m_oper == 4)
+			return static_cast<char>(LEFT);
+	}
+
+//	switch (m_prevOper) {
+////	case (0):
+////		return 'S';
+////		break;
+//	case (1):
+//		return static_cast<char>(UP);
+//		break;
+//	case (2):
+//		return static_cast<char>(RIGHT);
+//		break;
+//	case (3):
+//		return static_cast<char>(DOWN);
+//		break;
+//	case (4):
+//		return static_cast<char>(LEFT);
+//		break;
+//	default:
+//		return 'X';
+//		break;
+//	}
 }
 
 void NPuzzle::Board::printStatus() {

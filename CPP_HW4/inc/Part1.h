@@ -56,13 +56,12 @@ public:
 	void buildNewTable();
 	void playNPuzzleGame();
 
-	//void operator >>() {
+//	std::ostream& operator <<(std::ostream& out, const NPuzzle& nPuzzleObject) {
+//		out << nPuzzleObject.countObject;
+//		return out;
+//	}
 
-
-	//	return;
-	//}
-
-	//void operator <<() {
+	//std::istream& operator <<() {
 
 
 	//	return;
@@ -72,12 +71,12 @@ public:
 	public:
 		//Board constructor
 		Board() : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
-				  m_iMove(0), m_oper(), m_iEmpty(), m_isError(0),
+				  m_iMove(0), m_oper(), m_prevOper(0), m_iEmpty(), m_isError(0),
 				  m_isDone(0), m_iObject(0) {
 		}
 
-		Board(int iObject) : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
-				  m_iMove(0), m_oper(), m_iEmpty(), m_isError(0),
+		Board(int iObject, int prevOper) : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
+				  m_iMove(0), m_oper(), m_prevOper(prevOper),m_iEmpty(), m_isError(0),
 				  m_isDone(0), m_iObject(iObject) {
 		}
 
@@ -90,20 +89,7 @@ public:
 		void move();
 		int isSolved();
 		int numberOfBoards() { return m_iObject; }
-		char lastMove() {
-			if (m_iMove == 0) {
-				return 'S';
-			} else {
-				if (m_oper == 1)
-					return static_cast<char>(UP);
-				else if (m_oper == 2)
-					return static_cast<char>(RIGHT);
-				else if (m_oper == 3)
-					return static_cast<char>(DOWN);
-				else if (m_oper == 4)
-					return static_cast<char>(LEFT);
-			}
-		}
+		char lastMove();
 		void incrementNumberOfMoves() { ++m_iMove; }
 		int numberOfMoves() { return m_iMove; }
 
@@ -153,7 +139,7 @@ public:
 
 	private:
 		int **m_num, m_nRow, m_nColumn, m_nNum, m_count, m_iMove;
-		int m_oper, m_iEmpty, m_isError, m_isDone;
+		int m_oper, m_prevOper, m_iEmpty, m_isError, m_isDone;
 		int m_sizes[2], m_iObject;
 		std::string m_filePath;
 
@@ -186,8 +172,8 @@ private:
 
 	//helper functions
 
-	void init() {
-		Board nextBoard(++countObject);
+	void init(int oper) {
+		Board nextBoard(++countObject, oper);
 		nPuzzleBoard.push_back(nextBoard);
 	}
 };
