@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include "Part1.h"
-#include "Part1.cpp"
+//#include "Part1.cpp"
 using namespace std;
 
 int main() {
@@ -35,6 +35,7 @@ int main() {
 		switch (menuChoice) {
 		case EXIT:
 			system("clear");
+			//cout >> resumeGame;
 			while (gameFlag != EXIT) {
 				cout << "Would you like to save what you played so far to be ";
 				cout << "loaded next time? (Y/N)" << endl;

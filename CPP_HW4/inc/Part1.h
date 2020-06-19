@@ -40,7 +40,7 @@ enum commands {
 enum commandsFullNames {
 	QUIT = 'Q', SHUFFLE = 'S', UP = 'U', RIGHT = 'R', DOWN = 'D', LEFT = 'L',
 	INTELLIGENT = 'I', SOLVEPUZZLE = 'V', PRINTREPORT = 'T', WRITETOFILE = 'E',
-	READFROMFILE = 'O', MOVERANDOM = 'A', RESET = 'X'
+	READFROMFILE = 'O', MOVERANDOM = 'A', RESET = 'X', NOMOVE = 'S'
 };
 
 class NPuzzle {
@@ -56,16 +56,15 @@ public:
 	void buildNewTable();
 	void playNPuzzleGame();
 
-//	std::ostream& operator <<(std::ostream& out, const NPuzzle& nPuzzleObject) {
-//		out << nPuzzleObject.countObject;
-//		return out;
-//	}
+//	friend std::ostream& operator >>(std::ostream& output, const NPuzzle& nPuzzleObject) {
+//        output << nPuzzleObject.nPuzzleBoard[0].printElements(1, 1);
+//        return output;
+//    }
 
-	//std::istream& operator <<() {
-
-
-	//	return;
-	//}
+//    friend std::istream& operator <<(std::istream& input, NPuzzle& nPuzzleObject) {
+//    	input >> nPuzzleObject;
+//        return input;
+//    }
 
 	class Board {
 	public:
@@ -102,8 +101,9 @@ public:
 		void getIntelligentMovementV2(const int& route, int& isAvailable);
 		void getRandomMovement();
 		void getChosenRouteName();
+		int printElements(int iIndex, int jIndex);
 
-		int getPrevBoard(); /* delete it, if unnecessary */
+		void getPrevBoard(int& prevBoard); /* is it ok this way? or should the variable (m_iRootBoard) be public? */
 
 		bool operator ==(const Board& otherObject) {
 			int isSame = 1;
