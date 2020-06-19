@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include "Part1.h"
-//#include "Part1.cpp"
+#include "Part1.cpp"
 using namespace std;
 
 int main() {
