@@ -102,8 +102,8 @@ public:
 		void getIntelligentMovementV2(const int& route, int& isAvailable);
 		void getRandomMovement();
 		void getChosenRouteName();
-		int getPrevBoard();
-		void printPrevMove();
+
+		int getPrevBoard(); /* delete it, if unnecessary */
 
 		bool operator ==(const Board& otherObject) {
 			int isSame = 1;

@@ -289,7 +289,8 @@ void NPuzzle::solvePuzzle() {
 				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
 				//cout << " with the last move of " << nPuzzleBoard[i].lastMove();
 				//cout << "i_loop: " << i << endl;
-				printPrevMove(i);
+				cout << " with the last moves of (from last to first) ";
+				printPrevMove(iNPBVector);
 				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
 			} else {
@@ -309,7 +310,8 @@ void NPuzzle::solvePuzzle() {
 				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
 				//cout << " with the last move of " << nPuzzleBoard[i].lastMove();
 				//cout << "i_loop: " << i << endl;
-				printPrevMove(i);
+				cout << " with the last moves of (from last to first) ";
+				printPrevMove(iNPBVector);
 				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
 			} else {
@@ -329,7 +331,8 @@ void NPuzzle::solvePuzzle() {
 				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
 				//cout << " with the last move of " << nPuzzleBoard[i].lastMove();
 				//cout << "i_loop: " << i << endl;
-				printPrevMove(i);
+				cout << " with the last moves of (from last to first) ";
+				printPrevMove(iNPBVector);
 				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
 			} else {
@@ -349,7 +352,8 @@ void NPuzzle::solvePuzzle() {
 				cout << nPuzzleBoard[nNPBVector - 1].numberOfMoves();
 				//cout << " with the last move of " << nPuzzleBoard[i].lastMove();
 				//cout << "i_loop: " << i << endl;
-				printPrevMove(i);
+				cout << " with the last moves of (from last to first) ";
+				printPrevMove(iNPBVector);
 				cout << ". See below the found solution." << endl;
 				nPuzzleBoard[iNPBVector].print();
 			} else {
@@ -368,26 +372,19 @@ void NPuzzle::solvePuzzle() {
 
 void NPuzzle::printPrevMove(int i) {
 	int prevBoard;
-	//cout << "first_i: " << i << endl;
+
 	while (i != 0) {
-		//cout << "i: " << i << endl;
-		cout << nPuzzleBoard[i].lastMove() << " ";
+		cout << nPuzzleBoard[i].lastMove();
 		prevBoard = nPuzzleBoard[i].getPrevBoard();
-		if (prevBoard == 0)
-			nPuzzleBoard[i].printPrevMove();
 		i = prevBoard;
+		if (i != 0)
+			cout << " ";
 	}
-	//cout << "last_i: " << i << endl;
 	return;
 }
 
 int NPuzzle::Board::getPrevBoard() {
 	return m_iRootBoard;
-}
-
-void NPuzzle::Board::printPrevMove() {
-	cout << static_cast<commands>(m_prevMove);
-	return;
 }
 
 void NPuzzle::Board::print() {
@@ -557,40 +554,27 @@ int NPuzzle::Board::isSolved() {
 }
 
 char NPuzzle::Board::lastMove() {
-	//std::cout << "iMove: " << m_iMove << endl;
-	if (m_iMove == 0) {
-		return 'S';
-	} else {
-		if (m_oper == 1)
-			return static_cast<char>(UP);
-		else if (m_oper == 2)
-			return static_cast<char>(RIGHT);
-		else if (m_oper == 3)
-			return static_cast<char>(DOWN);
-		else if (m_oper == 4)
-			return static_cast<char>(LEFT);
-	}
+	char lastMoveChar;
 
-//	switch (m_prevOper) {
-////	case (0):
-////		return 'S';
-////		break;
-//	case (1):
-//		return static_cast<char>(UP);
-//		break;
-//	case (2):
-//		return static_cast<char>(RIGHT);
-//		break;
-//	case (3):
-//		return static_cast<char>(DOWN);
-//		break;
-//	case (4):
-//		return static_cast<char>(LEFT);
-//		break;
-//	default:
-//		return 'X';
-//		break;
-//	}
+	switch (m_prevMove)	{
+		case (U):
+			lastMoveChar = static_cast<char>(UP);
+			break;
+		case (R):
+			lastMoveChar = static_cast<char>(RIGHT);
+			break;
+		case (D):
+			lastMoveChar = static_cast<char>(DOWN);
+			break;
+		case (L):
+			lastMoveChar = static_cast<char>(LEFT);
+			break;
+		default:
+			//returns S letter, if there is no previous move
+			lastMoveChar = 'S';
+			break;
+	}
+	return lastMoveChar;
 }
 
 void NPuzzle::Board::printStatus() {
