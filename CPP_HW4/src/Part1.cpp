@@ -135,7 +135,7 @@ using namespace std;
 void NPuzzle::buildNewTable() {
 	init(0, 0);
 	nPuzzleBoard.resize(1);
-	countObject = 1; //resets no objects, since vector was resized
+	m_countObject = 1; //resets no objects, since vector was resized
 
 	nPuzzleBoard[0].setSize();
 	nPuzzleBoard[0].generateTable();
@@ -143,7 +143,8 @@ void NPuzzle::buildNewTable() {
 }
 
 void NPuzzle::playNPuzzleGame() {
-	eachStepValues[0] = 0;
+	m_eachStepValues = (int*)malloc(1 * sizeof(int));
+	m_eachStepValues[0] = 0;
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
@@ -209,7 +210,7 @@ void NPuzzle::printReport() {
 void NPuzzle::readFromFile() {
 	init(0, 0);
 	nPuzzleBoard.resize(1);
-	countObject = 1; //resets no objects, since vector was resized
+	m_countObject = 1; //resets no objects, since vector was resized
 
 	nPuzzleBoard[0].readFromFile();
 	return;
@@ -222,7 +223,7 @@ void NPuzzle::writeToFile() {
 
 void NPuzzle::shuffle() {
 	nPuzzleBoard.resize(1);
-	countObject = 1; //resets no objects, since vector was resized
+	m_countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].shuffleBoard();
 	return;
 }
@@ -239,7 +240,7 @@ void NPuzzle::setsize() {
 
 void NPuzzle::moveRandom() {
 	nPuzzleBoard.resize(1);
-	countObject = 1; //resets no objects, since vector was resized
+	m_countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].getRandomMovement();
 	nPuzzleBoard[0].move();
 	return;
@@ -247,7 +248,7 @@ void NPuzzle::moveRandom() {
 
 void NPuzzle::moveIntelligent() {
 	nPuzzleBoard.resize(1);
-	countObject = 1; //resets no objects, since vector was resized
+	m_countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].getIntelligentMovement();
 	nPuzzleBoard[0].move();
 	return;
@@ -255,7 +256,7 @@ void NPuzzle::moveIntelligent() {
 
 void NPuzzle::move() {
 	nPuzzleBoard.resize(1);
-	countObject = 1; //resets no objects, since vector was resized
+	m_countObject = 1; //resets no objects, since vector was resized
 	nPuzzleBoard[0].getRegularMovement(m_command);
 	nPuzzleBoard[0].move();
 	return;
@@ -267,8 +268,8 @@ void NPuzzle::solvePuzzle() {
 	int iNPBVector = nNPBVector - 1;
 
 	if (1 <= nPuzzleBoard[nNPBVector - 1].numberOfMoves()) {
-		initialLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves() - 1] + 1;
-		finalLastVector = eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] + 1;
+		initialLastVector = m_eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves() - 1] + 1;
+		finalLastVector = m_eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] + 1;
 	}
 	nPuzzleBoard[nNPBVector - 1].incrementNumberOfMoves();
 	for (int i = initialLastVector; i < finalLastVector; ++i) {
@@ -345,7 +346,8 @@ void NPuzzle::solvePuzzle() {
 		cout << "Solution not found yet. ";
 		cout << "Please try again solvePuzzle command." << endl << endl;
 	}
-	eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
+	m_eachStepValues = (int*)realloc(m_eachStepValues, (nPuzzleBoard[nNPBVector - 1].numberOfMoves() + 2) * sizeof(int));
+	m_eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
 	return;
 }
 
@@ -852,21 +854,10 @@ void NPuzzle::Board::getChosenRouteName() {
 }
 
 int NPuzzle::Board::printElements(int iIndex, int jIndex) {
-	//string element;
-//	int element;
-//
-//	for (int i = 0; i < m_nRow; ++i) {
-//		for (int j = 0; j < m_nColumn; ++j) {
-//			if (m_num[i][j] == REGULARZERO) {
-//				element << "bb" << " ";
-//			} else if (m_num[i][j] == FILLEDZERO) {
-//				element << "00" << " ";
-//			} else {
-//				if (m_num[i][j] <= MAXSINGLEDIGITNUMBER)
-//					element << "0";
-//				element << m_num[i][j] << " ";
-//			}
-//		}
-//	}
 	return m_num[iIndex][jIndex];
+}
+
+void NPuzzle::Board::editElements(int iIndex, int jIndex, int elementValue) {
+	m_num[iIndex][jIndex] = elementValue;
+	return;
 }

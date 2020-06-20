@@ -46,7 +46,7 @@ enum commandsFullNames {
 class NPuzzle {
 public:
 	//NPuzzle constructor
-	NPuzzle() : countObject(0), eachStepValues(), m_command() {}
+	NPuzzle() : m_countObject(0), m_eachStepValues(0), m_command() {}
 
 	//functions from the draft
 	void readFromFile();
@@ -56,28 +56,41 @@ public:
 	void buildNewTable();
 	void playNPuzzleGame();
 
-//	friend std::ostream& operator >>(std::ostream& output, const NPuzzle& nPuzzleObject) {
-//        output << nPuzzleObject.nPuzzleBoard[0].printElements(1, 1);
-//        return output;
-//    }
-
-//    friend std::istream& operator <<(std::istream& input, NPuzzle& nPuzzleObject) {
-//    	input >> nPuzzleObject;
-//        return input;
-//    }
+	//operator overloading methods
+	friend std::ostream& operator >>(std::ostream& output, NPuzzle& nPuzzleObject) {
+    	for (int i = 0; i < nPuzzleObject.nPuzzleBoard[0].m_nRow; ++i) {
+    		for (int j = 0; j < nPuzzleObject.nPuzzleBoard[0].m_nColumn; ++j) {
+    			output << nPuzzleObject.nPuzzleBoard[0].printElements(i, j);
+    			output << " ";
+    		}
+    	}
+        return output;
+    }
+    friend std::istream& operator <<(std::istream& input, NPuzzle& nPuzzleObject) {
+    	int elementValue;
+    	for (int i = 0; i < nPuzzleObject.nPuzzleBoard[0].m_nRow; ++i) {
+    		for (int j = 0; j < nPuzzleObject.nPuzzleBoard[0].m_nColumn; ++j) {
+    	    	input >> elementValue;
+    			nPuzzleObject.nPuzzleBoard[0].editElements(i, j, elementValue);
+    		}
+    	}
+    	return input;
+    }
 
 	class Board {
 	public:
 		//Board constructor
-		Board() : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
-				  m_iMove(0), m_oper(), m_iRootBoard(0), m_prevMove(0), m_iEmpty(), m_isError(0),
-				  m_isDone(0), m_iObject(0) {
-		}
+		Board() : m_nRow(), m_nColumn(), m_num(0), m_nNum(), m_count(0),
+				  m_iMove(0), m_oper(), m_iRootBoard(0), m_prevMove(0),
+				  m_iEmpty(), m_isError(0), m_isDone(0), m_iObject(0) {}
+		//Board constructor with value initializations
+		Board(int iObject, int iRootBoard, int prevMove) : m_nRow(),
+				m_nColumn(), m_num(0), m_nNum(), m_count(0), m_iMove(0),
+				m_oper(), m_iRootBoard(iRootBoard), m_prevMove(prevMove),
+				m_iEmpty(), m_isError(0), m_isDone(0), m_iObject(iObject) {}
 
-		Board(int iObject, int iRootBoard, int prevMove) : m_num(0), m_nRow(), m_nColumn(), m_nNum(), m_count(0),
-				  m_iMove(0), m_oper(), m_iRootBoard(iRootBoard), m_prevMove(prevMove), m_iEmpty(), m_isError(0),
-				  m_isDone(0), m_iObject(iObject) {
-		}
+		//public variables
+		int m_nRow, m_nColumn;
 
 		//functions from the draft
 		void print();
@@ -102,9 +115,11 @@ public:
 		void getRandomMovement();
 		void getChosenRouteName();
 		int printElements(int iIndex, int jIndex);
+		void editElements(int iIndex, int jIndex, int elementValue);
 
 		void getPrevBoard(int& prevBoard); /* is it ok this way? or should the variable (m_iRootBoard) be public? */
 
+		//operator overloading methods
 		bool operator ==(const Board& otherObject) {
 			int isSame = 1;
 			for (int i = 0; i < m_nRow; ++i) {
@@ -115,13 +130,12 @@ public:
 			}
 			return isSame;
 		}
-
 		int operator ()(int indexX, int indexY) {
-			if (!((2 <= indexX && indexX <= m_nRow) && (2 <= indexY && indexY <= m_nColumn)))
+			if (!((2 <= indexX && indexX <= m_nRow) &&
+				  (2 <= indexY && indexY <= m_nColumn)))
 				exit(0);
 			return m_num[indexX][indexY];
 		}
-
 		Board& operator =(const Board& otherObject) {
 			m_nRow = otherObject.m_nRow;
 			m_nColumn = otherObject.m_nColumn;
@@ -140,13 +154,10 @@ public:
 		}
 
 	private:
-		int **m_num, m_nRow, m_nColumn, m_nNum, m_count, m_iMove;
+		int **m_num, m_nNum, m_count, m_iMove;
 		int m_oper, m_iRootBoard, m_prevMove, m_iEmpty, m_isError, m_isDone;
 		int m_sizes[2], m_iObject;
 		std::string m_filePath;
-
-		//function from the draft
-		
 
 		//helper functions
 		void getFromFile();
@@ -156,7 +167,7 @@ public:
 	};
 
 private:
-	int countObject, eachStepValues[5];
+	int m_countObject, *m_eachStepValues;
 	char m_command;
 	std::vector<Board> nPuzzleBoard;
 	Board newBoard;
@@ -174,9 +185,8 @@ private:
 
 	//helper functions
 	void printPrevMove(int i);
-
 	void init(int iRootBoard, int prevMove) {
-		Board nextBoard(++countObject, iRootBoard, prevMove);
+		Board nextBoard(++m_countObject, iRootBoard, prevMove);
 		nPuzzleBoard.push_back(nextBoard);
 	}
 };
