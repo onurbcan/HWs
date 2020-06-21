@@ -10,26 +10,58 @@
 #include "Part1.h"
 
 void huffmanCoding(char *filePath) {
-	int i = 0, *allLetters = (int*)malloc(52 * sizeof(int));
-	char c;
+	int i = 0, *allLettersFreq = (int*)malloc(52 * sizeof(int));
+	int iterLetter = letterA;
+	char c, *allLetters = (char*)malloc(52 * sizeof(char));
 
 	openFileRead(filePath);
 	while (1) {
 		c = getc(fptr);
 		if (c == EOF)
 			break;
-		else if (65 <= c && c <= 90)
-			i = (int)((int)c - 65);
-		else if (97 <= c && c <= 122)
-			i = (int)((int)c - 71);
+		else if (letterA <= c && c <= letterZ)
+			i = (int)c - upperCaseIndexDifference;
+		else if (lettera <= c && c <= letterz)
+			i = (int)c - lowerCaseIndexDifference;
 		else
 			continue;
-		++allLetters[i];
+		allLetters[i] = (char)c;
+		++allLettersFreq[i];
 	}
 	closeFile(fptr);
 
-	for (i = 0; i < 52; ++i)
-		printf("%d\n", allLetters[i]);
+//	for (i = 0; i < 52; ++i)
+//		printf("%d:\t %d\n", i, allLettersFreq[i]);
+
+	struct huffmanCodingTree *rootHCT = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
+	struct huffmanCodingTree *iterHCT = rootHCT;
+
+	i = 0;
+	while (1) {
+		if (allLettersFreq[i] == 0) {
+			++i;
+			continue;
+		}
+		iterHCT->letter = allLetters[i];
+		iterHCT->freq = allLettersFreq[i];
+		++i;
+		if (i == 52)
+			break;
+		if (i == 26)
+			iterLetter = iterLetter + 7;
+		else
+			++iterLetter;
+
+		iterHCT->right = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
+		iterHCT = iterHCT->right;
+	}
+	iterHCT = NULL;
+
+	iterHCT = rootHCT;
+	while (iterHCT != NULL) {
+		printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
+		iterHCT = iterHCT->right;
+	}
 
 
 //	char c[30] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
