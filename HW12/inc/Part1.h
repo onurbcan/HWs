@@ -32,6 +32,7 @@ FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
 
 void huffmanCoding(char *file_path);
+void huffmanCoding2(char *file_path);
 
 void openFileRead(char *filePath);
 void openFileWrite(char *filePath);
