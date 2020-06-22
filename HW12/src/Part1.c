@@ -37,14 +37,14 @@
 #include "Part1.h"
 
 void huffmanCoding(char *filePath) {
-	int i, j, tempFreq, iItem = 0, iItemTemp, nItem, count;
+	int i, j, tempFreq, iItem = 0, iItemTemp, nItem, count, sumFreq;
 	int isSame;
 	int *allCharFreqs = 0;
 	char c, tempItem, *allCharItems = 0;
 
 	struct huffmanCodingTree *rootHCT = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
-	rootHCT->left = NULL;
 	struct huffmanCodingTree *iterHCT = rootHCT;
+	struct huffmanCodingTree *tempAddress1, *tempAddress2, *newAddress;
 
 	openFileRead(filePath);
 	while (1) {
@@ -92,32 +92,120 @@ void huffmanCoding(char *filePath) {
 		iterHCT->freq = allCharFreqs[i];
 		++i;
 		if (i == nItem) {
-			iterHCT->right = NULL;
+			iterHCT->next = NULL;
 			break;
 		} else {
-			iterHCT->right = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
-			iterHCT->right->left = iterHCT;
-			iterHCT = iterHCT->right;
+			iterHCT->next = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
+			iterHCT = iterHCT->next;
 		}
 	}
-	iterHCT = rootHCT;
+//	iterHCT = rootHCT;
+//	while (1) {
+//		if (iterHCT == NULL)
+//			break;
+//		printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
+//		iterHCT = iterHCT->next;
+//	}
+
 
 	while (1) {
 		count = 0;
 		iterHCT = rootHCT;
 		while (iterHCT != NULL) {
 			++count;
-			iterHCT = iterHCT->right;
+			iterHCT = iterHCT->next;
 		}
-		if (count == 1)
+		if (count == 1) {
 			break;
+		} else if (count == 2) {
+			iterHCT = rootHCT;
+			tempAddress1 = iterHCT;
+			tempAddress2 = iterHCT->next;
+			sumFreq = tempAddress1->freq + tempAddress2->freq;
+			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
+			newAddress->letter = 'X';
+			newAddress->freq = sumFreq;
+			newAddress->left = tempAddress1;
+			newAddress->right = tempAddress2;
+			newAddress->next = NULL;
+			rootHCT = newAddress;
+		} else {
+			iterHCT = rootHCT;
+			tempAddress1 = iterHCT;
+			tempAddress2 = iterHCT->next;
+			sumFreq = tempAddress1->freq + tempAddress2->freq;
+			while (1) {
+				if (iterHCT->next == NULL)
+					break;
+				else if (iterHCT->next->freq >= sumFreq)
+					break;
+				iterHCT = iterHCT->next;
+			}
+			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
+			newAddress->letter = 'X';
+			newAddress->freq = sumFreq;
+			newAddress->left = tempAddress1;
+			newAddress->right = tempAddress2;
+			newAddress->next = iterHCT->next;
 
-		iterHCT = rootHCT;
-
+			if (iterHCT == tempAddress2) {
+				rootHCT = newAddress;
+			} else {
+				if (iterHCT->next == NULL)
+					newAddress->next = NULL; //if iter is the last one, thus newAddr will be new last one
+				iterHCT->next = newAddress;
+				rootHCT = tempAddress2->next;
+			}
+			tempAddress1->next = NULL;
+			tempAddress2->next = NULL;
+		}
+		//this block prints all elements
+		//if (iterHCT == NULL)
+		//	break;
+		//printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
+		//iterHCT = iterHCT->next;
 	}
 	printf("count: %d", count);
 
-	//printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
+
+
+//		iterHCT = rootHCT;
+//		while (iterHCT->flag != 0)
+//			iterHCT = iterHCT->right;
+//		tempAddress1 = iterHCT;
+//		tempAddress2 = iterHCT->right;
+//
+//
+//		while (iterHCT != NULL)
+//			iterHCT = iterHCT->right;
+//		iterHCT = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
+//		iterHCT->flag = 0;
+//		iterHCT->freq = tempAddress1->freq + tempAddress2->freq;
+//		iterHCT->left = tempAddress1;
+//		iterHCT->right = tempAddress2;
+//
+//
+//
+//		count = 0;
+//		iterHCT = rootHCT;
+//		while (iterHCT != NULL) {
+//			if (iterHCT->flag == 0)
+//				++count;
+//			iterHCT = iterHCT->right;
+//		}
+//		if (count == 1)
+//			break;
+//
+//		iterHCT = rootHCT;
+//
+//	}
+//	printf("count: %d", count);
+
+
+//		if (iterHCT == NULL)
+//			break;
+//		printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
+//		iterHCT = iterHCT->next;
 //	--iItem;
 //	while (1) {
 //		if (iItem == -1)

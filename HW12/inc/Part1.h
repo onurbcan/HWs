@@ -21,6 +21,7 @@ struct huffmanCodingTree {
 	char letter;
 	int freq;
 	int code;
+	struct huffmanCodingTree *next;
 	struct huffmanCodingTree *left, *right;
 };
 
