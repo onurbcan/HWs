@@ -38,7 +38,7 @@
 
 void huffmanCoding(char *filePath) {
 	int i, j, tempFreq, iItem = 0, iItemTemp, nItem, count, sumFreq;
-	int isSame;
+	int isSame, isDone1, isDone2;
 	int *allCharFreqs = 0;
 	char c, tempItem, *allCharItems = 0;
 
@@ -90,6 +90,9 @@ void huffmanCoding(char *filePath) {
 	while (1) {
 		iterHCT->letter = allCharItems[i];
 		iterHCT->freq = allCharFreqs[i];
+		iterHCT->code = 0;
+		iterHCT->left = NULL;
+		iterHCT->right = NULL;
 		++i;
 		if (i == nItem) {
 			iterHCT->next = NULL;
@@ -125,6 +128,7 @@ void huffmanCoding(char *filePath) {
 			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
 			newAddress->letter = 'X';
 			newAddress->freq = sumFreq;
+			newAddress->code = 0;
 			newAddress->left = tempAddress1;
 			newAddress->right = tempAddress2;
 			newAddress->next = NULL;
@@ -144,6 +148,7 @@ void huffmanCoding(char *filePath) {
 			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
 			newAddress->letter = 'X';
 			newAddress->freq = sumFreq;
+			newAddress->code = 0;
 			newAddress->left = tempAddress1;
 			newAddress->right = tempAddress2;
 			newAddress->next = iterHCT->next;
@@ -165,9 +170,56 @@ void huffmanCoding(char *filePath) {
 		//printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
 		//iterHCT = iterHCT->next;
 	}
-	printf("count: %d", count);
+	//printf("count: %d, %d", count, rootHCT->freq);
+	rootHCT->left->code = 0;
+	rootHCT->right->code = 1;
 
+	iterHCT = rootHCT;
+	iterHCT = rootHCT->left;
+	isDone1 = 0;
+	isDone2 = 0;
+	while (1) {
+		if (isDone1 == 1 && isDone2 == 1)
+			break;
+		if (iterHCT->left != NULL) {
+			iterHCT->left->code = iterHCT->code * 10;
+			printf("%c:\t %d\t %d\n", iterHCT->left->letter, iterHCT->left->freq, iterHCT->left->code);
+			iterHCT = iterHCT->left;
+		} else {
+			isDone1 = 1;
+		}
+		if (iterHCT->right != NULL) {
+			iterHCT->right->code = (iterHCT->code * 10) + 1;
+			printf("%c:\t %d\t %d\n", iterHCT->right->letter, iterHCT->right->freq, iterHCT->right->code);
+			iterHCT = iterHCT->right;
+		} else {
+			isDone2 = 1;
+		}
+	}
 
+	iterHCT = rootHCT;
+	iterHCT = rootHCT->right;
+	isDone1 = 0;
+	isDone2 = 0;
+	while (1) {
+		if (isDone1 == 1 && isDone2 == 1)
+			break;
+		if (iterHCT->left != NULL) {
+			iterHCT->left->code = iterHCT->code * 10;
+			printf("%c:\t %d\t %d\n", iterHCT->left->letter, iterHCT->left->freq, iterHCT->left->code);
+			iterHCT = iterHCT->left;
+		} else {
+			isDone1 = 1;
+		}
+		if (iterHCT->right != NULL) {
+			iterHCT->right->code = (iterHCT->code * 10) + 1;
+			printf("%c:\t %d\t %d\n", iterHCT->right->letter, iterHCT->right->freq, iterHCT->right->code);
+			iterHCT = iterHCT->right;
+		} else {
+			isDone2 = 1;
+		}
+	}
+	printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
 
 //		iterHCT = rootHCT;
 //		while (iterHCT->flag != 0)
