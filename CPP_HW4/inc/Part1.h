@@ -143,18 +143,22 @@ public:
 			m_count = otherObject.m_count;
 			m_iMove = otherObject.m_iMove;
 			m_oper = otherObject.m_oper;
-			m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
+
+			//m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
 			for (int i = 0; i < m_nRow; ++i) {
-				m_num[i] = (int*)malloc(m_nColumn * sizeof(int));
+				m_num.push_back(std::vector<int>());
+				//m_num[i] = (int*)malloc(m_nColumn * sizeof(int));
 				for (int j = 0; j < m_nColumn; ++j) {
-					m_num[i][j] = otherObject.m_num[i][j];
+					m_num[i].push_back(otherObject.m_num[i][j]);
+					//m_num[i][j] = otherObject.m_num[i][j];
 				}
 			}
 			return *this;
 		}
 
 	private:
-		int **m_num, m_nNum, m_count, m_iMove;
+		std::vector<std::vector<int>> m_num;
+		int m_nNum, m_count, m_iMove;
 		int m_oper, m_iRootBoard, m_prevMove, m_iEmpty, m_isError, m_isDone;
 		int m_sizes[2], m_iObject;
 		std::string m_filePath;
@@ -167,7 +171,8 @@ public:
 	};
 
 private:
-	int m_countObject, *m_eachStepValues;
+	std::vector<int> m_eachStepValues;
+	int m_countObject;
 	char m_command;
 	std::vector<Board> nPuzzleBoard;
 	Board newBoard;

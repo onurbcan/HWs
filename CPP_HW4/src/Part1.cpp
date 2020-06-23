@@ -143,8 +143,9 @@ void NPuzzle::buildNewTable() {
 }
 
 void NPuzzle::playNPuzzleGame() {
-	m_eachStepValues = (int*)malloc(1 * sizeof(int));
-	m_eachStepValues[0] = 0;
+	//m_eachStepValues = (int*)malloc(1 * sizeof(int));
+	m_eachStepValues.push_back(0);
+	//m_eachStepValues[0] = 0;
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
@@ -346,8 +347,9 @@ void NPuzzle::solvePuzzle() {
 		cout << "Solution not found yet. ";
 		cout << "Please try again solvePuzzle command." << endl << endl;
 	}
-	m_eachStepValues = (int*)realloc(m_eachStepValues, (nPuzzleBoard[nNPBVector - 1].numberOfMoves() + 2) * sizeof(int));
-	m_eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
+	//m_eachStepValues = (int*)realloc(m_eachStepValues, (nPuzzleBoard[nNPBVector - 1].numberOfMoves() + 2) * sizeof(int));
+	m_eachStepValues.push_back(iNPBVector);
+	//m_eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
 	return;
 }
 
@@ -592,7 +594,8 @@ void NPuzzle::Board::getFromFile() {
 			}
 			strTemp[i] = '\0';
 			string str(strTemp);
-			m_num[iRow][iColumn] = stringIntConverter(strTemp);
+			m_num[iRow].push_back(stringIntConverter(strTemp));
+			//m_num[iRow][iColumn] = stringIntConverter(strTemp);
 			if (m_num[iRow][iColumn] != FILLEDZERO)
 				++m_nNum;
 			if (iColumn == (m_sizes[1] - 1)) {
@@ -611,10 +614,11 @@ void NPuzzle::Board::getFromFile() {
 			string str(strTemp);
 			m_sizes[iSizes] = stringIntConverter(strTemp);
 			if (iSizes == 0) {
-				m_num = (int**)realloc(m_num, m_sizes[0] * sizeof(*m_num));
+				//m_num = (int**)realloc(m_num, m_sizes[0] * sizeof(*m_num));
 			} else if (iSizes == 1) {
 				for (int j = 0; j < m_sizes[0]; ++j) {
-					m_num[j] = (int*)malloc(m_sizes[1] * sizeof(int));
+					m_num.push_back(std::vector<int>());
+					//m_num[j] = (int*)malloc(m_sizes[1] * sizeof(int));
 				}
 			}
 			++iSizes;
@@ -675,9 +679,10 @@ void NPuzzle::Board::generateTable() {
 	int iNum = 0, isSame, randNum, iNumTemp;
 	int numTemp[m_nNum];
 
-	m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
+	//m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
 	for (int j = 0; j < m_nRow; ++j) {
-		m_num[j] = (int*)malloc(m_nColumn * sizeof(int));
+		m_num.push_back(std::vector<int>());
+		//m_num[j] = (int*)malloc(m_nColumn * sizeof(int));
 	}
 	while (iNum < (m_nRow * m_nColumn)) {
 		if (iNum < m_nNum) {
@@ -694,10 +699,12 @@ void NPuzzle::Board::generateTable() {
 			if (isSame)
 				continue;
 			numTemp[iNum] = randNum;
-			m_num[iNum / m_nColumn][iNum % m_nColumn] = randNum;
+			m_num[iNum / m_nColumn].push_back(randNum);
+			//m_num[iNum / m_nColumn][iNum % m_nColumn] = randNum;
 		} else {
 			// FILLEDZERO (-2) will represent zeros on the table
-			m_num[iNum / m_nColumn][iNum % m_nColumn] = FILLEDZERO;
+			m_num[iNum / m_nColumn].push_back(FILLEDZERO);
+			//m_num[iNum / m_nColumn][iNum % m_nColumn] = FILLEDZERO;
 		}
 		++iNum;
 	}
