@@ -1,9 +1,9 @@
 //============================================================================
-// Name        : CPP_HW3.cpp
+// Name        : CPP_HW4.cpp
 // Author      : Onur
 // Version     :
-// Copyright   : 
-// Description : N-Puzzle game (OOP)
+// Copyright   :
+// Description : N-Puzzle game (OOPv2)
 //============================================================================
 
 #include <iostream>
