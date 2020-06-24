@@ -47,10 +47,11 @@ int main() {
 					break;
 				}
 			}
+			system("clear");
 			if (saveChoice == YES) {
 				if (gameFlag == RESUME)
 					resumeGame.writeToFile();
-				else if (gameFlag == EXIT)
+				else if (gameFlag == NEWGAME)
 					newGame.writeToFile();
 				else
 					cout << "Sorry that you haven't played here. See you next time. " << endl;
