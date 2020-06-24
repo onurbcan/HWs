@@ -143,9 +143,7 @@ void NPuzzle::buildNewTable() {
 }
 
 void NPuzzle::playNPuzzleGame() {
-	//m_eachStepValues = (int*)malloc(1 * sizeof(int));
 	m_eachStepValues.push_back(0);
-	//m_eachStepValues[0] = 0;
 	while (1) {
 		cout << "Use the initial letter of your wished navigation direction like Up (U), Down (D), Left (L), Rigth (R)." << endl;
 		cout << "You can quit any time using Q or shuffle the table using S. Have fun!" << endl;
@@ -347,9 +345,7 @@ void NPuzzle::solvePuzzle() {
 		cout << "Solution not found yet. ";
 		cout << "Please try again solvePuzzle command." << endl << endl;
 	}
-	//m_eachStepValues = (int*)realloc(m_eachStepValues, (nPuzzleBoard[nNPBVector - 1].numberOfMoves() + 2) * sizeof(int));
 	m_eachStepValues.push_back(iNPBVector);
-	//m_eachStepValues[nPuzzleBoard[nNPBVector - 1].numberOfMoves()] = iNPBVector;
 	return;
 }
 
@@ -417,8 +413,6 @@ void NPuzzle::Board::writeToFile() {
 		cin >> m_filePath;
 		m_sizes.push_back(m_nRow);
 		m_sizes.push_back(m_nColumn);
-//		m_sizes[0] = m_nRow;
-//		m_sizes[1] = m_nColumn;
 		saveToFile();
 		if (m_isError)
 			cout << "File path is invalid. Please try again." << endl;
@@ -578,6 +572,7 @@ void NPuzzle::Board::getFromFile() {
 	char c, strTemp[LENGTHSTRTEMP];
 	m_nNum = 0;
 	fstream fIO;
+
 	fIO.open(m_filePath, ios::in);
 	if (!fIO.is_open()) {
 		cout << "Error occurred! File not found." << endl;
@@ -598,7 +593,6 @@ void NPuzzle::Board::getFromFile() {
 			strTemp[i] = '\0';
 			string str(strTemp);
 			m_num[iRow].push_back(stringIntConverter(strTemp));
-			//m_num[iRow][iColumn] = stringIntConverter(strTemp);
 			if (m_num[iRow][iColumn] != FILLEDZERO)
 				++m_nNum;
 			if (iColumn == (m_sizes[1] - 1)) {
@@ -616,15 +610,9 @@ void NPuzzle::Board::getFromFile() {
 			strTemp[i] = '\0';
 			string str(strTemp);
 			m_sizes.push_back(stringIntConverter(strTemp));
-			//m_sizes[iSizes] = stringIntConverter(strTemp);
-			if (iSizes == 0) {
-				//m_num = (int**)realloc(m_num, m_sizes[0] * sizeof(*m_num));
-			} else if (iSizes == 1) {
-				for (int j = 0; j < m_sizes[0]; ++j) {
+			if (iSizes == 1)
+				for (int j = 0; j < m_sizes[0]; ++j)
 					m_num.push_back(std::vector<int>());
-					//m_num[j] = (int*)malloc(m_sizes[1] * sizeof(int));
-				}
-			}
 			++iSizes;
 		} else if (c != ' ' && iLine == LINECOUNT) {
 			while (c != ' ') {
@@ -650,11 +638,11 @@ void NPuzzle::Board::saveToFile() {
 		m_isError = 1;
 		return;
 	}
-	/* n and m sizes */
+	//n and m sizes
 	fIO << m_sizes[0] << " " << m_sizes[1] << " ";
-	/* number of moves */
+	//number of moves
 	fIO << endl << m_count << " " << endl;
-	/* num data */
+	//num data
 	for (int i = 0; i < m_sizes[0]; ++i) {
 		for (int j = 0; j < m_sizes[1]; ++j) {
 			fIO << m_num[i][j] << " ";
@@ -683,11 +671,8 @@ void NPuzzle::Board::generateTable() {
 	int iNum = 0, isSame, randNum, iNumTemp;
 	int numTemp[m_nNum];
 
-	//m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
-	for (int j = 0; j < m_nRow; ++j) {
+	for (int j = 0; j < m_nRow; ++j)
 		m_num.push_back(std::vector<int>());
-		//m_num[j] = (int*)malloc(m_nColumn * sizeof(int));
-	}
 	while (iNum < (m_nRow * m_nColumn)) {
 		if (iNum < m_nNum) {
 			isSame = 0;
@@ -704,11 +689,9 @@ void NPuzzle::Board::generateTable() {
 				continue;
 			numTemp[iNum] = randNum;
 			m_num[iNum / m_nColumn].push_back(randNum);
-			//m_num[iNum / m_nColumn][iNum % m_nColumn] = randNum;
 		} else {
-			// FILLEDZERO (-2) will represent zeros on the table
+			//FILLEDZERO (-2) will represent zeros on the table
 			m_num[iNum / m_nColumn].push_back(FILLEDZERO);
-			//m_num[iNum / m_nColumn][iNum % m_nColumn] = FILLEDZERO;
 		}
 		++iNum;
 	}
@@ -913,13 +896,10 @@ NPuzzle::Board& NPuzzle::Board::operator =(const Board& otherObject) {
 	m_iMove = otherObject.m_iMove;
 	m_oper = otherObject.m_oper;
 
-	//m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
 	for (int i = 0; i < m_nRow; ++i) {
 		m_num.push_back(std::vector<int>());
-		//m_num[i] = (int*)malloc(m_nColumn * sizeof(int));
 		for (int j = 0; j < m_nColumn; ++j) {
 			m_num[i].push_back(otherObject.m_num[i][j]);
-			//m_num[i][j] = otherObject.m_num[i][j];
 		}
 	}
 	return *this;

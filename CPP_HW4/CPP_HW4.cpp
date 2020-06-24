@@ -47,6 +47,7 @@ int main() {
 					break;
 				}
 			}
+			system("clear");
 			if (saveChoice == YES) {
 				if (gameFlag == RESUME)
 					resumeGame.writeToFile();
