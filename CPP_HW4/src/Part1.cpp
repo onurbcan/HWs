@@ -415,8 +415,10 @@ void NPuzzle::Board::writeToFile() {
 		cout << "Please enter the name of file that has the data of saved game." << endl;
 		cout << "For e.g: n_puzzle_game.txt" << endl;
 		cin >> m_filePath;
-		m_sizes[0] = m_nRow;
-		m_sizes[1] = m_nColumn;
+		m_sizes.push_back(m_nRow);
+		m_sizes.push_back(m_nColumn);
+//		m_sizes[0] = m_nRow;
+//		m_sizes[1] = m_nColumn;
 		saveToFile();
 		if (m_isError)
 			cout << "File path is invalid. Please try again." << endl;
@@ -528,7 +530,7 @@ void NPuzzle::Board::move() {
 
 int NPuzzle::Board::isSolved() {
 	m_isDone = 1;
-	/* checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order */
+	//checks if numbers in indices for e.g (3-by-3 game) 0 to 7 are in order
 	for (int i = 1; i < m_nNum - 1; ++i) {
 		if (m_num[(i - 1) / m_nColumn][(i - 1) % m_nColumn] > m_num[i / m_nColumn][i % m_nColumn]) {
 			m_isDone = 0;
@@ -613,7 +615,8 @@ void NPuzzle::Board::getFromFile() {
 			}
 			strTemp[i] = '\0';
 			string str(strTemp);
-			m_sizes[iSizes] = stringIntConverter(strTemp);
+			m_sizes.push_back(stringIntConverter(strTemp));
+			//m_sizes[iSizes] = stringIntConverter(strTemp);
 			if (iSizes == 0) {
 				//m_num = (int**)realloc(m_num, m_sizes[0] * sizeof(*m_num));
 			} else if (iSizes == 1) {

@@ -68,9 +68,6 @@ public:
 				m_oper(), m_iRootBoard(iRootBoard), m_prevMove(prevMove),
 				m_iEmpty(), m_isError(0), m_isDone(0), m_iObject(iObject) {}
 
-		//public variables
-
-
 		//functions from the draft
 		void print();
 		void readFromFile();
@@ -104,10 +101,10 @@ public:
 		Board& operator =(const Board& otherObject);
 
 	private:
+		std::vector<int> m_sizes;
 		std::vector<std::vector<int>> m_num;
-		int m_nRow, m_nColumn, m_nNum, m_count, m_iMove;
-		int m_oper, m_iRootBoard, m_prevMove, m_iEmpty, m_isError, m_isDone;
-		int m_sizes[2], m_iObject;
+		int m_nRow, m_nColumn, m_nNum, m_count, m_iMove, m_oper, m_iRootBoard;
+		int m_prevMove, m_iEmpty, m_isError, m_isDone, m_iObject;
 		std::string m_filePath;
 
 		//helper functions
