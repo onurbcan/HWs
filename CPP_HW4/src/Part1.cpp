@@ -366,8 +366,9 @@ void NPuzzle::printPrevMove(int i) {
 	return;
 }
 
-void NPuzzle::Board::getPrevBoard(int& prevBoard) {
-	prevBoard = m_iRootBoard;
+void NPuzzle::init(int iRootBoard, int prevMove) {
+	Board nextBoard(++m_countObject, iRootBoard, prevMove);
+	nPuzzleBoard.push_back(nextBoard);
 	return;
 }
 
@@ -867,4 +868,113 @@ int NPuzzle::Board::printElements(int iIndex, int jIndex) {
 void NPuzzle::Board::editElements(int iIndex, int jIndex, int elementValue) {
 	m_num[iIndex][jIndex] = elementValue;
 	return;
+}
+
+void NPuzzle::Board::getPrevBoard(int& prevBoard) {
+	prevBoard = m_iRootBoard;
+	return;
+}
+
+void NPuzzle::Board::getBoardSettings(int& nRow, int& nColumn) {
+	nRow = m_nRow;
+	nColumn = m_nColumn;
+	return;
+}
+
+//operator overloading method
+bool NPuzzle::Board::operator ==(const Board& otherObject) {
+	int isSame = 1;
+	for (int i = 0; i < m_nRow; ++i) {
+		for (int j = 0; j < m_nColumn; ++j) {
+			if (m_num[i][j] != otherObject.m_num[i][j])
+				isSame = 0;
+		}
+	}
+	return isSame;
+}
+
+//operator overloading method
+int NPuzzle::Board::operator ()(int indexX, int indexY) {
+	if (!((2 <= indexX && indexX <= m_nRow) &&
+		  (2 <= indexY && indexY <= m_nColumn)))
+		exit(0);
+	return m_num[indexX][indexY];
+}
+
+//operator overloading method
+NPuzzle::Board& NPuzzle::Board::operator =(const Board& otherObject) {
+	m_nRow = otherObject.m_nRow;
+	m_nColumn = otherObject.m_nColumn;
+	m_nNum = otherObject.m_nNum;
+	m_count = otherObject.m_count;
+	m_iMove = otherObject.m_iMove;
+	m_oper = otherObject.m_oper;
+
+	//m_num = (int**)realloc(m_num, m_nRow * sizeof(*m_num));
+	for (int i = 0; i < m_nRow; ++i) {
+		m_num.push_back(std::vector<int>());
+		//m_num[i] = (int*)malloc(m_nColumn * sizeof(int));
+		for (int j = 0; j < m_nColumn; ++j) {
+			m_num[i].push_back(otherObject.m_num[i][j]);
+			//m_num[i][j] = otherObject.m_num[i][j];
+		}
+	}
+	return *this;
+}
+
+//operator overloading method
+ostream& operator >>(ostream& output, NPuzzle& nPuzzleObject) {
+	int nRow, nColumn;
+
+	nPuzzleObject.nPuzzleBoard[0].getBoardSettings(nRow, nColumn);
+	for (int i = 0; i < nRow; ++i) {
+		for (int j = 0; j < nColumn; ++j) {
+			if (nPuzzleObject.nPuzzleBoard[0].printElements(i, j) == REGULARZERO) {
+				output << "bb" << " ";
+			} else if (nPuzzleObject.nPuzzleBoard[0].printElements(i, j) == FILLEDZERO) {
+				output << "00" << " ";
+			} else {
+				if (nPuzzleObject.nPuzzleBoard[0].printElements(i, j) <= MAXSINGLEDIGITNUMBER)
+					output << "0";
+				output << nPuzzleObject.nPuzzleBoard[0].printElements(i, j) << " ";
+			}
+		}
+		output << endl;
+	}
+	return output;
+}
+
+//operator overloading method
+istream& operator <<(istream& input, NPuzzle& nPuzzleObject) {
+	int elementValue, iZeros;
+	int nRow, nColumn;
+
+	nPuzzleObject.nPuzzleBoard[0].getBoardSettings(nRow, nColumn);
+	system("clear");
+	cout << "Please enter the new board configuration to be overwritten on the ";
+	cout << "last one. Total of ";
+	cout << nRow * nColumn;
+	cout << " elements are required to be submitted." << endl;
+	while (1) {
+		cout << "You can hit enter after each element. ";
+		cout << "Please note that bb denoted by " << REGULARZERO;
+		cout << " and 0 denoted by " << FILLEDZERO << "." << endl;
+		iZeros = 0;
+		for (int i = 0; i < nRow; ++i) {
+			for (int j = 0; j < nColumn; ++j) {
+				input >> elementValue;
+				if (elementValue == REGULARZERO)
+					++iZeros;
+				nPuzzleObject.nPuzzleBoard[0].editElements(i, j, elementValue);
+			}
+		}
+		if (iZeros != 1) {
+			system("clear");
+			cout << "There should be only one " << REGULARZERO << " on the board. ";
+			cout << "Please try again accordingly." << endl;
+		} else {
+			break;
+		}
+	}
+	return input;
 }
