@@ -8,10 +8,7 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
-#define upperCaseIndexDifference 65
-#define lowerCaseIndexDifference 71
-
-enum someLetters {letterA = 65, letterZ = 90, lettera = 97, letterz = 122};
+#define MAXTREESTEPS 50 //or max length of the code
 
 enum letters {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V,
 		W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t,
@@ -33,6 +30,7 @@ FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
 
 void huffmanCoding(char *file_path);
+void printCodes(struct huffmanCodingTree *root, int code[], int top);
 void huffmanCoding2(char *file_path);
 
 void openFileRead(char *filePath);
