@@ -8,7 +8,8 @@
 #ifndef INC_PART1_H_
 #define INC_PART1_H_
 
-#define MAXTREESTEPS 50 //or max length of the code
+#define MAXTREESTEPS 20 //or max length of the code
+#define ENDOFCODE -1
 
 enum letters {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V,
 		W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t,
@@ -17,7 +18,7 @@ enum letters {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V,
 struct huffmanCodingTree {
 	char letter;
 	int freq;
-	int code;
+	int code[MAXTREESTEPS];
 	struct huffmanCodingTree *next;
 	struct huffmanCodingTree *left, *right;
 };
@@ -28,15 +29,20 @@ FILE *fptr; //fptr file pointer read
 FILE *fptw; //fptw file pointer write
 /*! File pointer to edit the file */
 FILE *fpte; //fptw file pointer edit
+/*! File pointer to write binary file */
+FILE *fptwb; //fptwb file pointer write binary
 
 void huffmanCoding(char *file_path);
-void printCodes(struct huffmanCodingTree *root, int code[], int top);
-void huffmanCoding2(char *file_path);
+void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int top);
+void printCodes(struct huffmanCodingTree *rootHCT);
+void encodeMessage(struct huffmanCodingTree *rootHCT);
+void decodeMessage(struct huffmanCodingTree *rootHCT);
 
 void openFileRead(char *filePath);
 void openFileWrite(char *filePath);
 void openFileEdit(char *filePath);
 void closeFile(FILE *filePointer);
+void openFileWriteBinary(char *filePath);
 
 
 

@@ -28,6 +28,62 @@
  * Simulation: https://people.ok.ubc.ca/ylucet/DS/Huffman.html
  * Detailed description: https://www.studytonight.com/data-structures/huffman-coding
  *
+ * Char		 Freq		Code
+ * F		 1			10110101110
+ * '		 1			10110101111
+ * E		 1			10110101100
+ * G		 1			10110101101
+ * z		 1			00011110110
+ * M		 1			00011110111
+ * K		 1			0001111010
+ * A		 2			000111100
+ * x		 3			101101000
+ * Y		 3			101101001
+ * R		 3			101101010
+ * I		 5			00011111
+ * k		 7			11100010
+ * g		 8			11100011
+ * w		 9			0001110
+ * \n		 10			1000000
+ * T		 10			1000001
+ * .		 13			1011011
+ * ,		 13			1110000
+ * v		 18			000110
+ * b		 22			100001
+ * f		 24			101100
+ * m		 28			111001
+ * p		 28			111010
+ * c		 35			111011
+ * l		 36			00010
+ * y		 42			10001
+ * h		 52			10111
+ * u		 66			11110
+ * d		 66			11111
+ * s		 71			0000
+ * a		 76			0010
+ * n		 78			0011
+ * o		 79			0110
+ * i		 80			0111
+ * r		 84			1001
+ * t		 94			1010
+ * e		 155		010
+ *  		 230		110
+ *
+ * Message		Code
+ * A			000111100
+ * t			1010
+ * a			0010
+ * t			1010
+ * u			11110
+ * r			1001
+ * k			11100010
+ *
+ * Encoded message
+ * 00011110010100010101011110100111100010
+ *
+ * Decoded message
+ * Ataturk
+ *
  *  Created on: Jun 20, 2020
  *      Author: onur
  */
@@ -42,7 +98,7 @@ void huffmanCoding(char *filePath) {
 	char c, tempItem, *allCharItems = 0;
 
 	struct huffmanCodingTree *rootHCT = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
-	struct huffmanCodingTree *iterHCT = rootHCT;
+	struct huffmanCodingTree *tempRootHCT = rootHCT, *iterHCT = rootHCT;
 	struct huffmanCodingTree *tempAddress1, *tempAddress2, *newAddress;
 
 	openFileRead(filePath);
@@ -89,7 +145,6 @@ void huffmanCoding(char *filePath) {
 	while (1) {
 		iterHCT->letter = allCharItems[i];
 		iterHCT->freq = allCharFreqs[i];
-		iterHCT->code = 0;
 		iterHCT->left = NULL;
 		iterHCT->right = NULL;
 		++i;
@@ -102,17 +157,18 @@ void huffmanCoding(char *filePath) {
 		}
 	}
 //	iterHCT = rootHCT;
+//	i = 1;
 //	while (1) {
 //		if (iterHCT == NULL)
 //			break;
-//		printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
+//		printf("%d) %c:\t %d\n", i, iterHCT->letter, iterHCT->freq);
 //		iterHCT = iterHCT->next;
+//		++i;
 //	}
-
 
 	while (1) {
 		count = 0;
-		iterHCT = rootHCT;
+		iterHCT = tempRootHCT;
 		while (iterHCT != NULL) {
 			++count;
 			iterHCT = iterHCT->next;
@@ -120,20 +176,19 @@ void huffmanCoding(char *filePath) {
 		if (count == 1) {
 			break;
 		} else if (count == 2) {
-			iterHCT = rootHCT;
+			iterHCT = tempRootHCT;
 			tempAddress1 = iterHCT;
 			tempAddress2 = iterHCT->next;
 			sumFreq = tempAddress1->freq + tempAddress2->freq;
 			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
 			newAddress->letter = 'X';
 			newAddress->freq = sumFreq;
-			newAddress->code = 0;
 			newAddress->left = tempAddress1;
 			newAddress->right = tempAddress2;
 			newAddress->next = NULL;
-			rootHCT = newAddress;
+			tempRootHCT = newAddress;
 		} else {
-			iterHCT = rootHCT;
+			iterHCT = tempRootHCT;
 			tempAddress1 = iterHCT;
 			tempAddress2 = iterHCT->next;
 			sumFreq = tempAddress1->freq + tempAddress2->freq;
@@ -147,21 +202,18 @@ void huffmanCoding(char *filePath) {
 			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
 			newAddress->letter = 'X'; //'X' represents upper tree nodes
 			newAddress->freq = sumFreq;
-			newAddress->code = 0;
 			newAddress->left = tempAddress1;
 			newAddress->right = tempAddress2;
 			newAddress->next = iterHCT->next;
 
 			if (iterHCT == tempAddress2) {
-				rootHCT = newAddress;
+				tempRootHCT = newAddress;
 			} else {
 				if (iterHCT->next == NULL)
 					newAddress->next = NULL; //if iter is the last one, thus newAddr will be new last one
 				iterHCT->next = newAddress;
-				rootHCT = tempAddress2->next;
+				tempRootHCT = tempAddress2->next;
 			}
-			tempAddress1->next = NULL;
-			tempAddress2->next = NULL;
 		}
 		//this block prints all elements
 		//if (iterHCT == NULL)
@@ -172,31 +224,103 @@ void huffmanCoding(char *filePath) {
 	//printf("count: %d, %d", count, rootHCT->freq);
 
 
-	printCodes(rootHCT, code, lastIndex);
+	generateCodes(tempRootHCT, code, lastIndex);
+//	printCodes(rootHCT);
+	encodeMessage(rootHCT);
+	decodeMessage(rootHCT);
 	return;
 }
 
-void printCodes(struct huffmanCodingTree *root, int code[], int lastIndex) {
+void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex) {
 	int i;
-	if (root->left) {
+	if (rootHCT->left) {
 		code[lastIndex] = 0;
-		printCodes(root->left, code, lastIndex + 1);
+		generateCodes(rootHCT->left, code, lastIndex + 1);
 	}
-	if (root->right) {
+	if (rootHCT->right) {
 		code[lastIndex] = 1;
-		printCodes(root->right, code, lastIndex + 1);
+		generateCodes(rootHCT->right, code, lastIndex + 1);
 	}
 	//if the letter is other than 'X', then it is a leaf node
 	//'X' represents upper tree nodes
-	if (root->letter != 'X') {
-		printf("%c\t", root->letter);
+	if (rootHCT->letter != 'X') {
 		for (i = 0; i < lastIndex; ++i)
-			printf("%d", code[i]);
-		printf("\n");
+			rootHCT->code[i] = code[i];
+		rootHCT->code[lastIndex] = ENDOFCODE;
 	}
 	return;
 }
 
+void printCodes(struct huffmanCodingTree *rootHCT) {
+	int i;
+
+	while (1) {
+		if (rootHCT == NULL)
+			break;
+		else if (rootHCT->letter == 'X') {
+			rootHCT = rootHCT->next;
+			continue;
+		}
+		printf(" * %c\t\t %d\t\t\t", rootHCT->letter, rootHCT->freq);
+		i = 0;
+		while (rootHCT->code[i] != ENDOFCODE) {
+			printf("%d", rootHCT->code[i]);
+			++i;
+		}
+		printf("\n");
+		rootHCT = rootHCT->next;
+	}
+	return;
+}
+
+void encodeMessage(struct huffmanCodingTree *rootHCT) {
+	int i, iBuffer = 0;
+	char c, *buffer;
+	struct huffmanCodingTree *iterHCT = rootHCT;
+
+	openFileRead("files/message.txt");
+	openFileWriteBinary("files/encoded.bin");
+	printf("Message characters and codes:\n");
+	while (1) {
+		c = getc(fptr);
+		if (c == EOF)
+			break;
+		iterHCT = rootHCT;
+		while (iterHCT->letter != c)
+			iterHCT = iterHCT->next;
+		printf("%c\t", iterHCT->letter);
+		i = 0;
+		while (iterHCT->code[i] != ENDOFCODE) {
+			buffer = (char*)realloc(buffer, (iBuffer + 1) * sizeof(char));
+			buffer[iBuffer] = iterHCT->code[i] + 48;
+			printf("%c", iterHCT->code[i] + 48);
+			++iBuffer;
+			++i;
+		}
+		printf("\n");
+	}
+	printf("\nEncoded message:\n");
+	for (i = 0; i < iBuffer; ++i)
+		printf("%c", buffer[i]);
+	printf("\n");
+	fwrite(buffer, sizeof(char), iBuffer, fptwb);
+	closeFile(fptr);
+	closeFile(fptwb);
+	return;
+}
+
+void decodeMessage(struct huffmanCodingTree *rootHCT) {
+	char c;
+	openFileRead("files/encoded.bin");
+	while (1) {
+		c = getc(fptr);
+		if (c == EOF)
+			break;
+		printf("%d", c - 48);
+	}
+	closeFile(fptr);
+	return;
+}
 
 /** 5.1) Open file read
  * Opens the file to be read using the address and file name (together with
@@ -236,6 +360,17 @@ void openFileEdit(char *filePath) {
 void closeFile(FILE *filePointer) {
 	if (fclose(filePointer) != 0) {
 		printf("Error! File not closed.");
+		exit(1);
+	}
+	return;
+}
+
+/** 5.5) Open file write binary
+ * Opens the file to be written as binary using the address and file name
+ * (together with file type) in the parameter path. */
+void openFileWriteBinary(char *filePath) {
+	if ((fptwb = fopen(filePath, "wb")) == NULL) {
+		printf("Error! File not created.");
 		exit(1);
 	}
 	return;
