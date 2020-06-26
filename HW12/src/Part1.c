@@ -225,7 +225,6 @@ void huffmanCoding(char *filePath) {
 
 
 	generateCodes(tempRootHCT, code, lastIndex, &longestCode);
-	printf("longest: %d", longestCode);
 //	printCodes(rootHCT);
 	encodeMessage(rootHCT);
 	decodeMessage(rootHCT, longestCode);
@@ -295,8 +294,8 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 		i = 0;
 		while (iterHCT->code[i] != ENDOFCODE) {
 			buffer = (char*)realloc(buffer, (iBuffer + 1) * sizeof(char));
-			buffer[iBuffer] = iterHCT->code[i] + 48;
-			printf("%c", iterHCT->code[i] + 48);
+			buffer[iBuffer] = iterHCT->code[i] + CHARINTDIFFERENCE;
+			printf("%c", iterHCT->code[i] + CHARINTDIFFERENCE);
 			++iBuffer;
 			++i;
 		}
@@ -313,37 +312,50 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 }
 
 void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
-	int i, j, tempCode[longestCode], isSame;
+	int i, iCode, tempCode[longestCode], isSame, chosenLength, isEOF = 0;
 	char c, chosen;
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
 	openFileRead("files/encoded.bin");
-	i = 0;
+	openFileWrite("files/decoded.txt");
+	printf("\nDecoded message:\n");
+	iCode = 0;
 	while (1) {
 		c = getc(fptr);
-//		if (c == EOF)
-//			break;
-		if (i == longestCode)
-			break;
-		printf("%d", c - 48);
-		tempCode[i] = c - 48;
+		if (c == EOF)
+			isEOF = 1;
+		else
+			tempCode[iCode] = c - CHARINTDIFFERENCE;
 		iterHCT = rootHCT;
+
 		while (iterHCT != NULL) {
 			isSame = 1;
-			for (j = 0; j < i + 1; ++j) {
-				if (tempCode[j] != iterHCT->code[j]) {
+			for (i = 0; i < iCode + 1; ++i) {
+				if (tempCode[i] != iterHCT->code[i]) {
 					isSame = 0;
 					break;
 				}
 			}
-			if (isSame)
+			if (isSame) {
 				chosen = iterHCT->letter;
+				chosenLength = i;
+			}
 			iterHCT = iterHCT->next;
 		}
-		++i;
+		//compares codes either up to longest code (in this case 11) or if EOF obtained
+		if (iCode == longestCode || isEOF) {
+			printf("%c", chosen);
+			fprintf(fptw, "%c", chosen);
+			iCode = -1; //to set the j to 0 for the next loop iteration
+			fseek(fptr, chosenLength - longestCode - 1, SEEK_CUR);
+		}
+		if (isEOF)
+			break;
+		++iCode;
 	}
-	printf("chosen: %c", chosen);
+	printf("\n");
 	closeFile(fptr);
+	closeFile(fptw);
 	return;
 }
 
