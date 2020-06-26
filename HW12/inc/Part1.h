@@ -33,10 +33,10 @@ FILE *fpte; //fptw file pointer edit
 FILE *fptwb; //fptwb file pointer write binary
 
 void huffmanCoding(char *file_path);
-void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int top);
+void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode);
 void printCodes(struct huffmanCodingTree *rootHCT);
 void encodeMessage(struct huffmanCodingTree *rootHCT);
-void decodeMessage(struct huffmanCodingTree *rootHCT);
+void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode);
 
 void openFileRead(char *filePath);
 void openFileWrite(char *filePath);

@@ -94,7 +94,7 @@
 
 void huffmanCoding(char *filePath) {
 	int i, j, tempFreq, iItem = 0, iItemTemp, nItem, isSame, *allCharFreqs = 0;
-	int count, sumFreq, code[MAXTREESTEPS], lastIndex = 0;
+	int count, sumFreq, code[MAXTREESTEPS], lastIndex = 0, longestCode = 0;
 	char c, tempItem, *allCharItems = 0;
 
 	struct huffmanCodingTree *rootHCT = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
@@ -224,22 +224,23 @@ void huffmanCoding(char *filePath) {
 	//printf("count: %d, %d", count, rootHCT->freq);
 
 
-	generateCodes(tempRootHCT, code, lastIndex);
+	generateCodes(tempRootHCT, code, lastIndex, &longestCode);
+	printf("longest: %d", longestCode);
 //	printCodes(rootHCT);
 	encodeMessage(rootHCT);
-	decodeMessage(rootHCT);
+	decodeMessage(rootHCT, longestCode);
 	return;
 }
 
-void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex) {
+void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode) {
 	int i;
 	if (rootHCT->left) {
 		code[lastIndex] = 0;
-		generateCodes(rootHCT->left, code, lastIndex + 1);
+		generateCodes(rootHCT->left, code, lastIndex + 1, longestCode);
 	}
 	if (rootHCT->right) {
 		code[lastIndex] = 1;
-		generateCodes(rootHCT->right, code, lastIndex + 1);
+		generateCodes(rootHCT->right, code, lastIndex + 1, longestCode);
 	}
 	//if the letter is other than 'X', then it is a leaf node
 	//'X' represents upper tree nodes
@@ -247,6 +248,8 @@ void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex)
 		for (i = 0; i < lastIndex; ++i)
 			rootHCT->code[i] = code[i];
 		rootHCT->code[lastIndex] = ENDOFCODE;
+		if (lastIndex > *longestCode)
+			*longestCode = lastIndex;
 	}
 	return;
 }
@@ -309,15 +312,37 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	return;
 }
 
-void decodeMessage(struct huffmanCodingTree *rootHCT) {
-	char c;
+void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
+	int i, j, tempCode[longestCode], isSame;
+	char c, chosen;
+	struct huffmanCodingTree *iterHCT = rootHCT;
+
 	openFileRead("files/encoded.bin");
+	i = 0;
 	while (1) {
 		c = getc(fptr);
-		if (c == EOF)
+//		if (c == EOF)
+//			break;
+		if (i == longestCode)
 			break;
 		printf("%d", c - 48);
+		tempCode[i] = c - 48;
+		iterHCT = rootHCT;
+		while (iterHCT != NULL) {
+			isSame = 1;
+			for (j = 0; j < i + 1; ++j) {
+				if (tempCode[j] != iterHCT->code[j]) {
+					isSame = 0;
+					break;
+				}
+			}
+			if (isSame)
+				chosen = iterHCT->letter;
+			iterHCT = iterHCT->next;
+		}
+		++i;
 	}
+	printf("chosen: %c", chosen);
 	closeFile(fptr);
 	return;
 }
