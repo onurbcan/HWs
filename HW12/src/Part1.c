@@ -277,11 +277,12 @@ void printCodes(struct huffmanCodingTree *rootHCT) {
 
 void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	int i, iBuffer = 0;
-	char c, *buffer;
+	char c;
+	int *buffer;
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
 	openFileRead("files/message.txt");
-	openFileWriteBinary("files/encoded.bin");
+//	openFileWriteBinary("files/encoded.bin");
 	printf("Message characters and codes:\n");
 	while (1) {
 		c = getc(fptr);
@@ -293,8 +294,8 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 		printf("%c\t", iterHCT->letter);
 		i = 0;
 		while (iterHCT->code[i] != ENDOFCODE) {
-			buffer = (char*)realloc(buffer, (iBuffer + 1) * sizeof(char));
-			buffer[iBuffer] = iterHCT->code[i] + CHARINTDIFFERENCE;
+			buffer = (int*)realloc(buffer, (iBuffer + 1) * sizeof(int));
+			buffer[iBuffer] = iterHCT->code[i];
 			printf("%c", iterHCT->code[i] + CHARINTDIFFERENCE);
 			++iBuffer;
 			++i;
@@ -303,11 +304,13 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	}
 	printf("\nEncoded message:\n");
 	for (i = 0; i < iBuffer; ++i)
-		printf("%c", buffer[i]);
+		printf("%d", buffer[i]);
 	printf("\n");
-	fwrite(buffer, sizeof(char), iBuffer, fptwb);
+	printf("%d\n", iBuffer);
+	binHexConverter(buffer, iBuffer);
+//	fwrite(buffer, sizeof(char), iBuffer, fptwb);
 	closeFile(fptr);
-	closeFile(fptwb);
+//	closeFile(fptwb);
 	return;
 }
 
@@ -356,6 +359,128 @@ void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 	printf("\n");
 	closeFile(fptr);
 	closeFile(fptw);
+	return;
+}
+
+//use below lines to test the method
+//int binNums[16] = {0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1};
+//binHexConverter(binNums, sizeof(binNums) / sizeof(int));
+void binHexConverter(int *binNums, int lengthBinNums) {
+	int i, j, ihexNums = 0, hexNum, toPowerOf2;
+	int lengthHexNums, last, first;
+	char tempHexNum, *hexNums = 0;
+
+	if (lengthBinNums >= QUATERNARY) {
+		last = lengthBinNums - 1;
+		first = lengthBinNums - QUATERNARY;
+	} else {
+		last = lengthBinNums - 1;
+		first = LASTELEMENT;
+	}
+
+	while (1) {
+		hexNum = 0;
+		for (i = last; i >= first; --i) {
+			toPowerOf2 = 1;
+			for (j = last; j > i; --j)
+				toPowerOf2 *= BASE2;
+			hexNum += toPowerOf2 * binNums[i];
+		}
+		hexNums = realloc(hexNums, (ihexNums + 1) * sizeof(char));
+		switch (hexNum) {
+		case HEXA:
+			hexNums[ihexNums] = 'A';
+			break;
+		case HEXB:
+			hexNums[ihexNums] = 'B';
+			break;
+		case HEXC:
+			hexNums[ihexNums] = 'C';
+			break;
+		case HEXD:
+			hexNums[ihexNums] = 'D';
+			break;
+		case HEXE:
+			hexNums[ihexNums] = 'E';
+			break;
+		case HEXF:
+			hexNums[ihexNums] = 'F';
+			break;
+		default:
+			hexNums[ihexNums] = hexNum + CHARINTDIFFERENCE;
+			break;
+		}
+
+		if (first == LASTELEMENT) {
+			break;
+		} else if ((first - QUATERNARY) >= LASTELEMENT) {
+			last = last - QUATERNARY;
+			first = first - QUATERNARY;
+		} else {
+			last = last - QUATERNARY;
+			first = LASTELEMENT;
+		}
+		++ihexNums;
+	}
+	lengthHexNums = ihexNums + 1;
+	for (i = 0; i < lengthHexNums / 2; ++i) {
+		tempHexNum = hexNums[i];
+		hexNums[i] = hexNums[(lengthHexNums - 1) - i];
+		hexNums[(lengthHexNums - 1) - i] = tempHexNum;
+	}
+	for (i = 0; i < lengthHexNums; ++i) {
+		printf("%c", hexNums[i]);
+	}
+	return;
+}
+
+//use below lines to test the method
+//char hexNums[2] = {'5', 'D'};
+//hexBinConverter(hexNums, sizeof(hexNums) / sizeof(char));
+void hexBinConverter(char *hexNums, int lengthHexNums) {
+	int i, j, k, decNum, binMultiplier, *binNums = 0, iBinNums = 0;
+
+	for (i = 0; i < lengthHexNums; ++i) {
+		switch (hexNums[i]) {
+		case 'A':
+			decNum = HEXA;
+			break;
+		case 'B':
+			decNum = HEXB;
+			break;
+		case 'C':
+			decNum = HEXC;
+			break;
+		case 'D':
+			decNum = HEXD;
+			break;
+		case 'E':
+			decNum = HEXE;
+			break;
+		case 'F':
+			decNum = HEXF;
+			break;
+		default:
+			decNum = hexNums[i] - CHARINTDIFFERENCE;
+			break;
+		}
+		for (j = QUATERNARY; j > 0; --j) {
+			binMultiplier = 1;
+			for (k = 0; k < j - 1; ++k)
+				binMultiplier *= BASE2;
+			binNums = (int*)realloc(binNums, (iBinNums + 1) * sizeof(int));
+			if ((decNum / binMultiplier) >= 1) {
+				binNums[iBinNums] = 1;
+				decNum = decNum % binMultiplier;
+			} else  {
+				binNums[iBinNums] = 0;
+			}
+			++iBinNums;
+		}
+	}
+	for (i = 0; i < iBinNums; ++i) {
+		printf("%d", binNums[i]);
+	}
 	return;
 }
 
