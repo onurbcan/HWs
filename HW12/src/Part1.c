@@ -227,7 +227,7 @@ void huffmanCoding(char *filePath) {
 	generateCodes(tempRootHCT, code, lastIndex, &longestCode);
 //	printCodes(rootHCT);
 	encodeMessage(rootHCT);
-	decodeMessage(rootHCT, longestCode);
+//	decodeMessage(rootHCT, longestCode);
 	return;
 }
 
@@ -276,13 +276,14 @@ void printCodes(struct huffmanCodingTree *rootHCT) {
 }
 
 void encodeMessage(struct huffmanCodingTree *rootHCT) {
-	int i, iBuffer = 0;
+	int i, iBinNums = 0, nBinNums, nHexNums, nMissingBits;
 	char c;
-	int *buffer;
+	int *binNums = 0;
+	char *hexNums = calloc(1, sizeof(char));
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
 	openFileRead("files/message.txt");
-//	openFileWriteBinary("files/encoded.bin");
+	openFileWriteBinary("files/encoded.bin");
 	printf("Message characters and codes:\n");
 	while (1) {
 		c = getc(fptr);
@@ -294,87 +295,121 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 		printf("%c\t", iterHCT->letter);
 		i = 0;
 		while (iterHCT->code[i] != ENDOFCODE) {
-			buffer = (int*)realloc(buffer, (iBuffer + 1) * sizeof(int));
-			buffer[iBuffer] = iterHCT->code[i];
+			binNums = (int*)realloc(binNums, (iBinNums + 1) * sizeof(int));
+			binNums[iBinNums] = iterHCT->code[i];
 			printf("%c", iterHCT->code[i] + CHARINTDIFFERENCE);
-			++iBuffer;
+			++iBinNums;
 			++i;
 		}
 		printf("\n");
 	}
+	nBinNums = iBinNums;
 	printf("\nEncoded message:\n");
-	for (i = 0; i < iBuffer; ++i)
-		printf("%d", buffer[i]);
+	for (i = 0; i < nBinNums; ++i)
+		printf("%d", binNums[i]);
 	printf("\n");
-	printf("%d\n", iBuffer);
-	binHexConverter(buffer, iBuffer);
-//	fwrite(buffer, sizeof(char), iBuffer, fptwb);
+	printf("%d\n", iBinNums);
+
+	binHexConverter(binNums, nBinNums, hexNums, &nHexNums);
+	++nHexNums; //to add initial padding length information
+	hexNums = (char*)realloc(hexNums, nHexNums * sizeof(char));
+	for (i = nHexNums - 1; i > 0; --i)
+		hexNums[i] = hexNums[i - 1];
+
+	nMissingBits = (ONEBYTE - (nBinNums % ONEBYTE)) % ONEBYTE;
+	if (nMissingBits == 0)
+		hexNums[0] = 0 + CHARINTDIFFERENCE;
+	else
+		hexNums[0] = nMissingBits + CHARINTDIFFERENCE;
+	for (i = 0; i < nHexNums; ++i) {
+		printf("%c", hexNums[i]);
+	}
+	printf("sizeof: %d\n", sizeof(hexNums));
+	fwrite(hexNums, nHexNums, 1, fptwb);
 	closeFile(fptr);
-//	closeFile(fptwb);
+	closeFile(fptwb);
 	return;
 }
 
 void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 	int i, iCode, tempCode[longestCode], isSame, chosenLength, isEOF = 0;
+	int iHexNums = 0, nHexNums, nBinNums;
+	int *binNums = (int*)malloc(sizeof(int));
 	char c, chosen;
+	char *hexNums = calloc(1, sizeof(char));
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
 	openFileRead("files/encoded.bin");
-	openFileWrite("files/decoded.txt");
+//	openFileWrite("files/decoded.txt");
 	printf("\nDecoded message:\n");
-	iCode = 0;
+
 	while (1) {
 		c = getc(fptr);
 		if (c == EOF)
-			isEOF = 1;
-		else
-			tempCode[iCode] = c - CHARINTDIFFERENCE;
-		iterHCT = rootHCT;
-
-		while (iterHCT != NULL) {
-			isSame = 1;
-			for (i = 0; i < iCode + 1; ++i) {
-				if (tempCode[i] != iterHCT->code[i]) {
-					isSame = 0;
-					break;
-				}
-			}
-			if (isSame) {
-				chosen = iterHCT->letter;
-				chosenLength = i;
-			}
-			iterHCT = iterHCT->next;
-		}
-		//compares codes either up to longest code (in this case 11) or if EOF obtained
-		if (iCode == longestCode || isEOF) {
-			printf("%c", chosen);
-			fprintf(fptw, "%c", chosen);
-			iCode = -1; //to set the j to 0 for the next loop iteration
-			fseek(fptr, chosenLength - longestCode - 1, SEEK_CUR);
-		}
-		if (isEOF)
 			break;
-		++iCode;
+		hexNums = (char*)realloc(hexNums, (iHexNums + 1) * sizeof(char));
+		hexNums[iHexNums] = c;
+		++iHexNums;
 	}
+	nHexNums = iHexNums;
+	for (i = 0; i < nHexNums; ++i)
+		printf("%c", hexNums[i]);
 	printf("\n");
+	hexBinConverter(hexNums, nHexNums, binNums, &nBinNums);
+	for (i = 0; i < nBinNums; ++i)
+		printf("%d", binNums[i]);
+//	iCode = 0;
+//	while (1) {
+//		c = getc(fptr);
+//		if (c == EOF)
+//			isEOF = 1;
+//		else
+//			tempCode[iCode] = c - CHARINTDIFFERENCE;
+//		iterHCT = rootHCT;
+//
+//		while (iterHCT != NULL) {
+//			isSame = 1;
+//			for (i = 0; i < iCode + 1; ++i) {
+//				if (tempCode[i] != iterHCT->code[i]) {
+//					isSame = 0;
+//					break;
+//				}
+//			}
+//			if (isSame) {
+//				chosen = iterHCT->letter;
+//				chosenLength = i;
+//			}
+//			iterHCT = iterHCT->next;
+//		}
+//		//compares codes either up to longest code (in this case 11) or if EOF obtained
+//		if (iCode == longestCode || isEOF) {
+//			printf("%c", chosen);
+//			fprintf(fptw, "%c", chosen);
+//			iCode = -1; //to set the j to 0 for the next loop iteration
+//			fseek(fptr, chosenLength - longestCode - 1, SEEK_CUR);
+//		}
+//		if (isEOF)
+//			break;
+//		++iCode;
+//	}
+//	printf("\n");
 	closeFile(fptr);
-	closeFile(fptw);
+//	closeFile(fptw);
 	return;
 }
 
 //use below lines to test the method
 //int binNums[16] = {0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1};
 //binHexConverter(binNums, sizeof(binNums) / sizeof(int));
-void binHexConverter(int *binNums, int lengthBinNums) {
-	int i, j, ihexNums = 0, hexNum, toPowerOf2;
-	int lengthHexNums, last, first;
-	char tempHexNum, *hexNums = 0;
+void binHexConverter(int *binNums, int nBinNums, char *hexNums, int *nHexNums) {
+	int i, j, ihexNums = 0, hexNum, last, first, toPowerOf2;
+	char tempHexNum;
 
-	if (lengthBinNums >= QUATERNARY) {
-		last = lengthBinNums - 1;
-		first = lengthBinNums - QUATERNARY;
+	if (nBinNums >= QUATERNARY) {
+		last = nBinNums - 1;
+		first = nBinNums - QUATERNARY;
 	} else {
-		last = lengthBinNums - 1;
+		last = nBinNums - 1;
 		first = LASTELEMENT;
 	}
 
@@ -386,7 +421,7 @@ void binHexConverter(int *binNums, int lengthBinNums) {
 				toPowerOf2 *= BASE2;
 			hexNum += toPowerOf2 * binNums[i];
 		}
-		hexNums = realloc(hexNums, (ihexNums + 1) * sizeof(char));
+		hexNums = (char*)realloc(hexNums, (ihexNums + 1) * sizeof(char));
 		switch (hexNum) {
 		case HEXA:
 			hexNums[ihexNums] = 'A';
@@ -422,14 +457,11 @@ void binHexConverter(int *binNums, int lengthBinNums) {
 		}
 		++ihexNums;
 	}
-	lengthHexNums = ihexNums + 1;
-	for (i = 0; i < lengthHexNums / 2; ++i) {
+	*nHexNums = ihexNums + 1;
+	for (i = 0; i < *nHexNums / 2; ++i) {
 		tempHexNum = hexNums[i];
-		hexNums[i] = hexNums[(lengthHexNums - 1) - i];
-		hexNums[(lengthHexNums - 1) - i] = tempHexNum;
-	}
-	for (i = 0; i < lengthHexNums; ++i) {
-		printf("%c", hexNums[i]);
+		hexNums[i] = hexNums[(*nHexNums - 1) - i];
+		hexNums[(*nHexNums - 1) - i] = tempHexNum;
 	}
 	return;
 }
@@ -437,10 +469,11 @@ void binHexConverter(int *binNums, int lengthBinNums) {
 //use below lines to test the method
 //char hexNums[2] = {'5', 'D'};
 //hexBinConverter(hexNums, sizeof(hexNums) / sizeof(char));
-void hexBinConverter(char *hexNums, int lengthHexNums) {
-	int i, j, k, decNum, binMultiplier, *binNums = 0, iBinNums = 0;
-
-	for (i = 0; i < lengthHexNums; ++i) {
+void hexBinConverter(char *hexNums, int nHexNums, int *binNums, int *nBinNums) {
+	int i, j, k, decNum, binMultiplier, iBinNums = 0;
+	int nPaddingBits = hexNums[0];
+	//starts from 1 by ignoring the first index (padding bits info)
+	for (i = 1; i < nHexNums; ++i) {
 		switch (hexNums[i]) {
 		case 'A':
 			decNum = HEXA;
@@ -478,6 +511,7 @@ void hexBinConverter(char *hexNums, int lengthHexNums) {
 			++iBinNums;
 		}
 	}
+	*nBinNums = iBinNums;
 	for (i = 0; i < iBinNums; ++i) {
 		printf("%d", binNums[i]);
 	}
