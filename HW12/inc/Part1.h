@@ -53,7 +53,7 @@ void encodeMessage(struct huffmanCodingTree *rootHCT);
 void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode);
 
 void writeToFileInBytes(int *binNums, int nbinNums);
-void readFromFileInBytes(int *binNums, int *nBinNums);
+int* readFromFileInBytes(int *nBinNums);
 
 void binHexConverter(int *binNums, int nBinNums, char *hexNums, int *nHexNums);
 void hexBinConverter(char *hexNums, int nHexNums, int *binNums, int *nBinNums);

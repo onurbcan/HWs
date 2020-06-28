@@ -349,7 +349,7 @@ void writeToFileInBytes(int *binNums, int nBinNums) {
 		decNums[i] = decNums[(nDecNum - 1) - i];
 		decNums[(nDecNum - 1) - i] = tempDecNum;
 	}
-	openFileWriteBinary("files/encoded.bin");
+	openFileWriteBinary("files/encoded.dat");
 	//writes to file initially the padding info byte
 	fwrite(&nMissingBits, 1, 1, fptwb);
 	//writes to file the binary data, 1B each time
@@ -359,11 +359,63 @@ void writeToFileInBytes(int *binNums, int nBinNums) {
 	return;
 }
 
-void readFromFileInBytes(int *binNums, int *nBinNums) {
-	int j, k, nMissingBits, iBinNums = 0, binMultiplier;
-	unsigned int decNum;
+void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
+	int i, iCode, tempCode[longestCode], isSame, chosenLength, isEOF = 0;
+	int *binNums, iBinNums = 0, nBinNums;
+	char chosen;
+	struct huffmanCodingTree *iterHCT = rootHCT;
 
-	openFileReadBinary("files/encoded.bin");
+	openFileWrite("files/decoded.txt");
+	printf("\nDecoded message:\n");
+	binNums = readFromFileInBytes(&nBinNums);
+	printf("\n%d\n", nBinNums);
+	for (i = 0; i < nBinNums; ++i)
+		printf("%d", binNums[i]);
+
+	iCode = 0;
+	while (1) {
+		if (iBinNums == nBinNums)
+			isEOF = 1;
+		else
+			tempCode[iCode] = binNums[iBinNums];
+		iterHCT = rootHCT;
+		while (iterHCT != NULL) {
+			isSame = 1;
+			for (i = 0; i < iCode + 1; ++i) {
+				if (tempCode[i] != iterHCT->code[i]) {
+					isSame = 0;
+					break;
+				}
+			}
+			if (isSame) {
+				chosen = iterHCT->letter;
+				chosenLength = i;
+			}
+			iterHCT = iterHCT->next;
+		}
+		//compares codes either up to longest code (in this case 11) or if EOF obtained
+		if (iCode == longestCode || isEOF) {
+			printf("%c", chosen);
+			fprintf(fptw, "%c", chosen);
+			iCode = -1; //to set the j to 0 for the next loop iteration
+			iBinNums = iBinNums + (chosenLength - longestCode - 1);
+			fseek(fptr, chosenLength - longestCode - 1, SEEK_CUR);
+		}
+		if (isEOF)
+			break;
+		++iBinNums;
+		++iCode;
+	}
+	printf("\n");
+	closeFile(fptw);
+	return;
+}
+
+int* readFromFileInBytes(int *nBinNums) {
+	int j, k, nMissingBits, *binNums = 0, iBinNums = 0, binMultiplier;
+	int decNum;
+
+	openFileReadBinary("files/encoded.dat");
 	nMissingBits = getc(fptrb); //gets initially the padding information
 	printf("%d\n", nMissingBits);
 	while (1) {
@@ -376,6 +428,11 @@ void readFromFileInBytes(int *binNums, int *nBinNums) {
 			binMultiplier = 1;
 			for (k = 0; k < j - 1; ++k)
 				binMultiplier *= BASE2;
+			//removes padding bits
+			if (nMissingBits > 0) {
+				--nMissingBits;
+				continue;
+			}
 			binNums = (int*)realloc(binNums, (iBinNums + 1) * sizeof(int));
 			if ((decNum / binMultiplier) >= 1) {
 				binNums[iBinNums] = 1;
@@ -388,78 +445,7 @@ void readFromFileInBytes(int *binNums, int *nBinNums) {
 	}
 	closeFile(fptrb);
 	*nBinNums = iBinNums;
-	return;
-}
-
-
-void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
-	int i, iCode, tempCode[longestCode], isSame, chosenLength, isEOF = 0;
-	int iHexNums = 0, nHexNums, nBinNums;
-	int *binNums = (int*)malloc(sizeof(int));
-	char c, chosen;
-	char *hexNums = calloc(1, sizeof(char));
-	struct huffmanCodingTree *iterHCT = rootHCT;
-
-	//openFileRead("files/encoded.bin");
-//	openFileWrite("files/decoded.txt");
-	printf("\nDecoded message:\n");
-	readFromFileInBytes(binNums, &nBinNums);
-	printf("\n%d\n", nBinNums);
-	for (i = 0; i < nBinNums; ++i)
-		printf("%d", binNums[i]);
-	//hexNums[0] = 'A';
-	//nHexNums = 1;
-//	while (1) {
-//		c = getc(fptr);
-//		if (c == EOF)
-//			break;
-//		hexNums = (char*)realloc(hexNums, (iHexNums + 1) * sizeof(char));
-//		hexNums[iHexNums] = c;
-//		++iHexNums;
-//	}
-//	nHexNums = iHexNums;
-//	for (i = 0; i < nHexNums; ++i)
-//		printf("%c", hexNums[i]);
-//	printf("\n");
-	//hexBinConverter(hexNums, nHexNums, binNums, &nBinNums);
-//	iCode = 0;
-//	while (1) {
-//		c = getc(fptr);
-//		if (c == EOF)
-//			isEOF = 1;
-//		else
-//			tempCode[iCode] = c - CHARINTDIFFERENCE;
-//		iterHCT = rootHCT;
-//
-//		while (iterHCT != NULL) {
-//			isSame = 1;
-//			for (i = 0; i < iCode + 1; ++i) {
-//				if (tempCode[i] != iterHCT->code[i]) {
-//					isSame = 0;
-//					break;
-//				}
-//			}
-//			if (isSame) {
-//				chosen = iterHCT->letter;
-//				chosenLength = i;
-//			}
-//			iterHCT = iterHCT->next;
-//		}
-//		//compares codes either up to longest code (in this case 11) or if EOF obtained
-//		if (iCode == longestCode || isEOF) {
-//			printf("%c", chosen);
-//			fprintf(fptw, "%c", chosen);
-//			iCode = -1; //to set the j to 0 for the next loop iteration
-//			fseek(fptr, chosenLength - longestCode - 1, SEEK_CUR);
-//		}
-//		if (isEOF)
-//			break;
-//		++iCode;
-//	}
-//	printf("\n");
-	//closeFile(fptr);
-//	closeFile(fptw);
-	return;
+	return binNums;
 }
 
 //use below lines to test the method
