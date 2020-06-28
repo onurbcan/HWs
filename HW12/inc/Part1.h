@@ -43,12 +43,18 @@ FILE *fptw; //fptw file pointer write
 FILE *fpte; //fptw file pointer edit
 /*! File pointer to write binary file */
 FILE *fptwb; //fptwb file pointer write binary
+/*! File pointer to read binary file */
+FILE *fptrb; //fptr file pointer read binary
 
 void huffmanCoding(char *file_path);
 void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode);
 void printCodes(struct huffmanCodingTree *rootHCT);
 void encodeMessage(struct huffmanCodingTree *rootHCT);
 void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode);
+
+void writeToFileInBytes(int *binNums, int nbinNums);
+void readFromFileInBytes(int *binNums, int *nBinNums);
+
 void binHexConverter(int *binNums, int nBinNums, char *hexNums, int *nHexNums);
 void hexBinConverter(char *hexNums, int nHexNums, int *binNums, int *nBinNums);
 
@@ -56,8 +62,7 @@ void openFileRead(char *filePath);
 void openFileWrite(char *filePath);
 void openFileEdit(char *filePath);
 void closeFile(FILE *filePointer);
+void openFileReadBinary(char *filePath);
 void openFileWriteBinary(char *filePath);
-
-
 
 #endif /* INC_PART1_H_ */
