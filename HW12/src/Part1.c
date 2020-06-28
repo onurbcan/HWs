@@ -156,16 +156,6 @@ void huffmanCoding(char *filePath) {
 			iterHCT = iterHCT->next;
 		}
 	}
-//	iterHCT = rootHCT;
-//	i = 1;
-//	while (1) {
-//		if (iterHCT == NULL)
-//			break;
-//		printf("%d) %c:\t %d\n", i, iterHCT->letter, iterHCT->freq);
-//		iterHCT = iterHCT->next;
-//		++i;
-//	}
-
 	while (1) {
 		count = 0;
 		iterHCT = tempRootHCT;
@@ -215,24 +205,15 @@ void huffmanCoding(char *filePath) {
 				tempRootHCT = tempAddress2->next;
 			}
 		}
-		//this block prints all elements
-		//if (iterHCT == NULL)
-		//	break;
-		//printf("%c:\t %d\n", iterHCT->letter, iterHCT->freq);
-		//iterHCT = iterHCT->next;
 	}
-	//printf("count: %d, %d", count, rootHCT->freq);
-
-
 	generateCodes(tempRootHCT, code, lastIndex, &longestCode);
-//	printCodes(rootHCT);
-//	encodeMessage(rootHCT);
-	decodeMessage(rootHCT, longestCode);
+	huffmanCodingMenu(rootHCT, longestCode);
 	return;
 }
 
 void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode) {
 	int i;
+
 	if (rootHCT->left) {
 		code[lastIndex] = 0;
 		generateCodes(rootHCT->left, code, lastIndex + 1, longestCode);
@@ -253,8 +234,41 @@ void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex,
 	return;
 }
 
+void huffmanCodingMenu(struct huffmanCodingTree *rootHCT, int longestCode) {
+	int menuChoice;
+
+	system("clear");
+	printf("Welcome to the Huffman Coding algorithm encryption and decryption methods.\n");
+	do {
+		printf("\nPlease choose the operation using the below menu\n");
+		printf("1) Print generated codes for each character of the reference text\n");
+		printf("2) Encode message and save .dat file\n");
+		printf("3) Decode message using .dat file\n");
+		printf("0) Quit\n");
+		scanf("%d", &menuChoice);
+		system("clear");
+		switch (menuChoice) {
+		case 0:
+			break;
+		case 1:
+			printCodes(rootHCT);
+			break;
+		case 2:
+			encodeMessage(rootHCT);
+			break;
+		case 3:
+			decodeMessage(rootHCT, longestCode);
+			break;
+		default:
+			printf("Error occurred! %d is an invalid choice. Please try again.\n", menuChoice);
+			break;
+		}
+		while (getchar() != '\n');
+	} while (menuChoice != 0);
+}
+
 void printCodes(struct huffmanCodingTree *rootHCT) {
-	int i;
+	int i, iCode = 1;
 
 	while (1) {
 		if (rootHCT == NULL)
@@ -263,13 +277,14 @@ void printCodes(struct huffmanCodingTree *rootHCT) {
 			rootHCT = rootHCT->next;
 			continue;
 		}
-		printf(" * %c\t\t %d\t\t\t", rootHCT->letter, rootHCT->freq);
+		printf("%2d) %c\t %3d\t", iCode, rootHCT->letter, rootHCT->freq);
 		i = 0;
 		while (rootHCT->code[i] != ENDOFCODE) {
 			printf("%d", rootHCT->code[i]);
 			++i;
 		}
 		printf("\n");
+		++iCode;
 		rootHCT = rootHCT->next;
 	}
 	return;
@@ -277,12 +292,14 @@ void printCodes(struct huffmanCodingTree *rootHCT) {
 
 void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	int i, iBinNums = 0, nBinNums;
-	char c;
 	int *binNums = 0;
+	char c, filePath[MAXFILEPATHLENGTH];
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
-	openFileRead("files/message.txt");
-	printf("Message characters and codes:\n");
+	printf("Please enter the file path for the message to be encoded.\n");
+	scanf("%s", filePath);
+	openFileRead(filePath);
+	printf("Message characters and related codes:\n");
 	while (1) {
 		c = getc(fptr);
 		if (c == EOF)
@@ -295,7 +312,7 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 		while (iterHCT->code[i] != ENDOFCODE) {
 			binNums = (int*)realloc(binNums, (iBinNums + 1) * sizeof(int));
 			binNums[iBinNums] = iterHCT->code[i];
-			printf("%c", iterHCT->code[i] + CHARINTDIFFERENCE);
+			printf("%d", iterHCT->code[i]);
 			++iBinNums;
 			++i;
 		}
@@ -303,6 +320,10 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	}
 	nBinNums = iBinNums;
 	closeFile(fptr);
+	printf("\nEncoded message to be saved in the .dat file:\n");
+	for (i = 0; i < nBinNums; ++i)
+		printf("%d", binNums[i]);
+	printf("\n");
 	writeToFileInBytes(binNums, nBinNums);
 	return;
 }
@@ -311,9 +332,6 @@ void writeToFileInBytes(int *binNums, int nBinNums) {
 	int i, j, last, first, *decNums = 0, iDecNum = 0, nDecNum, tempDecNum;
 	int toPowerOf2;
 	int nMissingBits = (ONEBYTE - (nBinNums % ONEBYTE)) % ONEBYTE;
-	for (i = 0; i < nBinNums; ++i)
-		printf("%d", binNums[i]);
-	printf("\n");
 
 	if (nBinNums >= ONEBYTE) {
 		last = nBinNums - 1;
@@ -360,18 +378,19 @@ void writeToFileInBytes(int *binNums, int nBinNums) {
 }
 
 void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
-	int i, iCode, tempCode[longestCode], isSame, chosenLength, isEOF = 0;
+	int i, iCode, tempCode[longestCode], isSame, chosenLetterLength, isEOF = 0;
 	int *binNums, iBinNums = 0, nBinNums;
-	char chosen;
+	char chosenLetter;
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
-	openFileWrite("files/decoded.txt");
-	printf("\nDecoded message:\n");
+
 	binNums = readFromFileInBytes(&nBinNums);
-	printf("\n%d\n", nBinNums);
+	printf("Encoded message that was read from the .dat file:\n");
 	for (i = 0; i < nBinNums; ++i)
 		printf("%d", binNums[i]);
-
+	printf("\n");
+	printf("\nDecoded message:\n");
+	openFileWrite("files/decoded.txt");
 	iCode = 0;
 	while (1) {
 		if (iBinNums == nBinNums)
@@ -388,18 +407,18 @@ void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 				}
 			}
 			if (isSame) {
-				chosen = iterHCT->letter;
-				chosenLength = i;
+				chosenLetter = iterHCT->letter;
+				chosenLetterLength = i;
 			}
 			iterHCT = iterHCT->next;
 		}
 		//compares codes either up to longest code (in this case 11) or if EOF obtained
 		if (iCode == longestCode || isEOF) {
-			printf("%c", chosen);
-			fprintf(fptw, "%c", chosen);
+			printf("%c", chosenLetter);
+			fprintf(fptw, "%c", chosenLetter);
 			iCode = -1; //to set the j to 0 for the next loop iteration
-			iBinNums = iBinNums + (chosenLength - longestCode - 1);
-			fseek(fptr, chosenLength - longestCode - 1, SEEK_CUR);
+			iBinNums = iBinNums + (chosenLetterLength - longestCode - 1);
+			fseek(fptr, chosenLetterLength - longestCode - 1, SEEK_CUR);
 		}
 		if (isEOF)
 			break;
@@ -417,13 +436,10 @@ int* readFromFileInBytes(int *nBinNums) {
 
 	openFileReadBinary("files/encoded.dat");
 	nMissingBits = getc(fptrb); //gets initially the padding information
-	printf("%d\n", nMissingBits);
 	while (1) {
 		decNum = getc(fptrb);
 		if (feof(fptrb) == 1)
 			break;
-		printf("%d ", decNum);
-
 		for (j = ONEBYTE; j > 0; --j) {
 			binMultiplier = 1;
 			for (k = 0; k < j - 1; ++k)

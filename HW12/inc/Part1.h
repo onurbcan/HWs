@@ -11,6 +11,7 @@
 #define MAXTREESTEPS 20 //or max length of the code
 #define ENDOFCODE -1
 #define CHARINTDIFFERENCE 48
+#define MAXFILEPATHLENGTH 50
 
 #define QUATERNARY 4
 #define BASE2 2
@@ -22,10 +23,6 @@
 #define HEXE 14
 #define HEXF 15
 #define ONEBYTE 8
-
-enum letters {A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V,
-		W, X, Y, Z, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t,
-		u, v, w, x,	y, z};
 
 struct huffmanCodingTree {
 	char letter;
@@ -48,11 +45,11 @@ FILE *fptrb; //fptr file pointer read binary
 
 void huffmanCoding(char *file_path);
 void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode);
+void huffmanCodingMenu(struct huffmanCodingTree *rootHCT, int longestCode);
 void printCodes(struct huffmanCodingTree *rootHCT);
 void encodeMessage(struct huffmanCodingTree *rootHCT);
-void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode);
-
 void writeToFileInBytes(int *binNums, int nbinNums);
+void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode);
 int* readFromFileInBytes(int *nBinNums);
 
 void binHexConverter(int *binNums, int nBinNums, char *hexNums, int *nHexNums);

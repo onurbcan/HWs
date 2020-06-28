@@ -4,7 +4,7 @@
  Author      : Onur
  Version     :
  Copyright   : 
- Description :
+ Description : Huffman Coding algorithm encryption and decryption methods
  ============================================================================
  */
 
