@@ -14,75 +14,18 @@
  * bit '0' and each right branch with the bit '1'.
  * The frequency of a character also refers to the level of compression. The
  * more frequently a character is used, the fewer bits can be expressed in the
- * Huffman coding tree. What is expected to be done within the scope of homework
- * is explained below:
+ * Huffman coding tree. What is expected to be done within the scope of the
+ * assignment is explained below:
  * 1. Taking a text file (reference.txt) as input, creating the Huffman coding
- * tree and encrypting each character [40pts]
+ * tree and encrypting each character
  * 2. Encrypting a text requested from the user with character codes created
- * from the coding tree and writing it in a .dat file (encoded.dat) [20pts]
+ * from the coding tree and writing it in a .dat file (encoded.dat)
  * 3. To decode the binary array in encoded.dat and write it to decoded.txt.
- * [20pts]
  * 4. Calculation of the file size difference between encryption (encoded.dat)
- * and decryption (decoded.txt). [20pts]
+ * and decryption (decoded.txt).
  * You can use the resources below for a detailed explanation of Huffman Coding:
  * Simulation: https://people.ok.ubc.ca/ylucet/DS/Huffman.html
  * Detailed description: https://www.studytonight.com/data-structures/huffman-coding
- *
- * Char		 Freq		Code
- * F		 1			10110101110
- * '		 1			10110101111
- * E		 1			10110101100
- * G		 1			10110101101
- * z		 1			00011110110
- * M		 1			00011110111
- * K		 1			0001111010
- * A		 2			000111100
- * x		 3			101101000
- * Y		 3			101101001
- * R		 3			101101010
- * I		 5			00011111
- * k		 7			11100010
- * g		 8			11100011
- * w		 9			0001110
- * \n		 10			1000000
- * T		 10			1000001
- * .		 13			1011011
- * ,		 13			1110000
- * v		 18			000110
- * b		 22			100001
- * f		 24			101100
- * m		 28			111001
- * p		 28			111010
- * c		 35			111011
- * l		 36			00010
- * y		 42			10001
- * h		 52			10111
- * u		 66			11110
- * d		 66			11111
- * s		 71			0000
- * a		 76			0010
- * n		 78			0011
- * o		 79			0110
- * i		 80			0111
- * r		 84			1001
- * t		 94			1010
- * e		 155		010
- *  		 230		110
- *
- * Message		Code
- * A			000111100
- * t			1010
- * a			0010
- * t			1010
- * u			11110
- * r			1001
- * k			11100010
- *
- * Encoded message
- * 00011110010100010101011110100111100010
- *
- * Decoded message
- * Ataturk
  *
  *  Created on: Jun 20, 2020
  *      Author: onur
@@ -92,7 +35,7 @@
 #include <stdlib.h>
 #include "Part1.h"
 
-void huffmanCoding(char *filePath) {
+void huffmanCodingTree(char *filePath) {
 	int i, j, tempFreq, iItem = 0, iItemTemp, nItem, isSame, *allCharFreqs = 0;
 	int count, sumFreq, code[MAXTREESTEPS], lastIndex = 0, longestCode = 0;
 	char c, tempItem, *allCharItems = 0;
@@ -207,7 +150,7 @@ void huffmanCoding(char *filePath) {
 		}
 	}
 	generateCodes(tempRootHCT, code, lastIndex, &longestCode);
-	huffmanCodingMenu(rootHCT, longestCode);
+	huffmanCodingTreeMenu(rootHCT, longestCode);
 	return;
 }
 
@@ -234,7 +177,7 @@ void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex,
 	return;
 }
 
-void huffmanCodingMenu(struct huffmanCodingTree *rootHCT, int longestCode) {
+void huffmanCodingTreeMenu(struct huffmanCodingTree *rootHCT, int longestCode) {
 	int menuChoice;
 
 	system("clear");

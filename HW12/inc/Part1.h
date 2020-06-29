@@ -43,9 +43,9 @@ struct huffmanCodingTree {
 	struct huffmanCodingTree *left, *right;
 };
 
-void huffmanCoding(char *file_path);
+void huffmanCodingTree(char *file_path);
 void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode);
-void huffmanCodingMenu(struct huffmanCodingTree *rootHCT, int longestCode);
+void huffmanCodingTreeMenu(struct huffmanCodingTree *rootHCT, int longestCode);
 void printCodes(struct huffmanCodingTree *rootHCT);
 void encodeMessage(struct huffmanCodingTree *rootHCT);
 void writeToFileInBytes(int *binNums, int nbinNums);
