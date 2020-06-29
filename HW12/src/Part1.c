@@ -37,7 +37,7 @@
 
 void huffmanCodingTree(char *filePath) {
 	int i, j, tempFreq, iItem = 0, iItemTemp, nItem, isSame, *allCharFreqs = 0;
-	int count, sumFreq, code[MAXTREESTEPS], lastIndex = 0, longestCode = 0;
+	int sumFreq, code[MAXTREESTEPS], lastIndex = 0, longestCode = 0;
 	char c, tempItem, *allCharItems = 0;
 
 	struct huffmanCodingTree *rootHCT = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
@@ -100,21 +100,21 @@ void huffmanCodingTree(char *filePath) {
 		}
 	}
 	while (1) {
-		count = 0;
+		iItem = 0;
 		iterHCT = tempRootHCT;
 		while (iterHCT != NULL) {
-			++count;
+			++iItem;
 			iterHCT = iterHCT->next;
 		}
-		if (count == 1) {
+		if (iItem == LASTONE) {
 			break;
-		} else if (count == 2) {
+		} else if (iItem == LASTTWO) {
 			iterHCT = tempRootHCT;
 			tempAddress1 = iterHCT;
 			tempAddress2 = iterHCT->next;
 			sumFreq = tempAddress1->freq + tempAddress2->freq;
 			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
-			newAddress->letter = 'X';
+			newAddress->letter = '?';
 			newAddress->freq = sumFreq;
 			newAddress->left = tempAddress1;
 			newAddress->right = tempAddress2;
@@ -133,7 +133,7 @@ void huffmanCodingTree(char *filePath) {
 				iterHCT = iterHCT->next;
 			}
 			newAddress = (struct huffmanCodingTree*)malloc(sizeof(struct huffmanCodingTree));
-			newAddress->letter = 'X'; //'X' represents upper tree nodes
+			newAddress->letter = '?'; //'?' represents upper tree nodes
 			newAddress->freq = sumFreq;
 			newAddress->left = tempAddress1;
 			newAddress->right = tempAddress2;
@@ -165,9 +165,9 @@ void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex,
 		code[lastIndex] = 1;
 		generateCodes(rootHCT->right, code, lastIndex + 1, longestCode);
 	}
-	//if the letter is other than 'X', then it is a leaf node
-	//'X' represents upper tree nodes
-	if (rootHCT->letter != 'X') {
+	//if the letter is other than '?', then it is a leaf node
+	//'?' represents upper tree nodes
+	if (rootHCT->letter != '?') {
 		for (i = 0; i < lastIndex; ++i)
 			rootHCT->code[i] = code[i];
 		rootHCT->code[lastIndex] = ENDOFCODE;
@@ -191,16 +191,16 @@ void huffmanCodingTreeMenu(struct huffmanCodingTree *rootHCT, int longestCode) {
 		scanf("%d", &menuChoice);
 		system("clear");
 		switch (menuChoice) {
-		case 0:
+		case QUIT:
 			printf("Good bye!");
 			break;
-		case 1:
+		case PRINT:
 			printCodes(rootHCT);
 			break;
-		case 2:
+		case ENCODE:
 			encodeMessage(rootHCT);
 			break;
-		case 3:
+		case DECODE:
 			decodeMessage(rootHCT, longestCode);
 			break;
 		default:
@@ -208,7 +208,7 @@ void huffmanCodingTreeMenu(struct huffmanCodingTree *rootHCT, int longestCode) {
 			break;
 		}
 		while (getchar() != '\n');
-	} while (menuChoice != 0);
+	} while (menuChoice != QUIT);
 }
 
 void printCodes(struct huffmanCodingTree *rootHCT) {
@@ -217,7 +217,7 @@ void printCodes(struct huffmanCodingTree *rootHCT) {
 	while (1) {
 		if (rootHCT == NULL)
 			break;
-		else if (rootHCT->letter == 'X') {
+		else if (rootHCT->letter == '?') {
 			rootHCT = rootHCT->next;
 			continue;
 		}
@@ -352,7 +352,7 @@ void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 			tempCode[iCode] = binNums[iBinNums];
 		iterHCT = rootHCT;
 		while (iterHCT != NULL) {
-			if (iterHCT->letter == 'X') {
+			if (iterHCT->letter == '?') {
 				iterHCT = iterHCT->next;
 				continue;
 			}

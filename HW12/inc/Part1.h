@@ -35,6 +35,9 @@ FILE *fptwb; //fptwb file pointer write binary
 /*! File pointer to read binary file */
 FILE *fptrb; //fptr file pointer read binary
 
+enum menuChoices {QUIT = 0, PRINT = 1, ENCODE = 2, DECODE = 3};
+enum HCTElements {LASTONE = 1, LASTTWO = 2};
+
 struct huffmanCodingTree {
 	char letter;
 	int freq;
