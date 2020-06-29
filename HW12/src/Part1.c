@@ -249,6 +249,7 @@ void huffmanCodingMenu(struct huffmanCodingTree *rootHCT, int longestCode) {
 		system("clear");
 		switch (menuChoice) {
 		case 0:
+			printf("Good bye!");
 			break;
 		case 1:
 			printCodes(rootHCT);
@@ -297,6 +298,7 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	struct huffmanCodingTree *iterHCT = rootHCT;
 
 	printf("Please enter the file path for the message to be encoded.\n");
+	printf("for e.g: message.txt\n");
 	scanf("%s", filePath);
 	openFileRead(filePath);
 	printf("Message characters and related codes:\n");
@@ -323,7 +325,7 @@ void encodeMessage(struct huffmanCodingTree *rootHCT) {
 	printf("\nEncoded message to be saved in the .dat file:\n");
 	for (i = 0; i < nBinNums; ++i)
 		printf("%d", binNums[i]);
-	printf("\n");
+	printf("\n\n");
 	writeToFileInBytes(binNums, nBinNums);
 	return;
 }
@@ -332,6 +334,7 @@ void writeToFileInBytes(int *binNums, int nBinNums) {
 	int i, j, last, first, *decNums = 0, iDecNum = 0, nDecNum, tempDecNum;
 	int toPowerOf2;
 	int nMissingBits = (ONEBYTE - (nBinNums % ONEBYTE)) % ONEBYTE;
+	char filePath[MAXFILEPATHLENGTH];
 
 	if (nBinNums >= ONEBYTE) {
 		last = nBinNums - 1;
@@ -367,30 +370,37 @@ void writeToFileInBytes(int *binNums, int nBinNums) {
 		decNums[i] = decNums[(nDecNum - 1) - i];
 		decNums[(nDecNum - 1) - i] = tempDecNum;
 	}
-	openFileWriteBinary("files/encoded.dat");
+	printf("Please enter the file path for the encoded message to be saved.\n");
+	printf("for e.g: encoded.dat\n");
+	scanf("%s", filePath);
+	openFileWriteBinary(filePath);
 	//writes to file initially the padding info byte
 	fwrite(&nMissingBits, 1, 1, fptwb);
 	//writes to file the binary data, 1B each time
 	for (i = 0; i < nDecNum; ++i)
 		fwrite(&decNums[i], 1, 1, fptwb);
 	closeFile(fptwb);
+	printf("Encoded file saved successfully.\n");
 	return;
 }
 
 void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 	int i, iCode, tempCode[longestCode], isSame, chosenLetterLength, isEOF = 0;
 	int *binNums, iBinNums = 0, nBinNums;
-	char chosenLetter;
+	char chosenLetter, filePath[MAXFILEPATHLENGTH];
 	struct huffmanCodingTree *iterHCT = rootHCT;
-
 
 	binNums = readFromFileInBytes(&nBinNums);
 	printf("Encoded message that was read from the .dat file:\n");
 	for (i = 0; i < nBinNums; ++i)
 		printf("%d", binNums[i]);
-	printf("\n");
+	printf("\n\n");
+	printf("Please enter the file path for the decoded message to be saved.\n");
+	printf("for e.g: decoded.txt\n");
+	scanf("%s", filePath);
+	openFileWrite(filePath);
+	printf("Decoded file saved successfully.\n");
 	printf("\nDecoded message:\n");
-	openFileWrite("files/decoded.txt");
 	iCode = 0;
 	while (1) {
 		if (iBinNums == nBinNums)
@@ -399,6 +409,10 @@ void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 			tempCode[iCode] = binNums[iBinNums];
 		iterHCT = rootHCT;
 		while (iterHCT != NULL) {
+			if (iterHCT->letter == 'X') {
+				iterHCT = iterHCT->next;
+				continue;
+			}
 			isSame = 1;
 			for (i = 0; i < iCode + 1; ++i) {
 				if (tempCode[i] != iterHCT->code[i]) {
@@ -416,16 +430,14 @@ void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 		if (iCode == longestCode || isEOF) {
 			printf("%c", chosenLetter);
 			fprintf(fptw, "%c", chosenLetter);
-			iCode = -1; //to set the j to 0 for the next loop iteration
+			iCode = -1; //to set the index iterator to 0 for the next loop iteration
 			iBinNums = iBinNums + (chosenLetterLength - longestCode - 1);
-			fseek(fptr, chosenLetterLength - longestCode - 1, SEEK_CUR);
 		}
 		if (isEOF)
 			break;
 		++iBinNums;
 		++iCode;
 	}
-	printf("\n");
 	closeFile(fptw);
 	return;
 }
@@ -433,8 +445,12 @@ void decodeMessage(struct huffmanCodingTree *rootHCT, int longestCode) {
 int* readFromFileInBytes(int *nBinNums) {
 	int j, k, nMissingBits, *binNums = 0, iBinNums = 0, binMultiplier;
 	int decNum;
+	char filePath[MAXFILEPATHLENGTH];
 
-	openFileReadBinary("files/encoded.dat");
+	printf("Please enter the file path for the encoded message to be read.\n");
+	printf("for e.g: encoded.dat\n");
+	scanf("%s", filePath);
+	openFileReadBinary(filePath);
 	nMissingBits = getc(fptrb); //gets initially the padding information
 	while (1) {
 		decNum = getc(fptrb);
@@ -464,9 +480,6 @@ int* readFromFileInBytes(int *nBinNums) {
 	return binNums;
 }
 
-//use below lines to test the method
-//int binNums[16] = {0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1};
-//binHexConverter(binNums, sizeof(binNums) / sizeof(int));
 void binHexConverter(int *binNums, int nBinNums, char *hexNums, int *nHexNums) {
 	int i, j, ihexNums = 0, hexNum, last, first, toPowerOf2;
 	char tempHexNum;
@@ -532,9 +545,6 @@ void binHexConverter(int *binNums, int nBinNums, char *hexNums, int *nHexNums) {
 	return;
 }
 
-//use below lines to test the method
-//char hexNums[2] = {'5', 'D'};
-//hexBinConverter(hexNums, sizeof(hexNums) / sizeof(char));
 void hexBinConverter(char *hexNums, int nHexNums, int *binNums, int *nBinNums) {
 	int i, j, k, decNum, binMultiplier, iBinNums = 0;
 

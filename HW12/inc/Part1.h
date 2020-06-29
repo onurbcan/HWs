@@ -13,24 +13,16 @@
 #define CHARINTDIFFERENCE 48
 #define MAXFILEPATHLENGTH 50
 
-#define QUATERNARY 4
-#define BASE2 2
 #define LASTELEMENT 0
+#define BASE2 2
+#define QUATERNARY 4
+#define ONEBYTE 8
 #define HEXA 10
 #define HEXB 11
 #define HEXC 12
 #define HEXD 13
 #define HEXE 14
 #define HEXF 15
-#define ONEBYTE 8
-
-struct huffmanCodingTree {
-	char letter;
-	int freq;
-	int code[MAXTREESTEPS];
-	struct huffmanCodingTree *next;
-	struct huffmanCodingTree *left, *right;
-};
 
 /*! File pointer to read the file */
 FILE *fptr; //fptr file pointer read
@@ -42,6 +34,14 @@ FILE *fpte; //fptw file pointer edit
 FILE *fptwb; //fptwb file pointer write binary
 /*! File pointer to read binary file */
 FILE *fptrb; //fptr file pointer read binary
+
+struct huffmanCodingTree {
+	char letter;
+	int freq;
+	int code[MAXTREESTEPS];
+	struct huffmanCodingTree *next;
+	struct huffmanCodingTree *left, *right;
+};
 
 void huffmanCoding(char *file_path);
 void generateCodes(struct huffmanCodingTree *rootHCT, int code[], int lastIndex, int *longestCode);
