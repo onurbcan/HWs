@@ -125,6 +125,7 @@ public:
 				m_nRow(), m_nColumn(), m_nNum(), m_count(0), m_iMove(0),
 				m_oper(), m_iRootBoard(iRootBoard), m_prevMove(prevMove),
 				m_iEmpty(), m_isError(0), m_isDone(0), m_iObject(iObject) {}
+		~BoardVector() {}
 
 		void print();
 		void reset();
@@ -137,11 +138,18 @@ public:
 
 		void generateTable();
 		void getIntelligentMovement();
-		int printElements(int iIndex, int jIndex);
-		void editElements(int iIndex, int jIndex, int elementValue);
-		bool operator ==(const BoardVector& otherObject);
-		int operator ()(int indexX, int indexY);
-		BoardVector& operator =(const BoardVector& otherObject);
+		int printElements(int iIndex, int jIndex) override;
+		void editElements(int iIndex, int jIndex, int elementValue) override;
+		bool operator ==(const BoardVector& otherObject) override;
+		int operator ()(int indexX, int indexY) override;
+		BoardVector& operator =(const BoardVector& otherObject) override;
+
+	private:
+		std::vector<int> m_sizes;
+		std::vector<std::vector<int>> m_num;
+		int m_nRow, m_nColumn, m_nNum, m_count, m_iMove, m_oper, m_iRootBoard;
+		int m_prevMove, m_iEmpty, m_isError, m_isDone, m_iObject;
+		std::string m_filePath;
 	};
 
 private:
@@ -150,6 +158,7 @@ private:
 	char m_command;
 	std::vector<BoardVector> nPuzzleBoard;
 	BoardVector newBoard;
+//	newBoard = new BoardVector;
 
 	//functions from the draft
 	void print();
